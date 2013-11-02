@@ -25,6 +25,7 @@
  * This module should be outphased!
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 #define HIDDENDIRFILE "/ftp-data/misc/f00-hiddendirs.txt"
 

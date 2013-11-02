@@ -76,7 +76,7 @@
 #define HAVE_LIBCRYPTO 1
 
 /* Define to 1 if you have the `curses' library (-lcurses). */
-/* #undef HAVE_LIBCURSES */
+#define HAVE_LIBCURSES 1
 
 /* Define to 1 if you have the `dl' library (-ldl). */
 #define HAVE_LIBDL 1
@@ -85,7 +85,7 @@
 /* #undef HAVE_LIBHTTPD */
 
 /* Define to 1 if you have the `ncurses' library (-lncurses). */
-/* #undef HAVE_LIBNCURSES */
+#define HAVE_LIBNCURSES 1
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #define HAVE_LIBPTHREAD 1
