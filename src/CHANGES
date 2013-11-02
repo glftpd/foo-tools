@@ -70,3 +70,4 @@ Nov  1 2011: * Fixed mktime timeout on configure (thks to peakz)
              * Fixed chroot gentoo bug for foo-pre.
              * Added a little help file.
 Nov  2 2011: * Fixed a bug about "you're not in any of your predir" :)
+Mar 31 2013: * Fixed a strncpy bug while resolving links on x64 env. which lead to a "destination section's path doesnt exist" (overflow).

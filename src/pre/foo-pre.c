@@ -1210,7 +1210,8 @@ char *section_expand_path(char *sec) {
 
 	if (reps != -1) {
 		if (buf[0] == '/') {
-			strncpy(tmp, buf, reps);
+			strncpy(tmp,buf,reps);
+			tmp[reps] = '\0'; /* ensure null terminated */
 			buf[reps] = 0;
 		}
 		else {
