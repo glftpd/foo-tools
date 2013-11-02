@@ -1,0 +1,11 @@
+DuReX Presents :D ->> FOO-PRE FIX FOR 64BIT
+
+
+Add 
+- glconf.h
+- gllogs.c
+- gllogs.h
+- glupdate.c
+
+TO footools/src/lib
+And compile footools :) Now it shouldn't fuckup the dupefile & dirlog anymore.

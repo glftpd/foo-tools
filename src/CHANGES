@@ -60,3 +60,13 @@ Sep 28 2004: * Added WOY to the SECTION dir as a macro for Week of Year.
 	(thanks to funkstorm for pointing this out).
 
 Cheers, Tanesha Team <tanesha@tanesha.net>.
+
+//PCFiL
+Jul 27 2011: * Fixed dirlog damage on x64 OS for foo-pre
+             * Fixed foo-spy (spy) with new glftpd headers. (remember to set key in who.cfg)
+Sep 12 2011: * Fixed prestring to fit more env. (thks to _SoniCFL_)
+             * Changed glconf.h lib for latest glftpd-ng compatibility.
+Nov  1 2011: * Fixed mktime timeout on configure (thks to peakz)
+             * Fixed chroot gentoo bug for foo-pre.
+             * Added a little help file.
+Nov  2 2011: * Fixed a bug about "you're not in any of your predir" :)

@@ -21,7 +21,7 @@
 /*
  * Module to extract mp3info from a pred release
  * Author, Soren.
- * $Id: mod_idmp3.c 43 2003-06-23 14:32:18Z sorend $
+ * $Id: mod_idmp3.c,v 1.5 2003/06/23 14:32:18 sorend Exp $
  */
 
 #include <string.h>

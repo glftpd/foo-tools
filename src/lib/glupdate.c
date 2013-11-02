@@ -69,114 +69,6 @@ void get_dir_size (char *, int *, unsigned long long *);
 char *trim (char *);
 void add_ignore(char *);
 
-
-int
-main (int argc, char **argv)
-{
-	DIR *dirf;
-	struct dirent *dn;
-	struct stat st;
-	struct dirlog log;
-	char temppath[MAXPATHLEN];
-	char nambuf[MAXPATHLEN];
-	unsigned long long bytes;
-	int files;
-	int i, c;
-	char *config_file = GLCONF;
-	struct ignore *ignore = START;
-	int skip;
-
-
-	/* These entrys are always ingored. */
-	add_ignore(".");
-	add_ignore("..");
-	add_ignore("groups");
-
-
-	/* Parse command line options */
-	while((c = getopt(argc, argv, "hi:r:")) != EOF) {
-		switch(c) {
-			case 'h':
-				usage();
-			case 'i':
-				add_ignore(strdup(optarg));
-				break;
-			case 'r':
-				config_file = strdup(optarg);
-				break;
-			default:
-				usage();
-			}
-	}
-
-	argc -= optind;
-	argv += optind;
-
-	if (argc == 0)
-		usage();
-
-	load_sysconfig(config_file);
-
-	strncpy(nambuf, argv[0], sizeof(nambuf));
-
-	i = strlen(nambuf) - 1;
-	if (nambuf[i] == '/')
-		nambuf[i] = '\0';
-
-
-	dirf = opendir(nambuf);
-	if (dirf == NULL) {
-		printf ("Unable to read from directory: %s\n", nambuf);
-		exit (1);
-	}
-
-
-	for (;;) {
-		dn = readdir(dirf);
-		if (dn == NULL)
-			break;
-
-		if (strstr(dn->d_name, "NUKED") != NULL) {
-			printf("Skipping NUKED dir: %s\n", dn->d_name);
-			continue;
-		}
-		ignore = START;
-		skip = 0;
-		for (;;) {
-			if (!strcmp(dn->d_name, ignore->string)) {
-				printf("Skipping dir: %s\n", dn->d_name);
-				skip=1;
-				break;
-			}
-			if(ignore->next == NULL)
-				break;
-				ignore = ignore->next;
-		}
-		if (skip==1) continue;
-
-		snprintf(temppath, MAXPATHLEN, "%s/%s", nambuf, dn->d_name);
-		stat(temppath, &st);
-		if (S_ISDIR (st.st_mode)) {
-			    log.status = 0;
-			    log.uptime = (time_t) st.st_mtime;
-			    log.uploader = (unsigned short int) st.st_uid;
-			    log.group = (unsigned short int) st.st_gid;
-			    strncpy (log.dirname, temppath, sizeof(log.dirname) - 1);
-			    bytes = 0ULL;
-			    files = 0;
-			    get_dir_size(temppath, &files, &bytes);
-			    log.files = files;
-			    log.bytes = bytes;
-
-			    update_log(log);
-		}
-	}
-
-	closedir(dirf);
-	exit(0);
-}
-
-
 void
 get_dir_size (char *dirname, int *files, unsigned long long *bytes)
 {
@@ -238,7 +130,7 @@ update_log (struct dirlog log)
 	else
 		strncpy (actname, strrchr (log.dirname, '/') + sizeof (char), sizeof (actname));
 
-	snprintf (work_buf, MAXPATHLEN, "%s/%s/logs/dirlog", rootpath, datapath);
+	snprintf (work_buf, MAXPATHLEN, "/ftp-data/logs/dirlog");
 	file = fopen (work_buf, "r+b");
 	if (file == NULL) {
 		printf ("Cannot open %s\n", work_buf);
@@ -256,7 +148,6 @@ update_log (struct dirlog log)
 		work_buf[y] = '\0';
 		strncpy (log.dirname, work_buf, sizeof (log.dirname));
 	}
-	printf ("Updating: %s\n", actname);
 
 	for (;;) {
 		fread (&newlog, sizeof (struct dirlog), 1, file);

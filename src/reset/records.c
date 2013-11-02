@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * $Id: records.c 14 2003-02-12 13:03:11Z sorend $
+ * $Id: records.c,v 1.2 2003/02/12 13:03:11 sorend Exp $
  */
 
 /*

@@ -21,7 +21,7 @@
 /*
  * Some lib to do smth about security  /sorend
  *
- * $Id: security.h 6 2003-01-22 14:31:30Z sorend $
+ * $Id: security.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
  */
 
 /*

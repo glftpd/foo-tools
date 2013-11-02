@@ -23,8 +23,8 @@
  * a file, but should be extended to atleast read filelist from .sfv files.
  *
  **
- * $Id: sfv.h 6 2003-01-22 14:31:30Z sorend $
- * $Source$
+ * $Id: sfv.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Source: /home/cvs/footools/footools/src/lib/sfv.h,v $
  * Author: Flower (c) Tanesha Team
  */
 

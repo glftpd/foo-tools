@@ -22,7 +22,7 @@
 /*
  * command to find latest races a user has participated in, <sorend@tanesha.net>
  *
- * $Id: lastraces.c 6 2003-01-22 14:31:30Z sorend $
+ * $Id: lastraces.c,v 1.2 2003/01/22 14:31:30 sorend Exp $
  */
 
 #include <stdio.h>

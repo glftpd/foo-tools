@@ -5868,7 +5868,7 @@ main ()
       mktime_test ((time_t) 60 * 60);
       mktime_test ((time_t) 60 * 60 * 24);
 
-      for (j = 1; 0 < j; j *= 2)
+      for (j = 1; 0 < j; j <<= 1) 
         bigtime_test (j);
       bigtime_test (j - 1);
     }

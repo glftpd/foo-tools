@@ -44,7 +44,7 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c 72 2004-09-28 06:52:24Z sorend $"
+#define VERSION "$Id: foo-pre.c,v 1.18 2004/09/28 06:52:24 sorend Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);
@@ -1274,10 +1274,10 @@ int pre_handler(int argc, char *argv[]) {
 	if (strchr(argv[1], '/'))
 		quit(" * You cant give paths in releasename ('/' not allowed)!\n");
 
-	getcwd(source, 300);
+	char *sourcebis = getcwd(NULL, 0);
 
 	// check if we are in a position to pre.
-	group = group_find_by_dir(groups, source);
+	group = group_find_by_dir(groups, sourcebis);
 
 	if (!group) {
 		printf(" * You are not in the group-dir of any of your groups.\n\n");
@@ -1287,7 +1287,7 @@ int pre_handler(int argc, char *argv[]) {
 		quit(0);
 	}
 
-	pre_log("GROUP", "%s %s", source, group);
+	pre_log("GROUP", "%s %s", sourcebis, group);
 
 	printf(" * Looks like this is going to be a %s pre..\n", group);
 	ht_put(env, PROPERTY_GROUP, group);
@@ -1307,7 +1307,9 @@ int pre_handler(int argc, char *argv[]) {
 	destpath = section_expand_path(dest_section);
 	ht_put(env, "RESOLVEDDESTINATION", destpath);
 
-	sprintf(source, "%s/%s", source, argv[1]);
+        strcpy(source, sourcebis);
+        strcat(source, "/");
+        strcat(source, argv[1]);
 
 	// check if source dir is okay.
 	if ((stat(source, &st) == -1) || !S_ISDIR(st.st_mode)) {

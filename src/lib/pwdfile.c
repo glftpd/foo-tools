@@ -20,7 +20,6 @@
  */
 
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -50,7 +49,7 @@ void pwd_set_etcdir(char *etcdir) {
 	_etcdir = strdup(etcdir);
 }
 
-char * _pwd_get_etcdir() {
+char *_pwd_get_etcdir() {
 	if (_etcdir == 0)
 		_etcdir = strdup(DEFAULT_ETCDIR);
 
@@ -65,8 +64,7 @@ pwdfile *_pwd_reload() {
 	stringtokenizer st;
 	int i;
 
-	t = _pwd_get_etcdir();
-	sprintf(buf, "%s/%s", t, DEFAULT_PASSWD);
+	sprintf(buf, "%s/%s", _pwd_get_etcdir(), DEFAULT_PASSWD);
 
 	if (stat(buf, &stt) == -1)
 		return pwd_userlist;
@@ -144,15 +142,14 @@ pwdfile *pwd_getpwuid(int uid) {
 
 grpfile_t *_pwd_grpreload() {
 	linefilereader_t lfr;
-	char buf[300], gidbuf[30], *etcdir;
+	char buf[300], gidbuf[30];
 	stringtokenizer st;
 	grpfile_t *tmp = 0;
 
 	if (pwd_grouplist)
 		return pwd_grouplist;
 
-	etcdir = _pwd_get_etcdir();
-	sprintf(buf, "%s/%s", etcdir, DEFAULT_GROUP);
+	sprintf(buf, "%s/%s", _pwd_get_etcdir(), DEFAULT_GROUP);
 
 	if (lfr_open(&lfr, buf) < 0)
 		return 0;

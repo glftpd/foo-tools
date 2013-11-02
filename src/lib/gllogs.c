@@ -25,7 +25,6 @@
  * Maintained by: Flower
  */
 
-#include <stdint.h>
 #include "gllogs.h"
 #include "glupdate.c"
 #include <stdio.h>
@@ -224,7 +223,7 @@ int gl_gllog_announce(char *type, char *str) {
 int gl_site_msg(char *from, char *to, char *msg) {
 	FILE *f;
 	char buf[300], *p;
-	time_t t;
+	long t;
 
 	if (!to)
 		return 0;
@@ -235,9 +234,8 @@ int gl_site_msg(char *from, char *to, char *msg) {
 	if (!f)
 		return 0;
 
-	time(&t);
-	p = ctime(&t);
-	strcpy(buf, p);
+	t = time(0);
+	sprintf(buf, ctime(&t));
 	p = (char*)&buf;
 	while (*p)
 		if (*p == '\n')

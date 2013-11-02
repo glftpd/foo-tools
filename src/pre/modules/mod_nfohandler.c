@@ -21,7 +21,7 @@
 /*
  * Module for extracting info from .nfo files and adding to glftpd.log
  * Author, Soren.
- * $Id: mod_nfohandler.c 40 2003-06-20 11:32:28Z sorend $
+ * $Id: mod_nfohandler.c,v 1.3 2003/06/20 11:32:28 sorend Exp $
  */
 
 #include <sys/types.h>

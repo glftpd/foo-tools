@@ -72,6 +72,5 @@ AC_CONFIG_FILES([Makefile
                  unzip/Makefile
                  util/Makefile
                  who/Makefile
-                 zip/Makefile
-		 isodiz/Makefile])
+                 zip/Makefile])
 AC_OUTPUT

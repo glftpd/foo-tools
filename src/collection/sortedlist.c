@@ -21,7 +21,7 @@
 /*
  * Impl of sortedlist.h interface, <sorend@tanesha.net>
  *
- * $Id: sortedlist.c 6 2003-01-22 14:31:30Z sorend $
+ * $Id: sortedlist.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
  */
 
 #include "sortedlist.h"

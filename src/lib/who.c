@@ -22,12 +22,11 @@
  * Library to take care of accessing glftpd's online-list.
  *
  **
- * $Id: who.c 6 2003-01-22 14:31:30Z sorend $
+ * $Id: who.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
  * Maintained By: Flower
  */
 
 #include "who.h"
-#include <stdio.h>
 #include <string.h>
 
 int who_init(online_t *c, key_t key) {
@@ -139,7 +138,7 @@ int who_transfer_file(struct ONLINE *o, char *b) {
       r++;
 
   if (strstr(o->currentdir, s))
-    strcpy(b, o->currentdir);
+    sprintf(b, o->currentdir);
   else
     sprintf(b, "%s/%s", o->currentdir, s);
 

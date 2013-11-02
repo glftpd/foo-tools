@@ -24,8 +24,8 @@
  * Refactored a bunch here  /sorend.
  *
  **
- * $Id: strlist.c 6 2003-01-22 14:31:30Z sorend $
- * $Source$
+ * $Id: strlist.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Source: /home/cvs/footools/footools/src/collection/strlist.c,v $
  * Author: Soren
  */
 
