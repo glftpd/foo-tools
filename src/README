@@ -1,0 +1,19 @@
+
+
+Building:
+
+Run 'make' from this dir to build all.
+
+'make clean' cleans up for fresh rebuild.
+
+The stuff build is the following:
+
+pre/foo-pre           -  'site pre' tool.
+bouncer/simple_entry  -  entry bouncer.
+nukes/foo-nukes       -  'site nukes' tool.
+who/spy               -  spy tool.
+
+Look in the dirs for documentation/sample setups.
+
+
+Cheers, Tanesha Team.

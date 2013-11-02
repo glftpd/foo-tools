@@ -1,0 +1,14 @@
+
+
+This package contains the foo-nukes tool.
+
+Once it is build, copy foo-nukes to glftpd/bin, and add
+it to the .conf.
+
+It is supposed to be a replacement too for 'site nukes'.
+Run 'site nukes help' after it is installed for help.
+
+NOTE: You probably want to change NUKES_SITEROOT to "/site" in
+nukes.h!
+
+

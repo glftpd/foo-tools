@@ -1,0 +1,19 @@
+
+foo-tools CHANGELOG:
+--------------------
+
+This changelog will be updated whenever there are new builds
+released.
+
+Mar  7 2002: Created this type of release-format.
+             This release is basically what was in the previous
+             releases, with the exception that its much easier
+             to maintain :)
+
+Mar 14 2002: Made minorchanges to foo-pre, new cookie for full resolved
+             prepath %PP.
+
+Mar 18 2002: Added binding to a specific ip in simple_entry.
+
+
+Cheers, Tanesha Team <tanesha@tanesha.net>.

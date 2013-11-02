@@ -1,0 +1,17 @@
+
+
+If you dont have your glftpd.conf in /etc/glftpd.conf, then
+you must start the tool as 'spy /path/to/my.conf'.
+
+Also, the bug usurper pointed out; Someone must be logged
+into the ftp before you start the spy. It doesnt create
+the shared memory by itself.
+
+Quick usage:
+
+UP/DOWN - move cursor
+'k'     - if root, then kick the user.
+'d'     - switch to dir-mode, view the dir the user is in.
+'u'     - switch back to user-mode from dir-mode.
+
+
