@@ -1,11 +1,31 @@
+/*
+ * foo-tools, a collection of utilities for glftpd users.
+ * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
+ *
+ * This file is part of foo-tools.
+ *
+ * foo-tools is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * foo-tools is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with foo-tools; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 /**
  * Library implementing a searchable string list.
  *
- * Refactored a bunch here  /flower.
+ * Refactored a bunch here  /sorend.
  *
  **
- * $Id: strlist.c,v 1.5 2002/01/31 11:34:43 sd Exp $
- * $Source: /var/cvs/foo/src/collection/strlist.c,v $
+ * $Id: strlist.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Source: /home/cvs/footools/footools/src/collection/strlist.c,v $
  * Author: Soren
  */
 
@@ -155,6 +175,36 @@ char *str_iterator_next(strlist_iterator_t *i) {
 	if (i->cur) {
 		ret = i->cur->data;
 		i->cur = i->cur->next;
+	}
+
+	return ret;
+}
+
+char *str_join(strlist_t *l, char *delim) {
+	strlist_t *tmp;
+	char *ret;
+	int newlen = 0, dl;
+
+	dl = strlen(delim);
+
+	for (tmp = l; tmp; tmp = tmp->next) {
+		newlen += strlen(tmp->data);
+
+		if (tmp->next)
+			newlen += dl;
+	}
+
+	if (newlen == 0)
+		return strdup("");
+
+
+	ret = malloc(newlen + 1);
+	*ret = 0;
+	for (tmp = l; tmp; tmp = tmp->next) {
+		strcat(ret, tmp->data);
+
+		if (tmp->next)
+			strcat(ret, delim);
 	}
 
 	return ret;

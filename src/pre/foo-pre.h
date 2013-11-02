@@ -1,3 +1,23 @@
+/*
+ * foo-tools, a collection of utilities for glftpd users.
+ * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
+ *
+ * This file is part of foo-tools.
+ *
+ * foo-tools is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * foo-tools is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with foo-tools; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #ifndef _foopre_h
 #define _foopre_h
@@ -27,6 +47,7 @@
 #define PROPERTY_GROUP_GL_SS "gl_stat_section"
 #define PROPERTY_GROUP_RATIO "ratio"
 #define PROPERTY_GROUP_ANNOUNCE "announce"
+#define PROPERTY_GROUP_DEFSEC "def_sec"
 
 #define PROPERTY_SECTION_DIR "dir"
 #define PROPERTY_SECTION_NAME "name"
@@ -38,6 +59,16 @@
 #define PROPERTY_CREDITABLE "creditable"
 #define PROPERTY_ADDSUB "addsubdirstodirlog"
 
+#define PROPERTY_MOVE_EXTERNAL "move.external"
+
+#define PROPERTY_ETCDIR "etcdir"
+
+#define PROPERTY_MODULES "modules"
+
+#define MODULE_LOADER_FUNC "module_loader"
+
+#define MODULE_SETCONFIG_FUNC "set_config"
+#define MODULE_SETENV_FUNC "set_env"
 
 /*
  * Holds info about chowns
@@ -82,6 +113,44 @@ struct subdir_list {
 
 typedef struct subdir_list subdir_list_t;
 
+/*
+ * Structure for creating modules for foo-pre.
+ */
+struct module_list {
+	/*
+	 * the name of the module
+	 */
+	char *mod_name;
 
+	/*
+	 * function to use for each dir of the release.
+	 *
+	 * dirpath - complete path to the dir.
+	 * args - the args from commandline
+	 *
+	 * NYI!
+	 */
+	int (*mod_func_dir)(char *dirpath, char *args[]);
+
+	/*
+	 * function to use for each file of the release
+	 *
+	 * filepath - path to the file.
+	 * args - the args from commandline
+	 */
+	int (*mod_func_file)(char *filepath, char *args[]);
+
+	/*
+	 * function to use for all of the release
+	 *
+	 * releasepath - path to the release
+	 * args - the args from commandline
+	 */
+	int (*mod_func_rel)(char *releasepath, char *args[]);
+
+	struct module_list *next;
+};
+
+typedef struct module_list module_list_t;
 
 #endif

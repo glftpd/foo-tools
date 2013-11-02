@@ -1,0 +1,19 @@
+
+
+Building:
+--
+
+Just build it with the make script ;)
+
+
+Configuring:
+--
+
+Add the module to the modules list in pre.cfg and add two properties:
+
+#
+# chmod files and dirs on pre.
+#
+mod_chmod.files=0644
+mod_chmod.dirs=0755
+

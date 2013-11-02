@@ -1,0 +1,43 @@
+
+
+Modules, wtd ?
+--------------
+
+Modules are addons which are not automagically build into the
+foo-pre binary.  It is done like this because the modules provides
+some not-so-general functions which are not needed by everyone. Eg.
+if you never pre mp3 files, maybe you are not interested in foo-pre
+scanning each release for mp3-ids.
+
+Take a look at the README.* files in the modules/ dir for information.
+
+Currently the following modules are available:
+
++ mod_idmp3 - this module adds an PRE-MP3INFO logtarget to glftpd.log
+  which contains information about the mp3 release from the mp3id.
++ mod_sitenfoadd - this module will enable you to get an <my-sitename>.nfo
+  added to each dir of the pred release. The nfo can even be put to
+  contain eg. the releasename.
++ mod_nfohandler - this module will enable a logtarget PRE-NFO with
+  information extracted from the .nfo of the release.
+
+To enable the modules, you must first build them, and then copy the
+modulename.so file to somewhere in /glftpd, preferably in /bin/premodules,
+but its not a requirement. When this is done, you can enable it in
+pre.cfg by adding it to the modules list. Eg. your module list could look
+like this:
+
+modules=/bin/premodules/mod_idmp3.so|/bin/premodules/mod_sitenfoadd.so
+
+Apart from this, each module requires some module-specific configuration
+to pre.cfg, which you can read about in the README files in modules/.
+
+
+Enjoy, and dont hesitate to ask questions if you have trouble ;-).
+
+Tanesha Team <tanesha@tanesha.net>
+
+
+
+
+

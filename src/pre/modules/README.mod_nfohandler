@@ -1,0 +1,28 @@
+
+What is mod_nfohandler ?
+------------------------
+
+Nfohandler is a module to extract arbitrary information from .nfo
+files on pre, like eg. IMDB id or genre text. You can configure
+it to extract any information using regular expressions. The
+extracted info will be logged to glftpd.log in a format you chose, 
+so you can easily use it by your bot lateron.
+
+
+Installing
+----------
+
+When you run 'make' from the modules dir it should be build. If you
+want to build only this module, then run 'make mod_nfohandler.so'.
+
+When build, copy mod_nfohandler.so to /glftpd/bin/premodules/ and
+add it to your pre.cfg like
+
+modules=/bin/premodules/mod_other.so|/bin/premodules/mod_nfohandler.so
+
+Once you have this done, you need to add configuration of the module
+to pre.cfg. 
+
+Please take a look at the included pre.cfg for examples, since it
+explains better than what I can do here right now :-).
+

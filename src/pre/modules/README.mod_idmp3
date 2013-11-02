@@ -1,0 +1,64 @@
+
+
+Building:
+---------
+mod_idmp3 depends on the mp3info package. You can download the latest
+version from: http://ibiblio.org/mp3info/
+
+After downloading, unpack it, and link the dir to the path of mod_mp3info
+
+Eg.
+
+cd footools/src/pre/modules
+tar zcvf /path/to/mp3info-x.x.x.tgz
+ln -s mp3info-x.x.x mp3info
+
+so that you have the dir
+footools/src/pre/modules/mp3info
+
+Now you can run 'make' in this dir and it will hopefully build
+mod_idmp3.so :-)
+
+When you have mod_idmp3.so, then copy it to /glftpd/bin/premodules
+and add it to the modules list in pre.cfg like this:
+
+modules=/bin/premodules/mod_idmp3.so
+
+If you have more modules already loaded, then it will look like this
+
+modules=/bin/premodules/mod_other.so|/bin/premodules/mod_whatever.so|/bin/premodules/mod_idmp3.so
+
+Note, that I have been working with mp3info-0.8.4 so if you have a
+different version, and its not working, then find the older version
+(which is also available on the url above), before you bug me.
+
+
+Output:
+-------
+
+output from mod_idmp3 can be configured using the setting:
+
+mod_idmp3.output=output string
+
+in the pre.cfg, default output string is:
+
+PRE-MP3INFO: "%R" "%a" "%l" "%y" "%g" "%G" "%r" "%Q" "%o" "%m" "%s" "%S" "%L"
+
+The variables are (mostly, some are missing) the same as in mp3info so
+if you know that program, you should be familiar with this too.
+
+%R - release name, eg. Me_and_Myself-My_Leet_Tracks-2003-Whatever
+%a - artist
+%l - album name
+%y - year
+%g - genre (string)
+%G - genre (id)
+%r - bitrate in Kbit/s
+%Q - sampling frequency in Hz
+%o - mode, stereo/mono
+%m - playing time, minutes only, NYI
+%s - playing time, seconds only (%m:%s -> total playing time, min+sec), NYI
+%S - playing time total seconds (%S -> total playing time, sec), NYI
+%L - mpeg layer
+
+NYI = not yet implemented.

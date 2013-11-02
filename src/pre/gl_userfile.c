@@ -1,11 +1,34 @@
+/*
+ * foo-tools, a collection of utilities for glftpd users.
+ * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
+ *
+ * This file is part of foo-tools.
+ *
+ * foo-tools is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * foo-tools is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with foo-tools; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#include "gl_userfile.h"
+
 #include <lib/stringtokenizer.h>
 #include <util/linefilereader.h>
-
+#include <collection/strlist.h>
 
 #define CREDITS_LINE "CREDITS "
 
@@ -17,25 +40,6 @@ char STAT_LINES[][20] = {
 	{ "MONTHUP" },
 	{ 0 }
 };
-
-struct gl_section_stat {
-	int section;
-
-	long files;
-	long long kbytes;
-	long seconds;
-
-	struct gl_section_stat *next;
-};
-
-typedef struct gl_section_stat gl_section_stat_t;
-
-struct gl_stat {
-	char *cmd;
-	gl_section_stat_t *stats;
-};
-
-typedef struct gl_stat gl_stat_t;
 
 gl_section_stat_t * _gl_parse_sec_stats(stringtokenizer *st, int *sec) {
 	gl_section_stat_t *ss = malloc(sizeof(gl_section_stat_t));
@@ -63,7 +67,7 @@ gl_section_stat_t * _gl_parse_sec_stats(stringtokenizer *st, int *sec) {
 }
 
 
-gl_stat_t * _gl_parse_stats(char *str) {
+gl_stat_t * _gl_parse_stats(char *str, char *username) {
 	gl_stat_t *s = malloc(sizeof(gl_stat_t));
 	gl_section_stat_t *ss;
 	stringtokenizer st;
@@ -75,6 +79,7 @@ gl_stat_t * _gl_parse_stats(char *str) {
 		return 0;
 
 	s->cmd = strdup(st_next(&st));
+	s->user = strdup(username);
 	s->stats = 0;
 
 	while ((ss = _gl_parse_sec_stats(&st, &i)) != 0) {
@@ -112,12 +117,12 @@ char * _gl_tostring_stats(gl_stat_t *s) {
 	return tmp;
 }
 
-char * _gl_userfile_add_stats(char *str, int files, long kbytes, int seconds, int sec) {
+char * _gl_userfile_add_stats(char *str, char *username, int files, long kbytes, int seconds, int sec) {
 	gl_section_stat_t *ss;
 	gl_stat_t *stat;
 	char *tmp;
 
-	stat = _gl_parse_stats(str);
+	stat = _gl_parse_stats(str, username);
 
 	if (!stat)
 		return strdup(str);
@@ -134,6 +139,31 @@ char * _gl_userfile_add_stats(char *str, int files, long kbytes, int seconds, in
 	tmp = _gl_tostring_stats(stat);
 
 	return tmp;
+}
+
+
+char * _gl_userfile_reset_stats(char *str, char *username, int files, long kbytes, int seconds, int (*callback)(gl_stat_t *stat)) {
+	gl_section_stat_t *ss;
+	gl_stat_t *stat;
+
+	stat = _gl_parse_stats(str, username);
+
+	if (!stat)
+		return strdup(str);
+
+	// found some stats, exec the callback function if it exists.
+	if (callback != 0)
+		callback(stat);
+
+	// reset the stats to the supplied values.
+	for (ss = stat->stats; ss; ss = ss->next) {
+		ss->files = files;
+		ss->kbytes = kbytes;
+		ss->seconds = seconds;
+	}
+
+	return _gl_tostring_stats(stat);
+
 }
 
 char * _gl_userfile_add_credits(char *str, long credits, int sec) {
@@ -189,9 +219,17 @@ int _gl_userfile_is_credit(char *s) {
 
 int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, long credits, int stat_sec, int cred_sec) {
 	linefilereader_t lfr;
-	char *ufnew, *tmp, buf[1024];
+	char *ufnew, *tmp, buf[1024], *username;
 	int rc = 0;
 	FILE *out;
+
+	// get username.
+	tmp = strrchr(userfile, '/');
+
+	if (tmp)
+		username = tmp + 1;
+	else
+		username = tmp;
 
 	if (lfr_open(&lfr, userfile) < 0)
 		return -1;
@@ -209,7 +247,7 @@ int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, l
 
 	while (lfr_getline(&lfr, buf, 1024) > -1) {
 		if ((stat_sec > -1) && _gl_userfile_is_stat(buf)) {
-			tmp = _gl_userfile_add_stats(buf, files, kbytes, seconds, stat_sec);
+			tmp = _gl_userfile_add_stats(buf, username, files, kbytes, seconds, stat_sec);
 			fprintf(out, "%s\n", tmp);
 			free(tmp);
 			rc++;
@@ -231,6 +269,73 @@ int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, l
 
 	return rc;
 }
+
+
+int gl_userfile_set_stats(char *userfile, int files, long kbytes, int seconds, strlist_t *types, int (*callback)(gl_stat_t *stat)) {
+
+	linefilereader_t lfr;
+	char *ufnew, *tmp, buf[1024], cbuf[100], *username;
+	int rc = 0;
+	FILE *out;
+
+	// get username.
+	tmp = strrchr(userfile, '/');
+
+	if (tmp)
+		username = tmp + 1;
+	else
+		username = tmp;
+
+	if (lfr_open(&lfr, userfile) < 0)
+		return -1;
+
+	ufnew = malloc(strlen(userfile) + 10);
+	sprintf(ufnew, "%s.pre-tmp", userfile);
+	out = fopen(ufnew, "w");
+
+	if (!out) {
+		lfr_close(&lfr);
+		fclose(out);
+		free(ufnew);
+		return -1;
+	}
+
+	while (lfr_getline(&lfr, buf, 1024) > -1) {
+
+		tmp = strchr(buf, ' ');
+
+		bzero(cbuf, 100);
+
+		if (tmp)
+			strncpy(cbuf, buf, tmp - buf);
+
+		if (tmp && str_search(types, cbuf, 0)) {
+
+			// printf("old: %s\n", buf);
+
+			tmp = _gl_userfile_reset_stats(buf, username, files, kbytes, seconds, callback);
+
+			// printf("new: %s\n", tmp);
+
+			fprintf(out, "%s\n", tmp);
+			free(tmp);
+			rc++;
+		}
+		else {
+			fprintf(out, "%s\n", buf);
+		}
+	}
+
+	fclose(out);
+	lfr_close(&lfr);
+
+	rename(ufnew, userfile);
+
+	free(ufnew);
+
+	return rc;
+}
+
 
 
 int gl_userfile_get_ratio(char *userfile, int section) {
@@ -290,10 +395,10 @@ int main(int argc, char *argv[]) {
 
 	printf("stats: %s\n", st);
 
-	ratio = gl_userfile_get_ratio("/export/f00/ftp-data/users/flower", 0);
+	ratio = gl_userfile_get_ratio("/export/f00/ftp-data/users/sorend", 0);
 	printf("ratio: %d\n", ratio);
 
-	gl_userfile_add_stats("/export/f00/ftp-data/users/flower", 10, 1024000, 120, ratio*1024000, 1, 1);
+	gl_userfile_add_stats("/export/f00/ftp-data/users/sorend", 10, 1024000, 120, ratio*1024000, 1, 1);
 
 	printf("creds: %s\n", _gl_userfile_add_credits("CREDITS 123 49281 3012", 301923, 1));
 }

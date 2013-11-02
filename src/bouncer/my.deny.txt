@@ -1,8 +1,0 @@
-421-
-421- ************************* ACCESS DENIED **************************
-421-
-421- This is a private service, for registered users only.
-421- Your IP (%s) has been logged for further investigations.
-421- If you are a registered user, please contact the customer-support
-421- for further info.  Otherwise, please do not connect again.
-421 

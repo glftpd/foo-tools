@@ -1,0 +1,49 @@
+
+
+Installing:
+-----------
+
+This doesnt require anything to build.  You can run 'make' and it
+will build, or you can run 'make mod_sitenfoadd.so' and it will
+build only this module.
+
+When you have mod_sitenfoadd.so, then copy it to /glftpd/bin/premodules
+and add it to the modules list in pre.cfg like this:
+
+modules=/bin/premodules/mod_sitenfoadd.so
+
+If you have more modules already loaded, then it will look like this:
+
+modules=/bin/premodules/mod_other.so|/bin/premodules/mod_sitenfoadd.so
+
+Also, in pre.cfg, you must add two entries for sitenfoadd to work:
+
+-- snip --
+
+#
+# The file containing your site nfo data, dont forget to prepend with
+# file: or it wont be loaded !
+#
+mod_sitenfoadd.nfo=file:/ftp-data/misc/sitenfo.sample
+
+#
+# The filename to use for your site.nfo in the dirs.
+#
+mod_sitenfoadd.filename=mysite.nfo
+
+-- snip --
+
+inside the nfo you want to add, you can use the following variables:
+
+RELEASE - expanded to name of the release, eg. Whatever_v1.0_Windoze-MyGRP
+DATE - expanded to current date, eg. 2003-06-05
+TIME - expanded to current time, eg. 15:39:03
+
+Formatting is 'standard' footools formatting, all variables are strings:
+
+%[%s]RELEASE% and %[%s]DATE% and %[%s]TIME% .. Check the included
+sitenfo.sample in this dir.
+
+
+Thats it ;-).  Pre smth, and see your nfos pop into the pred dirs ..
+

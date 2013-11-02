@@ -2,8 +2,7 @@
 foo-tools CHANGELOG:
 --------------------
 
-This changelog will be updated whenever there are new builds
-released.
+This changelog will be updated whenever there are new builds released.
 
 Mar  7 2002: Created this type of release-format.
              This release is basically what was in the previous
@@ -14,6 +13,48 @@ Mar 14 2002: Made minorchanges to foo-pre, new cookie for full resolved
              prepath %PP.
 
 Mar 18 2002: Added binding to a specific ip in simple_entry.
+
+Sep 10 2002: Changes in simple_entry:
+				* All network operations now bind to the specified entry_ip.
+				* Added 'logfile' property, to support some logging.
+			 Changes in foo-pre:
+				* Added 'touch'ing of files on pre.
+				* Added better 'daily-dir' support to destination-dir.
+				* Added default section for groups to pre to.
+				* Changed so all group.* settings can have a group.DEFAULT
+
+Nov  6 2002: + Added nfocleaner to the distribution.  Check out the README
+               in the nfo/ dir for information on this.
+             + Added zipchecker to the distribution. Check out the README
+               in the zip/ dir for information on this.
+             + Added README.macro and README.xferlog and README.who to the
+               distribution, contains info on how to use some of the stuff
+               in lib/.
+
+Nov 12 2002: * Fixed bug in foo-pre, which meant broken macro expansion.
+             + Added log-message to make it easier parsing the logfile for pres.
+
+Jan 17 2003: * Fixed a bug in collection/hashtable.c.
+             + Added hammer protection to simple_entry bouncer. Look for
+               new feature 'connect_allow' in config file.
+             + Also added a bouncer/README for bouncer docs.
+
+Jan 20 2003: + Added reset/ catalog.  Look at reset/README for information.
+
+Mar  6 2003: * Fixed some code in the testing/mover, it should actually be
+               working now.
+             + Added move.external to foo-pre.  So you can use /bin/mv or
+               a shell-script or whatever for moving in case rename() fails.
+               (for the slow, this means you can now pre between partitions).
+
+Jun 05 2003: * Some foo-pre changes mainly, introducing external modules.
+             + Made module for mp3 releases, extracts mp3info from the release.
+             + Made module to add site's nfo to releases.
+             + Made module to extract information from .nfo files.
+             * Must build seperately from src/pre/modules/
+             + Added etcdir property to foo-pre, if someone needs different dir for passwd/group.
+
+Jun 28 2004: * Fixed support for new 'GROUP <groupname> <gadmin>' in glftpd2.0 userfiles.
 
 
 Cheers, Tanesha Team <tanesha@tanesha.net>.

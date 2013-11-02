@@ -1,0 +1,2 @@
+--->> %[%s]DIR% passed my elite site at %[%s]DATE% / %[%s]TIME% <<---
+

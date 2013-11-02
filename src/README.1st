@@ -1,0 +1,16 @@
+
+
+Building:
+---------
+
+Run './configure' to configure.
+
+Run 'make' to view available targets.
+
+After building, run 'make show' to view where the programs are.
+
+For documentation on installing/running the programs, take a
+look in the ../doc/ folder.
+
+
+Cheers, Tanesha Team.

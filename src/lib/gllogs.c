@@ -1,7 +1,27 @@
 /*
+ * foo-tools, a collection of utilities for glftpd users.
+ * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
+ *
+ * This file is part of foo-tools.
+ *
+ * foo-tools is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * foo-tools is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with foo-tools; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+/*
  * Library to handle adding/updating some glftpd logfiles.
  *
- * $Id: gllogs.c,v 1.2 2001/07/20 09:25:43 sd Exp $
+ * $Id: gllogs.c,v 1.3 2003/06/23 07:32:29 sorend Exp $
  * Maintained by: Flower
  */
 
@@ -126,7 +146,7 @@ int gl_dupelog_add(char *rel) {
 	return 1;
 }
 
-int gl_gllog_add(char *str) {
+int gl_gllog_add_alt(char *str, char *logfile) {
     FILE *f;
     time_t t;
     char buf[300], *p;
@@ -135,19 +155,9 @@ int gl_gllog_add(char *str) {
 
     strftime(buf, 300, "%a %b %d %T %Y", localtime(&t));
 
-    /*
-    sprintf(buf, ctime(&t));
-    p = (char*)&buf;
-    while (*p)
-	if (*p == '\n')
-	    *p = 0;
-	else
-	    p++;
-    */
-
-    f = fopen(GLFTPDLOG, "a");
+    f = fopen(logfile, "a");
     if (!f)
-	return 0;
+		return 0;
 
     fprintf(f, "%s %s\n", buf, str);
     fclose(f);
@@ -155,10 +165,18 @@ int gl_gllog_add(char *str) {
     return 1;
 }
 
+int gl_gllog_add(char *str) {
+	
+	return gl_gllog_add_alt(str, GLFTPDLOG);
+}
+
 int gl_gllog_announce(char *type, char *str) {
     char buf[1024];
 
-    sprintf(buf, "%s: \"%s\"", type, str);
+	if (str[0] == '"')
+		sprintf(buf, "%s: %s", type, str);
+	else
+		sprintf(buf, "%s: \"%s\"", type, str);
 
     return gl_gllog_add(buf);
 }
@@ -186,11 +204,11 @@ int gl_site_msg(char *from, char *to, char *msg) {
 		else
 			p++;
 
-	fprintf(f, "
-From: %s (%s)
---------------------------------------------------------------------------
-
-%s
+	fprintf(f, "\
+From: %s (%s)\
+--------------------------------------------------------------------------\
+\
+%s\
 ", from, buf, msg);
 
 	fclose(f);
