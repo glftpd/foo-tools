@@ -27,7 +27,7 @@
  * CHANGELOG:
  * + version 2.o, modularized for frame checker.
  *
- * $Id: mod_nfo.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: mod_nfo.c 6 2003-01-22 14:31:30Z sorend $
  */
 #include <time.h>
 #include <stdio.h>

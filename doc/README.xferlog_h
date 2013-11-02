@@ -1,0 +1,84 @@
+
+
+This is a quick introduction to using the xferlog parsing library:
+
+
+The purpose of this is to create quick access to extracting info
+from an xferlog.
+
+
+1)  Create a handler that does what you want with the xferlog items.
+
+This example is a very simple one, which sums up the files transfered
+for a specific catalog.
+
+unsigned long files = 0;
+char *dir = "/site/private";
+
+int sum_dir_transfers_handler(xferlog_t *logentry) {
+
+	if (!strncmp(dir, logentry->xfer_file, strlen(dir)))
+		files++;
+
+    return 1;
+}
+
+Notice that the handler is defined to return an int.  If the handler
+returns 0, it means stop parsing xferlog.  You can use this to stop
+parsing once you found the logentry you need.
+
+
+2) Parse the xferlog:
+
+xferlog_read("/glftpd/ftp-data/logs/xferlog", sum_dir_transfers_handler);
+
+Thats it :)
+
+
+3) Creating more advanced handlers:
+
+If you need a handler that saves the logentries, then you must not use
+the logentry reference that was passed to the handler, but instead use the
+xferlog_clone method to create a clone which you can then use however
+you wish (and, remember that its also your responsibility to free the
+cloned resources again, eg. with xferlog_free method).
+
+An example of this:
+
+--
+
+sortedlist_t list;
+char *user;
+
+int gather_user_transfers_handler(xferlog_t *logentry) {
+
+	xferlog_t *usertransfer;
+
+	if (!strcmp(user, logentry->xfer_user)) {
+		// clone the object
+		usertransfer = xferlog_clone(logentry);
+
+		// add it to the list of user's transfers
+		sortedlist_add(&list, usertransfer);
+    }
+
+	return 1;
+}
+
+
+sortedlist_init(&list);
+user = strdup("sorend");
+
+xferlog_read("/glftpd/ftp-data/logs/xferlog", gather_user_transfers_handler);
+
+sortedlist_reset(&list);
+while (sortedlist_hasnext(&list)) {
+	xferlog_t *transfer = sortedlist_next(&list);
+	printf("t: %s\n", transfer->xfer_file);
+}
+
+
+
+--
+
+

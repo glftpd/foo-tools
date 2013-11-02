@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * Tanesha Team! $Id: nukes.c,v 1.4 2003/09/27 13:13:41 sorend Exp $
+ * Tanesha Team! $Id: nukes.c 51 2003-09-27 13:13:41Z sorend $
  */
 
 #include "glnukelog.h"

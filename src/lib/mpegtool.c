@@ -22,7 +22,7 @@
  * mpegtool - routines kindly borrowed from d4rk0n3, and then refactored/optimized
  * a bit.
  *
- * $Id: mpegtool.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: mpegtool.c 6 2003-01-22 14:31:30Z sorend $
  */
 
 #include <sys/types.h>

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * $Source: /home/cvs/footools/footools/src/lib/common.h,v $
+ * $Source$
  * Author: Soren
  *
  * This module should be outphased!

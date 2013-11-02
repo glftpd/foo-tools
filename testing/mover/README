@@ -1,0 +1,19 @@
+
+
+This is a mover tool, to keep free space on your HDs.
+
+It is only useful if you have the following setup:
+
+* One 'incoming' partition.  (You have to make seperate .conf files
+  if you have more incoming files).
+
+* Multiple archive partitions where you want to copy the stuff to.
+
+
+Look at the sample mover.conf for example configurations.
+
+Also, (like the rest of the tools here) this tool WILL delete files
+on your drives, so use with extreme care - you have been warned !
+
+
+

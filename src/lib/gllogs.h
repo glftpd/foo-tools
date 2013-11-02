@@ -21,12 +21,14 @@
 /*
  * Library to handle adding/updating some glftpd logfiles.
  *
- * $Id: gllogs.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: gllogs.h 70 2004-09-05 08:09:33Z sorend $
  * Maintained by: Flower
  */
 
 #include <fcntl.h>
 #include <time.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 // define some locations for where to find glftpd logs.
 #define DUPEFILE "/ftp-data/logs/dupefile"
@@ -34,24 +36,6 @@
 #define DIRLOG "/ftp-data/logs/dirlog"
 #define GLFTPDLOG "/ftp-data/logs/glftpd.log"
 #define GLMSGPATH "/ftp-data/msgs"
-
-struct dupefile {
-    char filename[256];
-    time_t timeup;
-    char uploader[25];
-};
-
-struct dirlog {
-    ushort status;     // 0 = NEWDIR, 1 = NUKE, 2 = UNNUKE, 3 = DELETED
-    time_t uptime;
-    ushort uploader;    /* Libc6 systems use ushort in place of uid_t/gid_t */
-    ushort group;
-    ushort files;
-    long bytes;
-    char dirname[255];
-    struct dirlog *nxt;
-    struct dirlog *prv;
-};
 
 /*
  * Adds an entry to the dupefile log.

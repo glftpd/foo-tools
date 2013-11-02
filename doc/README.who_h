@@ -1,0 +1,84 @@
+
+
+This is a quick introduction for using the 'who' library.
+
+
+The 'who' library simplifies the use of glftpd's shared memory pool
+which contains information about users who are currently online.
+
+
+Example usage:
+
+
+1) Initialize the 'who' structure.
+
+online_t online;
+
+// 0x0000DEAD is the default glftpd shm key
+who_init(&online, 0x0000DEAD);
+
+
+2) Loop over the nodes.
+
+int max, i;
+struct ONLINE *node, nodeclone;
+
+max = who_online_max(&online);
+
+for (i = 0; i < max; i++) {
+
+   // node is now the pointer to the structure which can get
+   // updated by glftpd.
+   node = who_getnode(&online, i);
+
+   // if node is 0 (NULL) then noone are online there.
+   if (node == 0)
+      continue;
+
+   // clone the structure so we dont work directly on the shared memory.
+   memcpy(&nodeclone, node, sizeof(struct ONLINE));
+
+   // call the do something routine to do what we need with the node.
+   do_something_with_the_node(&nodeclone);
+}
+
+3) de-tach the 'who' structure again.
+
+who_deinit(&online);
+
+
+
+Helper methods in the library:
+
+There are a few helper methods that works on ONLINE structures, they
+can be convenient for extracting information about transfers:
+
+1) Get the transfer direction of a node:
+
+int direction = who_transfer_direction(node);
+
+direction is now either:
+
+TRANS_NONE -> no transfer on this node
+TRANS_UP -> node is uploading
+TRANS_DOWN -> node is downloading
+
+
+2) Get the file the user is transfering:
+
+char buf[1024];
+
+int rc = who_transfer_file(node, buf);
+
+buf -> will be filled with the complete path of the file which is being
+downloaded.  Eg.  /site/incoming/warez-kiddie/illegal.zip
+rc -> will be 1 on success, otherwise the contents of buf are undefined.
+
+
+3) Get the speed of a transfering file:
+
+double speed = who_transfer_speed(node);
+
+speed - contains the speed at which the node is transfering, or -1 if
+there was no transfer (or, an error).
+

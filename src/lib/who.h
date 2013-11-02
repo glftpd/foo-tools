@@ -22,7 +22,7 @@
  * Library to take care of accessing glftpd's online-list.
  *
  **
- * $Id: who.h,v 1.3 2003/03/28 18:01:20 sorend Exp $
+ * $Id: who.h 22 2003-03-28 18:01:20Z sorend $
  * Author: Flower
  */
 

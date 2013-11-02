@@ -20,7 +20,7 @@
  */
 /*
  * Cookie parsing lib by Biohazard
- * $Id: cookie.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: cookie.c 6 2003-01-22 14:31:30Z sorend $
  */
 #include <stdio.h>
 #include <malloc.h>

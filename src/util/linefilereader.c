@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * $Id: linefilereader.c,v 1.2 2003/01/22 14:31:30 sorend Exp $
+ * $Id: linefilereader.c 6 2003-01-22 14:31:30Z sorend $
  *
  * Author: sorend
  */

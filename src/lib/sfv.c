@@ -29,10 +29,11 @@
  *   + Added routines to read/parse sfv files. These are currently untested !
  *
  **
- * $Id: sfv.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/lib/sfv.c,v $
+ * $Id: sfv.c 6 2003-01-22 14:31:30Z sorend $
+ * $Source$
  * Author: Soren
  */
+#include <stdlib.h>
 #include "sfv.h"
 #include <sys/stat.h>
 #include <unistd.h>

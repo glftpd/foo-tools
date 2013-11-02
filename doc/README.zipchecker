@@ -1,0 +1,73 @@
+
+
+Zipchecker documentation:
+-------------------------
+
+
+The zipchecker uses the checker framework's configuration file,
+which is GLROOT/etc/foo-checker.conf  (you can find a sample
+in the checker/ catalog of the foo-tools distribution).
+
+
+1) Configuration file:
+
+For 'proper' configuration, you need to define the following
+settings in the configuration file:
+
+---
+
+# files that matches these will be extracted
+zip_extract *.nfo|*.diz
+
+# text to show for each extracted file. macros: file size zsize method status
+zip_showfile  -> %[%s]file% %[%s]size% %[%s]zsize% %[%s]method% %[%s]status%\n
+
+# this is the filename of the ad to put in the zip
+zip_adfilename zip.nfo
+
+# this is the content of the ad to put in the zip
+zip_ad file:/ftp-data/misc/zip-ad.txt
+
+# this comment will be put as zipcomment
+zip_adcomment \n\n passed My Site \n\n
+
+# this will be shown if all went ok
+zip_success    *  %[%s]file% passed :)
+
+# the dir containing unwanted files (which will be removed from the .zip)
+zip_unwanteddir /ftp-data/misc/unwantednfos
+
+---
+
+2) Macros available in both the ad file/comment lines:
+
+DIR - the dir the file was uploaded to (string)
+FILE - the file uploaded (string)
+USER - the uploader (string)
+GROUP - the group of the uploader (string)
+TIME - the date/time of the upload (string)
+
+(look at examples and lib/README.macro for info on using these)
+
+
+3) Installing in your setup:
+
+You must put the zipchecker binary to somewhere in your GLROOT, and
+put it into your zipscript like this (this example is for a bash zipscript,
+if you have anything else, you must figure how to use it there on your own):
+
+---
+
+case $1
+   *.zip|*.ZIP)
+      /path/to/zipchecker $1 $2 $3
+   ;;
+esac
+
+---
+
+Also, the configuration file for the checker framework must be in
+place in GLROOT/etc/foo-checker.conf
+
+
+If it doesnt work, use your brain, dont complain :)

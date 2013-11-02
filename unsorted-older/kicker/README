@@ -1,0 +1,41 @@
+
+
+This is a very quick kicker to prevent people from dual-leeching on your
+site.  I know glftpd has this feature, but this tool allows you to
+define a private path in which users are allowed to dual leech (this is
+good eg. for groups spreading release from private dir).  Also, it adds
+an log entry to glftpd.log, which you can make your bot create fancy
+output from.
+
+The glftpd.log format is as follows:
+
+KICK: "DUAL" "<username>" <otherpid> "<otherfile>" <thispid> "<thisfile>"
+
+Try dual-leeching to get a log-entry created, and then figure how to use
+it with your botscript.
+
+
+Installing:
+
+* Edit Makefile, you MUST set the IPCKEY to the ipckey used in the setup.
+
+* Edit antidualleech.c and update the list of people who are allowed
+  to dual-leech.
+
+* Run 'make' to build binary.
+
+* Run 'make install' to put the file to FTPROOT/bin/ with correct perms.
+
+  If you do not have FTPROOT setup, then:
+
+  cp foo-antidualleech /glftpd/bin
+  chown root.root /glftpd/bin/foo-antidualleech
+  chmod 4711 /glftpd/bin/foo-antidualleech
+
+  It needs these permissions, or it will not be able to send kill to
+  other glftpd sessions !
+
+
+* Add cscript to /etc/glftpd.conf:
+	cscript RETR /bin/foo-antidualleech
+

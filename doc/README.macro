@@ -1,0 +1,68 @@
+
+
+This is a quick intoduction to using the macro library.
+
+
+In the end, the user will have to use macros of the format:
+
+%[<format>]<macro>%
+
+where
+
+format is a printf style format, and
+macro is the name of the defined macro to be expanded
+
+
+Some examples:
+
+HELLO -> world (string)
+NAME -> sorend (string)
+DONE -> 51.1 (float)
+TOTAL -> 1353 (int)
+
+
+'%[%s]HELLO%'      -> 'world'
+'%[%-10.10s]NAME%' -> 'sorend    '
+'%[%.1f]DONE%'     -> '51.1'
+'%[%10d]TOTAL%'    -> '      1353'
+
+
+To use the macro lib do the following:
+
+1) Create a new macro_list variable:
+
+   struct macro_list *macros;
+
+2) Add the macros and their expansion values.  Look at the macro.h
+   to check which ml_add* functions are supported.
+
+   macros = ml_addstring(macros, "HELLO", "world");
+   macros = ml_addstring(macros, "NAME", "sorend");
+   macros = ml_addfloat(macros, "DONE", 51.1);
+   macros = ml_addint(macros, "TOTAL", 1353);
+
+3) Get the text to replace and get the macros expanded.
+
+   char *out;
+
+   out = ml_replacebuf(macros, "
+hello %[%s]HELLO%!
+Name : %[%-10.10s]NAME%
+Done : %[%.1f]DONE%
+Total: %[%10d]TOTAL%
+");
+
+   printf(out);
+
+
+4) Free the resources:
+
+   // free the newly allocated buffer of macroexpanded content.
+   free(out);
+
+   // free the expansions
+   ml_free(macros);
+
+   // prevent bad usage in future
+   macros = 0;
+

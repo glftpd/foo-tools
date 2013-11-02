@@ -1,0 +1,14 @@
+
+This is a tool to view last races which a user has participated in.
+
+1) Edit lastraces.c at the top.. change 'default' dirs to fit the setup.
+
+2) Change SKIPREGEX to be a valid regex for all dirs that should be skipped.
+
+3) Change ROOTDIR to be the rootdir for glftpd files.
+
+4) Copy lastraces binary to <glftpd-dir>/bin, and add it to glftpd.conf
+
+5) If you installed it as 'site races' then login and do:
+   'site races myusername'
+

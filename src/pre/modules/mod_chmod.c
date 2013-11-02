@@ -21,7 +21,7 @@
 /*
  * Module to extract mp3info from a pred release
  * Author, Soren.
- * $Id: mod_chmod.c,v 1.1 2003/08/15 08:09:38 sorend Exp $
+ * $Id: mod_chmod.c 44 2003-08-15 08:09:38Z sorend $
  */
 
 #include <string.h>

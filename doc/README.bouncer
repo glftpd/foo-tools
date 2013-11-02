@@ -1,0 +1,36 @@
+
+The very quick README for simple_entry (foo.bnc v3.2).
+
+
+Quick feature-list:
+
+* Supports cycling controlconnections between more IP/ports.
+
+* All messages returned by the bouncer are customizable.
+
+* Threaded using threadpool for minimum overhead.
+
+* Ident lookup and passing to ftpd in IDNT style.
+
+* Configurable timeout values for ident/connect/idle.
+
+* Hammer protection on per-IP basis.
+
+* Optional logging for debugging needs.
+
+* Stable :-).  Tested on 24/7 ftp systems for over a year.
+
+
+Quick setup info:
+
+1) Make a copy of the simple_sample.cfg and edit it to fit
+   your setup.  The simple_sample.cfg is well-documented,
+   if you know what a bouncer is, you should have no problems
+   configuring this.
+
+2) Take a look at the my.*.txt files, and edit them to your
+   likings.
+
+3) Start it up.  Run ./simple_entry without any arguments
+   for info on parameters.
+

@@ -21,11 +21,13 @@
 /*
  * Library to handle adding/updating some glftpd logfiles.
  *
- * $Id: gllogs.c,v 1.3 2003/06/23 07:32:29 sorend Exp $
+ * $Id: gllogs.c 41 2003-06-23 07:32:29Z sorend $
  * Maintained by: Flower
  */
 
+#include <stdint.h>
 #include "gllogs.h"
+#include "glupdate.c"
 #include <stdio.h>
 #include <time.h>
 #include <sys/file.h>
@@ -38,7 +40,7 @@ int gl_dupefile_add(char *fn, char *u) {
 	bzero(&df, sizeof(df));
 	strcpy(df.filename, fn);
 	strcpy(df.uploader, u);
-	time(&df.timeup);
+	df.timeup = (time32_t)time(NULL);
 	
 	f = fopen(DUPEFILE, "ab");
 
@@ -52,17 +54,51 @@ int gl_dupefile_add(char *fn, char *u) {
 }
 
 int gl_dirlog_add(char *dn, ushort uid, ushort gid, ushort files, long bytes) {
+    FILE *f;
+    struct dirlog dl;
+    
+    strcpy(dl.dirname, dn);
+    dl.uploader = uid;
+    dl.group = gid;
+    dl.files = files;
+    dl.bytes = bytes;
+    dl.uptime = (time32_t)time(NULL);
+    dl.status = 0;
+    
+    update_log(dl);
+    return 1;
+}
+
+int gl_dirlog_update(char *dn, ushort uid, ushort gid, ushort files, long bytes, int status) {
+    
+    FILE *f;
+    struct dirlog dl;
+    
+    strcpy(dl.dirname, dn);
+    dl.uploader = uid;
+    dl.group = gid;
+    dl.files = files;
+    dl.bytes = bytes;
+    dl.uptime = (time32_t)time(NULL);
+    dl.status = 0;
+    
+    update_log(dl);
+    return 1;
+}
+
+/*
+int gl_dirlog_add(char *dn, ushort uid, ushort gid, ushort files, long bytes) {
 	FILE *f;
 	struct dirlog dl;
 
 	bzero(&dl, sizeof(dl));
 	strcpy(dl.dirname, dn);
-	dl.uploader = uid;
-	dl.group = gid;
-	dl.files = files;
-	dl.bytes = bytes;
-	time(&dl.uptime);
-	dl.status = 0;
+	dl.uploader = (uint16_t)uid;
+	dl.group = (uint16_t)gid;
+	dl.files = (uint16_t)files;
+	dl.bytes = (uint64_t)bytes;
+	dl.uptime = (time32_t)time(NULL);
+	dl.status = (uint16_t)0;
 
 	f = fopen(DIRLOG, "ab");
 
@@ -75,6 +111,9 @@ int gl_dirlog_add(char *dn, ushort uid, ushort gid, ushort files, long bytes) {
 	return 1;
 }
 
+*/
+
+/*
 int gl_dirlog_update(char *dn, ushort uid, ushort gid, ushort files, long bytes, int status) {
 	FILE *f;
 	struct dirlog dl;
@@ -103,13 +142,13 @@ int gl_dirlog_update(char *dn, ushort uid, ushort gid, ushort files, long bytes,
 
 	if (!found) {
 		bzero(&dl, sizeof(dl));
-		dl.uploader = uid;
-		dl.group = gid;
-		dl.files = files;
-		dl.bytes = bytes;
+	    dl.uploader = (uint16_t)uid;
+        dl.group = (uint16_t)gid;
+        dl.files = (uint16_t)files;
+    	dl.bytes = (uint64_t)bytes;
 		strcpy(dl.dirname, dn);
 		dl.status = (status == -1) ? 0 : status;
-		time(&dl.uptime);
+		dl.uptime = (time32_t)time(NULL);
 
 		fwrite(&dl, sizeof(dl), 1, f);
 	}
@@ -122,6 +161,7 @@ int gl_dirlog_update(char *dn, ushort uid, ushort gid, ushort files, long bytes,
 
 	return 1;
 }
+*/
 
 int gl_dupelog_add(char *rel) {
 	FILE *f;
@@ -184,7 +224,7 @@ int gl_gllog_announce(char *type, char *str) {
 int gl_site_msg(char *from, char *to, char *msg) {
 	FILE *f;
 	char buf[300], *p;
-	long t;
+	time_t t;
 
 	if (!to)
 		return 0;
@@ -195,8 +235,9 @@ int gl_site_msg(char *from, char *to, char *msg) {
 	if (!f)
 		return 0;
 
-	t = time(0);
-	sprintf(buf, ctime(&t));
+	time(&t);
+	p = ctime(&t);
+	strcpy(buf, p);
 	p = (char*)&buf;
 	while (*p)
 		if (*p == '\n')

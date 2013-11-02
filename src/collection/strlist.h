@@ -24,8 +24,8 @@
  * Changed line to be *data instead of line[300]
  *
  **
- * $Id: strlist.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/collection/strlist.h,v $
+ * $Id: strlist.h 6 2003-01-22 14:31:30Z sorend $
+ * $Source$
  * Author: Soren
  */
 

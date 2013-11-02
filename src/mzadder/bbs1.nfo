@@ -1,0 +1,4 @@
+
+%[%s]FN% (%[%.1f]FS% MB) was uploaded to MyBBS Node %[%s]NODE%
+		by %[%s]UN% from %[%s]UL% 
+		at %[%s]TIME% on %[%s]DATE% (less precise %[%s]STIM%)

@@ -22,11 +22,12 @@
  * Generic sortable/searchable list for items/structs.
  *
  **
- * $Id: genlistc.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/lib/genlistc.c,v $
+ * $Id: genlistc.c 6 2003-01-22 14:31:30Z sorend $
+ * $Source$
  * Author: Soren
  */
 #include "genlistc.h"
+#include <stdlib.h>
 
 void glist_init(struct glist_t *l, int type) {
 	l->head=NULL; l->tail=NULL;

@@ -22,7 +22,7 @@
  * The standalone cleaner is implemented just as a wrapper to
  * call into the checker framework.
  *
- * $Id: cleaner.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: cleaner.c 6 2003-01-22 14:31:30Z sorend $
  */
 
 #include <checker/frame.h>

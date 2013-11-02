@@ -23,10 +23,11 @@
  * by bio's replacer lib, which is fancier.
  *
  **
- * $Id: macro.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/lib/macro.c,v $
+ * $Id: macro.c 6 2003-01-22 14:31:30Z sorend $
+ * $Source$
  * Author: Soren
  */
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>

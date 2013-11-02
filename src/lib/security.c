@@ -21,7 +21,7 @@
 /*
  * Check security.h ;)
  *
- * $Id: security.c,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: security.c 6 2003-01-22 14:31:30Z sorend $
  */
 
 #include <stdio.h>

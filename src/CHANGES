@@ -56,5 +56,7 @@ Jun 05 2003: * Some foo-pre changes mainly, introducing external modules.
 
 Jun 28 2004: * Fixed support for new 'GROUP <groupname> <gadmin>' in glftpd2.0 userfiles.
 
+Sep 28 2004: * Added WOY to the SECTION dir as a macro for Week of Year.
+	(thanks to funkstorm for pointing this out).
 
 Cheers, Tanesha Team <tanesha@tanesha.net>.

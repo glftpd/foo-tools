@@ -22,7 +22,7 @@
  * Defines some routines to sort about everything with.
  *
  * <sorend@tanesha.net>
- * $Id: sortedlist.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
+ * $Id: sortedlist.h 6 2003-01-22 14:31:30Z sorend $
  */
 #ifndef _sortedlist_h
 #define _sortedlist_h

@@ -21,7 +21,7 @@
 /*
  * Module to add site.nfo to each dir of a release.
  * Author, Soren.
- * $Id: mod_sitenfoadd.c,v 1.2 2003/06/20 10:41:43 sorend Exp $
+ * $Id: mod_sitenfoadd.c 39 2003-06-20 10:41:43Z sorend $
  */
 
 #include <string.h>

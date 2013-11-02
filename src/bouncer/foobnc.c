@@ -22,7 +22,7 @@
  * This is the very basic version of the entry bouncer.  All datanode
  * and ssl stuff has been removed.
  *
- * $Id: foobnc.c,v 1.5 2003/09/27 14:59:55 sorend Exp $
+ * $Id: foobnc.c 53 2003-09-27 14:59:55Z sorend $
  */
 
 #include <pthread.h>
@@ -55,7 +55,7 @@
 #include "foobnc.h"
 
 #define VERSION "3.3"
-#define CVSVERSION "$Id: foobnc.c,v 1.5 2003/09/27 14:59:55 sorend Exp $"
+#define CVSVERSION "$Id: foobnc.c 53 2003-09-27 14:59:55Z sorend $"
 
 #define MAX_BUFSIZE 4096
 #define RUNTIME_CONNECT_ALLOW "runtime_connect_allow"

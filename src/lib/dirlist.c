@@ -23,6 +23,7 @@
  * dirlist.h interface.  /sorend
  */
 
+#include <stdlib.h>
 #include <sys/file.h>
 #include <sys/types.h>
 #include <dirent.h>

@@ -1,0 +1,28 @@
+
+
+Layout draft for new 'new' tool:
+
+
+new
+~
+
+
+
+-----------------------------------------------------------------/RACE/----
+> 1>>  1m2s 2CD, Init: sorend   PC-Utils/Hello_Kitty-VCD
+  2    2m2s [####::::] 12/20x20  `-> CD1, Lead: somegay
+  3    2m3s -EMPTY-              `-> Sample, Need SFV
+  4    2m4s [######::] 13/17x20  `-> CD2, Lead: othergay
+                                 `-> Rls-lead: hello, nfo: OK
+---------------------------------------------------------------------------
+-----------------------------------------------------------------/RACE/----
+> 5>>  1m2s [##::::::] 12/12x20 PC-Utils/Hello_Kitty-VCD
+                                 `-> Rls-lead: hello, nfo: OK
+---------------------------------------------------------------------------
+ 12 1234567 1234567891234567890 1234567890123456789012345678901234567890123
+< 5> 12h12m 2F 4.4Mb     sorend PC-Utils/Hello-Whatever
+<12> 12h32m 20 x 20Mb    sorend -NUKED-/PC-Utils/Hello-Whatever2
+<12> 12h32m 20 x 20Mb    sorend -APPROVED-/PC-Utils/Hello-Whatever3
+<12> 12h32m 20 x 20Mb    sorend 
+
+

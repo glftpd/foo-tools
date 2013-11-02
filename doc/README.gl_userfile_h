@@ -1,0 +1,32 @@
+
+
+Quick docs for the gl_userfile lib:
+-----------------------------------
+
+
+The purpose of this library is to handle the updates of glftpd's userfiles,
+specifically regarding the stats/credits.
+
+
+It has two methods exposed (from gl_userfile.h):
+
+
+1) Getting the ratio of a user for a specific section:
+
+int gl_userfile_get_ratio(char *userfile, int section);
+
+The userfile must be full path to a userfile, eg. "/ftp-data/users/johndoe"
+
+The section is the decimal value of the section, and corresponds to the
+look of glftpd's userfiles;
+
+Eg.
+
+RATIO 3 3 3
+
+
+
+2) Updating the stats:
+
+int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, long credits, int stat_section, int cred_section) {
+

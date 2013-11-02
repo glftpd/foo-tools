@@ -1,0 +1,53 @@
+
+
+The sfv tools contains two programs, which will be very
+quickly described here:
+
+
+
+blehsfv:
+--------
+This is a sfv checker.  It will read a .sfv file and check files
+from current dir against it.  Optionally it will take an argument
+if you do only wish to get one file sfv checked.
+
+/path/to/blehsfv
+    checks all files in *.sfv of a dir.
+
+/path/to/blehsfv myfile.rar
+    checks myfile.rar against *.sfv of the dir.
+
+
+
+createsfv:
+----------
+This is a tool to create a sfv file entry for a file.  It takes
+one argument, which is the filename to create sfv entry from.
+
+/path/to/createsfv myfile.rar
+    creates sfv entry for myfile.rar
+
+An example of how this could be used in a script:
+
+-- myleetsfvcreator.sh --
+#!/bin/sh
+
+echo "; created by myleetsfvcreator" > $1
+
+for rarfile in *.r??; do 
+
+	echo `/path/to/createsfv $rarfile` >> $1
+
+done
+
+--
+
+You could then call it like:
+
+cd /path/to/rarfiles
+/path/to/myleetsfvcreator.sh myfiles.sfv
+
+.. which would create myfiles.sfv with the entries of the *.r??
+of /path/to/rarfiles
+
+

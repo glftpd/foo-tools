@@ -21,7 +21,7 @@
 /*
  * Module to extract mp3info from a pred release
  * Author, Soren.
- * $Id: mod_symlink.c,v 1.10 2004/04/13 21:03:53 sorend Exp $
+ * $Id: mod_symlink.c 67 2004-04-13 21:03:53Z sorend $
  */
 
 #include <string.h>

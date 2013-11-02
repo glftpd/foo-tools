@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * $Id: reset.c,v 1.4 2003/02/12 13:03:11 sorend Exp $
+ * $Id: reset.c 14 2003-02-12 13:03:11Z sorend $
  */
 
 #include <sys/types.h>

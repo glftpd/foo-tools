@@ -21,7 +21,7 @@
 /*
  * Routines to move around with filedescriptors.
  *
- * $Id: fd.h,v 1.2 2003/01/22 14:31:30 sorend Exp $
+ * $Id: fd.h 6 2003-01-22 14:31:30Z sorend $
  */
 
 #ifndef _fd_h

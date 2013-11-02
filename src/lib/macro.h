@@ -23,8 +23,8 @@
  * by bio's replacer lib, which is fancier.
  *
  **
- * $Id: macro.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/lib/macro.h,v $
+ * $Id: macro.h 6 2003-01-22 14:31:30Z sorend $
+ * $Source$
  * Author: Soren
  */
 struct macro_list {

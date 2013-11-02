@@ -1,0 +1,81 @@
+
+
+Nfocleaner documentation:
+-------------------------
+
+
+The cleaner uses the checker framework's configuration file,
+which is GLROOT/etc/foo-checker.conf  (you can find a sample
+in the checker/ catalog of the foo-tools distribution).
+
+
+1) Configuration file:
+
+For 'proper' configuration, you need to define the following
+settings in the configuration file:
+
+---
+
+# dir that contains unwanted nfo files.
+nfo_unwanteddir /ftp-data/misc/unwantednfos
+
+# file to put at top of the cleaned nfo
+nfo_prepend /ftp-data/misc/nfo-head-ad.txt
+
+# file to put at bottom of the cleaned nfo
+nfo_append /ftp-data/misc/nfo-tail-ad.txt
+
+# file containing the ads to clean from nfo
+nfo_cleanlist /ftp-data/misc/nfo-cleanlist.txt
+
+---
+
+
+2) Cleaning nfos:
+
+For the nfo to be cleaned for ads, you must define the nfo_cleanlist
+in the .conf.  The file which is pointed to must contain a list of
+lines to be removed.  The lines are matched like files, so you can
+use '*', '?' and '[]' expansion in them.
+
+You can get a fairly not-so-updated cleanlist at this URL:
+   http://www.tanesha.net/projects/leech.php?dl=dl/nfo-cleanlist.txt
+
+
+3) Putting your ad in the nfos:
+
+For your ads to be put in the nfo you must define nfo_prepend and/or
+nfo_append.
+
+In the ad files, you can use the following macros (all strings):
+
+USER
+DIR
+DATE
+TIME
+
+(Look at the examples or at the lib/README.macro for documentation
+on how to use these macros).
+
+
+4) Installing in your setup:
+
+You must put the nfocleaner binary to somewhere in your GLROOT, and
+put it into your zipscript like this (this example is for a bash zipscript,
+if you have anything else, you must figure how to use it there on your own):
+
+---
+
+case $1
+   *.nfo|*.NFO)
+      /path/to/nfocleaner $1 $2 $3
+   ;;
+esac
+
+---
+
+Also, the configuration file for the checker framework must be in
+place in GLROOT/etc/foo-checker.conf
+
+
+If it doesnt work, use your brain, dont complain :)
