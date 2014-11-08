@@ -1205,6 +1205,10 @@ char *section_expand_path(char *sec) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(tmp, "WOY", buf);
 
+	strftime(buf, 1024, "%V", tm_now);
+	pre_replace(tmp, "CW", buf);
+	pre_replace(tmp, "KW", buf);
+	
 	// if its a link then expand it.
 	reps = readlink(tmp, buf, 1024);
 
