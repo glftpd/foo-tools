@@ -6,6 +6,7 @@
  * Maintained By: Flower
  */
 
+#include <stdio.h>
 #include "who.h"
 #include <string.h>
 

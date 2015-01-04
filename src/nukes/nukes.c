@@ -302,23 +302,23 @@ int nukes_init(int argc, char *argv[]) {
 }
 
 void nukes_help() {
-  printf("
-Syntax; site nukes <arg1> <arg2> .. <argn>
-
-Arguments can be:
-  Any word  -  Will search reason/nuker/dirname/nukee for the word.
-  Any number-  Will make output list <number> newest found nukes.
-  nuker=<n> -  Will search for items where nuker is <n>.
-  nukee=<n> -  Will search for items where nukee is <n>.
-  reason=<r>-  Will search for items where reason contains <r>.
-  status=<s>-  Will search for statuses, where <s> is nuked or unnuked.
-  factor=<f>-  Will search for nukes with factor <f>.
-
-Examples:
-  site nukes 10 nuker=flower       - List 10 latest nukes by flower
-  site nukes 3 -FLT                - List 3 latest -FLT nukes.
-  site nukes reason=size games     - List where reason contains size
-                                     and 'games' is in the nuke.
+  printf(" \
+Syntax; site nukes <arg1> <arg2> .. <argn> \
+ \
+Arguments can be: \
+  Any word  -  Will search reason/nuker/dirname/nukee for the word. \
+  Any number-  Will make output list <number> newest found nukes. \
+  nuker=<n> -  Will search for items where nuker is <n>. \
+  nukee=<n> -  Will search for items where nukee is <n>. \
+  reason=<r>-  Will search for items where reason contains <r>. \
+  status=<s>-  Will search for statuses, where <s> is nuked or unnuked. \
+  factor=<f>-  Will search for nukes with factor <f>. \
+ \
+Examples: \
+  site nukes 10 nuker=flower       - List 10 latest nukes by flower \
+  site nukes 3 -FLT                - List 3 latest -FLT nukes. \
+  site nukes reason=size games     - List where reason contains size \
+                                     and 'games' is in the nuke. \
 ");
 
   exit(0);

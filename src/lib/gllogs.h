@@ -15,6 +15,7 @@
 #define GLFTPDLOG "/ftp-data/logs/glftpd.log"
 #define GLMSGPATH "/ftp-data/msgs"
 
+typedef unsigned short ushort;
 struct dupefile {
     char filename[256];
     time_t timeup;

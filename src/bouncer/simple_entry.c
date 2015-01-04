@@ -19,7 +19,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-
 #include <collection/hashtable.h>
 #include <lib/common.h>
 #include <lib/stringtokenizer.h>
@@ -509,12 +508,12 @@ void entry_setup_handler(void *arg) {
 }
 
 void entry_debug_handler(int sig) {
-    char addr[20], cmd[160], line[160], src_line[160];
-    struct sigcontext_struct *sc;
+  /*  char addr[20], cmd[160], line[160], src_line[160];
+    struct sigcontext *sc;
     FILE *fp;
     char *p;
 
-    sc = (struct sigcontext_struct *)(&sig + 1);
+    sc = (struct sigcontext *)(&sig + 1);
 
     sprintf(addr, "%lx", sc->eip);
 
@@ -555,7 +554,7 @@ void entry_debug_handler(int sig) {
 
 	pclose(fp);
 
-    exit(1);
+*/    exit(1);
 }                                         
 
 
