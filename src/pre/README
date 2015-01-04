@@ -1,12 +1,13 @@
 
 
-foo-pre v3.1 [C-version] (c) Tanesha Team.  Source distribution.
-----------------------------------------------------------------
-              Tanesha Team <tanesha@tanesha.net>
-              updated by: turbo <turbo@glftpd.com>
+foo-pre v3.1.1 [C-version] (c) Tanesha Team.  Source distribution.
+--------------------------------------------------------------------------------
+                      Tanesha Team <tanesha@tanesha.net>
+       Currently Maintained by turbo <turbo@glftpd.com> (as of 2007-07)
+
 
 features;
----------
+--------------------------------------------------------------------------------
 
  * Multiple predirs per group
  * Multiple pre-destinations per group
@@ -19,7 +20,12 @@ features;
 
 
 changelog;
-----------
+--------------------------------------------------------------------------------
+
+Changed in version 3.1.1 (2007-09-26);
+
+ * Bugfix: added quoting for the source and target files to the mv command.
+   (credit goes to Sked for suggesting this; thank you!)
 
 Changed in version 3.1 (2007-07-03);
 
@@ -74,7 +80,7 @@ Changed in version 2.o;
 
 
 requirements;
--------------
+--------------------------------------------------------------------------------
 
 Your site MUST be setup so files that are pred are on same partition
 as the target catalog.  foo-pre supports more predirs per group, so
@@ -86,7 +92,7 @@ figuring how to setup foo-pre to support your setup, then send us a mail.
 
 
 installation;
--------------
+--------------------------------------------------------------------------------
 
  * Build the binary if you didnt already.
    "make"
@@ -119,7 +125,7 @@ get someone to use the tool :-)
 
 
 about the CUSTOM announcing;
-----------------------------
+--------------------------------------------------------------------------------
 
 If you're using vr's .tcl, then find the scanlog proc and add this in the
 case switch;
@@ -131,7 +137,7 @@ case switch;
  
 
 last note;
-----------
+--------------------------------------------------------------------------------
 
 Tanesha got sechzie legg0rs ^_^
 

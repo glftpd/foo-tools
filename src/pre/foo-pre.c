@@ -195,10 +195,27 @@ strlist_t * user_find_groups(char *u) {
 	if (lfr_open(&lfr, buf) < 0)
 		quit("  * Could not open your userfile %s", buf);
 
-	while (lfr_getline(&lfr, buf, 1024) > -1) {
-		if (!strncasecmp(buf, "GROUP ", 6) ||
-		    !strncasecmp(buf, "PRIVATE ", 8)) {
-			groups = str_add(groups, strchr(buf, ' ') + 1);
+	while (lfr_getline(&lfr, buf, 1024) > -1)
+  {
+		if (!strncasecmp(buf, "GROUP ", 6) || !strncasecmp(buf, "PRIVATE ", 8))
+    {
+      // UGLY HACK TO ACCURATELY GIT PUB/PRIV GROUPS OF USER
+      char tmpbuf[1024];
+      strncpy(tmpbuf, buf, 1024);
+      char* ptr = strchr(tmpbuf, ' ');
+      //printf("tmpbuf=%s\n", tmpbuf);
+      ptr = strtok(tmpbuf, " ");
+      while ((ptr = strtok(NULL, " ")) != NULL)
+      {
+        //printf("found group --> %s\n", ptr);
+        groups = str_add(groups, ptr);
+      }      
+      
+      /* ORIGINAL METHOD */
+      /*
+      printf("GOUND GROUP: %s\n", strchr(buf, ' '));
+      groups = str_add(groups, strchr(buf, ' ') + 1);
+      */
 		}
 	}
 
@@ -825,11 +842,12 @@ int pre(char *section, char *dest, char *src, char *rel, char *group) {
 	if (rename(src, dest) == -1)
   {
     int orig_errno = errno; // backup the 'real' errno
-    printf(" * RENAME failed, will attempt to use MV instead..\n");
+    printf(" * RENAME failed, attempting to use the MV command instead..\n");
     // build move command string..
-    int len = strlen("mv ") + strlen(src) + strlen(" ") + strlen(dest) + 1;
+    int len = strlen("mv '") + strlen(src) + strlen("' '")
+              + strlen(dest) + strlen("'") + 1; // + 1 for null termination char
     char cmd[len];
-    sprintf(&cmd[0], "mv %s %s", src, dest);
+    sprintf(&cmd[0], "mv '%s' '%s'", src, dest);
     /*printf("\ncmd={\n");
     printf(cmd);
     printf("\n}\n");*/
@@ -837,12 +855,10 @@ int pre(char *section, char *dest, char *src, char *rel, char *group) {
     int chk_src = access(src, F_OK),
         chk_dest = access(dest, F_OK);
     if (chk_src != 0 && chk_dest == 0)
-    {
-      printf(" * MV appears to have worked properly!\n");
-    }
+      printf(" * MV command looks to have worked!\n");
     else
     {
-      printf("\n* MV also Failed.  Quitting! (RENAME errno=%i)\n", orig_errno);
+      printf("\n * MV also Failed.  Quitting! (RENAME errno=%i)\n", orig_errno);
       //printf("Errno: %i", errno);
 		  quit("");
     }
