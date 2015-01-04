@@ -1,31 +1,11 @@
-/*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 /**
  * Library implementing a searchable string list.
  *
  * Changed line to be *data instead of line[300]
  *
  **
- * $Id: strlist.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/collection/strlist.h,v $
+ * $Id: strlist.h,v 1.4 2002/01/31 11:34:43 sd Exp $
+ * $Source: /var/cvs/foo/src/collection/strlist.h,v $
  * Author: Soren
  */
 
@@ -77,13 +57,6 @@ strlist_t *str_load(strlist_t *l, char *fn);
  * Closes a list.
  */
 void str_close(strlist_t *l);
-
-/*
- * joins a stringlist into a char with delim inbetween each element.
- * the returned char* must be freed by user !  if no elements in list
- * "" is returned.
- */
-char *str_join(strlist_t *l, char *delim);
 
 /*
  * Returns the reverse ordered list.

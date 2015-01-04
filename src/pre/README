@@ -1,0 +1,137 @@
+
+
+foo-pre v3.1 [C-version] (c) Tanesha Team.  Source distribution.
+----------------------------------------------------------------
+              Tanesha Team <tanesha@tanesha.net>
+              updated by: turbo <turbo@glftpd.com>
+
+features;
+---------
+
+ * Multiple predirs per group
+ * Multiple pre-destinations per group
+ * Giving credits and stats for right fileowners on pre-command
+ * Updates all gl .logs correctly (eg. dupelog, dirlog)
+ * Fully definable-announces per grp
+ * Allows to use predefined ratios for grps.
+
+ * Plus ofcause, it increases user's happyness-level :-)
+
+
+changelog;
+----------
+
+Changed in version 3.1 (2007-07-03);
+
+ * If the rename(src, dest) function fails, a system("mv %s %s", src, dest)
+   will be attempted. (note: just a quick little hack added by turbo for
+   instances where files need to be moved across different drives or w/e).
+ * If the rename(..) fails and the system("mv ..") both fail, the errno
+   from the rename command will be displayed.
+
+Changed in version 3.o;
+
+ * Almost 100% rewrite of the code, now much easier to extend in future.
+ * Config file also has new layout, so be sure to take look at it.
+ - Removed the 'late pre' feature, since it wasnt very beautiful and too
+   dependent on how the zipscript works.
+ + Added support for glftpd's sections.
+ + New macros for announce: %G %g %T.
+ + Added support for chowning of the files in a pre (to hide who
+   put the files).
+ + Added support for a default announce style.
+ + Added logging to /ftp-data/logs/foo-pre.log
+ + Added support for defining which files should be counted in announce
+   and given credits for.
+
+Changed in version 2.3;
+
+ * Fixed broken touching of dirs.
+ + Added support for preing to linked dirs (and getting real dir added to dirlog).
+   (eg, pre to /site/today would expand to /site/incoming/0917)
+ + Added support for better counting of files for irc announces.
+ + Added support for not giving stats to pre-wh0re.
+ + Implemented %P macro, points to destination-section's dir.
+ + Using new passwd file parsing, so should now run on fbsd-glftpd too.
+
+Changed in version 2.1;
+
+ + Added "touching" of the dir, so it shows up last on "ls -ltr".
+ + Added support for non-shell zipscripts in 'late pre' racing, read
+   the docs on what this means.
+
+Changed in version 2.o;
+
+ * Fixed that sometimes it created weird files in /ftp-data/users.
+ + Added support to specify ratios (if you add bytes when users uploads).
+ + Added support not to add dirlog.
+ * Fixed dirlog updates for main-dir of a release. Now is summed up
+   correctly.
+ * Rewrote late pre functionality.  Now moves files much faster to
+   destination dir, and checks afterwards.
+ * Fixed that an empty main-dir of a release wouldnt be added to dirlog.
+ + Implemented the %C macro.
+
+
+requirements;
+-------------
+
+Your site MUST be setup so files that are pred are on same partition
+as the target catalog.  foo-pre supports more predirs per group, so
+this should absolutely be possible for you to setup!
+
+This means: NO COPY PRE. ONLY MOVE. foo-pre will never support copy-pre,
+so if thats what you want, better go get smth else. If you have trouble
+figuring how to setup foo-pre to support your setup, then send us a mail.
+
+
+installation;
+-------------
+
+ * Build the binary if you didnt already.
+   "make"
+
+ * Copy foo-pre to your glftpd bin dir, and .conf to ftp-data/misc.
+   "cp foo-pre /glftpd/bin/; cp pre.cfg /glftpd/etc/"
+
+ * Set correct permissions on foo-pre, it needs setuid bit set.
+   "chown root /gfltpd/bin/foo-pre; chmod 4711 /glftpd/bin/foo-pre"
+
+ * Add foo-pre in your glftpd.conf.
+   "site_cmd PRE EXEC /bin/foo-pre"
+   "custom-pre *"
+
+ * Edit /glftpd/etc/pre.cfg to reflect your setup.
+   Look at the sample .cfg for details.
+
+ * Change your glftpd.conf to not modify stats/credits for uploading into
+   grpdirs.
+   "creditcheck	/site/private* 0"
+   "nostats /site/private/* *"
+
+ * Copy display files to be in place.
+   "cp pre-head.txt pre-tail.txt /glftpd/ftp-data/misc"
+
+
+Thats it, now hopefully you can login and run 'site pre' and go
+get someone to use the tool :-)
+
+
+
+about the CUSTOM announcing;
+----------------------------
+
+If you're using vr's .tcl, then find the scanlog proc and add this in the
+case switch;
+
+      CUSTOM: {                  
+        set cusmsg [lindex $args 0]
+        sndall "\[\002$sns\002\] $cusmsg"
+      }
+ 
+
+last note;
+----------
+
+Tanesha got sechzie legg0rs ^_^
+

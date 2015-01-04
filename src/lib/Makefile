@@ -1,6 +1,6 @@
 #
-# $Id: Makefile.in,v 1.1 2003/05/24 05:39:36 sorend Exp $
-# $Source: /home/cvs/footools/footools/src/lib/Makefile.in,v $
+# $Id: Makefile,v 1.12 2002/03/07 20:43:57 flower Exp $
+# $Source: /var/cvs/foo/src/lib/Makefile,v $
 #
 # Uncomment this to make win32/cygwin versions.
 # DEFS = -DWIN32
@@ -12,7 +12,7 @@ include ../Makefile.config
 
 SRCDIR = ..
 
-OBJS = dirlist.o cookie.o common.o genlistc.o sfv.o macro.o gllogs.o pwdfile.o stringtokenizer.o security.o sockop.o who.o xferlog.o mpegtool.o
+OBJS = dirlist.o cookie.o common.o genlistc.o sfv.o macro.o gllogs.o pwdfile.o stringtokenizer.o security.o sockop.o who.o xferlog.o
 
 
 all:	$(OBJS)
@@ -22,5 +22,5 @@ clean:
 
 release:
 	@mkdir $(RELEASEDIR)/lib
-	@cp Makefile README* *.c *.h $(RELEASEDIR)/lib
+	@cp Makefile *.c *.h $(RELEASEDIR)/lib
 

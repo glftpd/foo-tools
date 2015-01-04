@@ -11,9 +11,6 @@ all: foo-nukes
 foo-nukes: $(OBJS)
 	gcc -O2 -o $@ $(OBJS)
 
-foo-nuketop: nuketop.o ../collection/sortedlist.o
-	gcc -O2 -o $@ nuketop.o ../collection/sortedlist.o
-
 clean:
 	rm -f *~ *.o foo-nukes
 

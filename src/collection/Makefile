@@ -1,6 +1,6 @@
 #
-# $Id: Makefile.in,v 1.1 2003/05/24 05:39:36 sorend Exp $
-# $Source: /home/cvs/footools/footools/src/collection/Makefile.in,v $
+# $Id: Makefile,v 1.3 2002/03/07 20:43:57 flower Exp $
+# $Source: /var/cvs/foo/src/collection/Makefile,v $
 #
 # Uncomment this to make win32/cygwin versions.
 # DEFS = -DWIN32

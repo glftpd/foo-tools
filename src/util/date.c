@@ -1,23 +1,3 @@
-/*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 
 
 #include "date.h"
@@ -145,30 +125,6 @@ date_t * date_parse_unix(char *d) {
 	return da;
 }
 
-date_t * date_parse_timet(time_t d) {
-
-	struct tm *tm;
-	date_t *da;
-
-	tm = localtime(&d);
-
-	if (!tm)
-		return 0;
-
-	da = (date_t*)malloc(sizeof(date_t));
-
-	da->sec = tm->tm_sec;
-	da->min = tm->tm_min;
-	da->hour = tm->tm_hour;
-	da->wday = tm->tm_wday;
-	da->mday = tm->tm_mday;
-	da->mon = tm->tm_mon;
-	da->year = tm->tm_year + 1900;
-
-	return da;
-}
-
-
 char * date_tostring(date_t *d, char *fmt) {
 	char *smday, *smon, *buf;
 
@@ -289,10 +245,6 @@ int date_after(date_t *d, date_t *q) {
  *
  */
 void date_makeage(time_t t, time_t age, char *buf) {
-	date_makeage_delim(t, age, buf, " ");
-}
-
-void date_makeage_delim(time_t t, time_t age, char *buf, char *delim) {
 	time_t days=0,hours=0,mins=0,secs=0;
 	
 	if (t>=age)
@@ -307,10 +259,11 @@ void date_makeage_delim(time_t t, time_t age, char *buf, char *delim) {
 		secs=age-(mins*60);
 		
 		if (days)
-			sprintf(buf,"%dd%s%dh",days,delim,hours);
+			sprintf(buf,"%dd %dh",days,hours);
 		else if (hours)
-			sprintf(buf,"%dh%s%dm",hours,delim,mins);
+			sprintf(buf,"%dh %dm",hours,mins);
 		else
-			sprintf(buf,"%dm%s%ds",mins,delim,secs);
+			sprintf(buf,"%dm %ds",mins,secs);
 	}
 }
+

@@ -1,24 +1,4 @@
 /*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-/*
  * NOT FINISHED, DO NOT USE
  */
 
@@ -30,7 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <collection/sortedlist.h>
+#include "../lib/sortedlist.h"
 
 #define NUKELOG "/ftp-data/logs/nukelog"
 #define DEFAULT_NUM 15
@@ -241,10 +221,11 @@ time_t time_start(char p) {
 
 	default:
 		// default is week.
-	  //wday = lt->tm_wday;
-		lt->tm_wday = 0;
-		tmp = mktime(lt);
-		// tmp = tmp/(3600*24);
+		wday = lt->tm_wday;
+
+		tmp = tmp/(3600*24);
+
+		break;
 	}
 
 	return tmp;
@@ -257,14 +238,7 @@ int main(int argc, char *argv[]) {
 	time_t end, start;
 
 	if (argc < 3) {
-		printf("bad install, syntax; foo-nukes <sorting> <period> [num]\n");
-		printf("
-sorting: n - number-of-nukes, b - bytes, m - multiplier, c - credits
-period : w - week, m - month, a - alltime
-num    : some number
-
-Example: site nuketop b w 20
-");
+		printf("bad install, syntax; foo-nukes <type> <period> [num]\n");
 		exit(1);
 	}
 

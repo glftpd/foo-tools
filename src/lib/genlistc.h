@@ -1,33 +1,12 @@
-/*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 /**
  * Generic sortable/searchable list for items/structs.
  *
  **
- * $Id: genlistc.h,v 1.2 2003/01/22 14:31:29 sorend Exp $
- * $Source: /home/cvs/footools/footools/src/lib/genlistc.h,v $
+ * $Id: genlistc.h,v 1.1.1.1 2001/04/30 10:49:37 sd Exp $
+ * $Source: /var/cvs/foo/src/lib/genlistc.h,v $
  * Author: Soren
  */
 #include <stdio.h>
-#include <stdlib.h>
 
 #define INSERT_NOORDER	0
 #define	INSERT_SORTED	1

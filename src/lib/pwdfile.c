@@ -1,37 +1,15 @@
-/*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 
 
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <util/linefilereader.h>
-#include <stdio.h>
 #include "stringtokenizer.h"
 #include "pwdfile.h"
 
 long pwd_lastupdate = 0;
 pwdfile *pwd_userlist = 0;
 grpfile_t *pwd_grouplist = 0;
-char *_etcdir = 0;
 
 void _pwd_finalize(pwdfile *l) {
 	pwdfile *t;
@@ -43,20 +21,6 @@ void _pwd_finalize(pwdfile *l) {
 	}
 }
 
-void pwd_set_etcdir(char *etcdir) {
-	if (_etcdir != 0)
-		free(_etcdir);
-
-	_etcdir = strdup(etcdir);
-}
-
-char *_pwd_get_etcdir() {
-	if (_etcdir == 0)
-		_etcdir = strdup(DEFAULT_ETCDIR);
-
-	return _etcdir;
-}
-
 pwdfile *_pwd_reload() {
 	struct stat stt;
 	char buf[500], *t, idbuf[10];
@@ -65,9 +29,7 @@ pwdfile *_pwd_reload() {
 	stringtokenizer st;
 	int i;
 
-	sprintf(buf, "%s/%s", _pwd_get_etcdir(), DEFAULT_PASSWD);
-
-	if (stat(buf, &stt) == -1)
+	if (stat(PASSWDFILE, &stt) == -1)
 		return pwd_userlist;
 
 	if (stt.st_mtime == pwd_lastupdate)
@@ -79,7 +41,7 @@ pwdfile *_pwd_reload() {
 
 	_pwd_finalize(pwd_userlist);
 
-	if (lfr_open(&lfr, buf) < 0)
+	if (lfr_open(&lfr, PASSWDFILE) < 0)
 		return pwd_userlist;
 
 	while (lfr_getline(&lfr, buf, 300) > -1) {
@@ -118,7 +80,7 @@ pwdfile *_pwd_reload() {
 }
 
 pwdfile *pwd_getpwnam(char *u) {
-	pwdfile *tmp = 0;
+	pwdfile *tmp;
 
 	pwd_userlist = _pwd_reload();
 
@@ -130,7 +92,7 @@ pwdfile *pwd_getpwnam(char *u) {
 }
 
 pwdfile *pwd_getpwuid(int uid) {
-	pwdfile *tmp = 0;
+	pwdfile *tmp;
 
 	pwd_userlist = _pwd_reload();
 
@@ -145,14 +107,12 @@ grpfile_t *_pwd_grpreload() {
 	linefilereader_t lfr;
 	char buf[300], gidbuf[30];
 	stringtokenizer st;
-	grpfile_t *tmp = 0;
+	grpfile_t *tmp;
 
 	if (pwd_grouplist)
 		return pwd_grouplist;
 
-	sprintf(buf, "%s/%s", _pwd_get_etcdir(), DEFAULT_GROUP);
-
-	if (lfr_open(&lfr, buf) < 0)
+	if (lfr_open(&lfr, GROUPFILE) < 0)
 		return 0;
 
 	while (lfr_getline(&lfr, buf, 300) > 0) {
@@ -188,7 +148,7 @@ grpfile_t *_pwd_grpreload() {
 }
 
 grpfile_t *pwd_getgpnam(char *g) {
-	grpfile_t *t = 0;
+	grpfile_t *t;
 
 	for (t = _pwd_grpreload(); t; t = t->next)
 		if (!strcmp(t->group, g))
@@ -201,7 +161,7 @@ grpfile_t *pwd_getgpgid(int gid) {
 	grpfile_t *t;
 
 	for (t = _pwd_grpreload(); t; t = t->next)
-		if (t->gid == gid)
+		if (t->gid = gid)
 			break;
 
 	return t;

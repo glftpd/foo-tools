@@ -7,7 +7,7 @@ SRCDIR = ..
 LIBS = ../collection/strlist.o ../lib/gllogs.o ../lib/pwdfile.o ../util/linefilereader.o ../collection/hashtable.o ../lib/stringtokenizer.o ./gl_userfile.o
 
 foo-pre: foo-pre.o $(LIBS)
-	$(CC) -o $@ $< $(LIBS) -ldl
+	$(CC) -o $@ $< $(LIBS)
 
 foo.Pre: foo.Pre.o
 	$(CC) -o $@ $< $(LIBS)

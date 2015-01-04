@@ -1,40 +1,8 @@
-/*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 
 #include "hashtable.h"
 #include <util/linefilereader.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
-
-
-int ht_size(hashtable_t *ht) {
-	hashtable_item_t *tmp;
-	int i = 0;
-
-	for (tmp = ht->list; tmp; tmp = tmp->next)
-		i++;
-
-	return i;
-}
 
 
 hashtable_item_t *_ht_find_item(hashtable_item_t *t, char *k) {
@@ -48,7 +16,7 @@ hashtable_item_t *_ht_find_item(hashtable_item_t *t, char *k) {
 }
 
 int ht_remove(hashtable_t *ht, char *key) {
-	hashtable_item_t *tmp, *n = 0, *next;
+	hashtable_item_t *tmp, *n, *next;
 	int found = 0;
 
 	tmp = ht->list;
@@ -63,7 +31,6 @@ int ht_remove(hashtable_t *ht, char *key) {
 		} else
 			free(tmp);
 
-		// set tmp ptr to point to next.
 		tmp = next;
 	}
 
@@ -117,11 +84,6 @@ int ht_put(hashtable_t *ht, char *key, char *value) {
 }
 
 int ht_put_obj(hashtable_t *ht, char *key, void *obj) {
-
-	return ht_put_obj_free(ht, key, obj, 1);
-}
-
-int ht_put_obj_free(hashtable_t *ht, char *key, void *obj, int dofree) {
 	hashtable_item_t *tmp;
 	char *tmpstr;
 
@@ -131,7 +93,7 @@ int ht_put_obj_free(hashtable_t *ht, char *key, void *obj, int dofree) {
 	tmp = _ht_find_item(ht->list, key);
 
 	if (tmp) {
-		if (dofree && tmp->value)
+		if (tmp->value)
 			free(tmp->value);
 
 		tmp->value = (char*)obj;
@@ -292,7 +254,6 @@ int ht_load_prop(hashtable_t *ht, char *fn, char delim) {
 		val = _ht_trim(tmp + 1);
 
 		_ht_replace(val, "\\n", "\n");
-		_ht_replace(val, "\\r", "\r");
 
 #ifdef HT_SUPPORT_FILEPROP
 		if (!strncmp(val, "file:", 5)) {

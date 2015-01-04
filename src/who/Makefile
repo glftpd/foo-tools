@@ -1,6 +1,6 @@
 #
-# $Id: Makefile.in,v 1.1 2003/05/24 05:39:36 sorend Exp $
-# $Source: /home/cvs/footools/footools/src/who/Makefile.in,v $
+# $Id: Makefile,v 1.5 2002/03/14 07:38:23 flower Exp $
+# $Source: /var/cvs/foo/src/who/Makefile,v $
 #
 
 include ../Makefile.config
@@ -10,26 +10,14 @@ LIBS = -lcurses
 
 OBJS = ../lib/who.o spy_view.o spy.o ../lib/dirlist.o ../collection/strlist.o ../util/linefilereader.o
 
-WEBSPYOBJS = ../lib/who.o webspy.o webspy_nodeview.o webspy_nodedetailsview.o webspy_dirview.o ../lib/dirlist.o ../collection/strlist.o ../util/linefilereader.o ../lib/macro.o ../collection/hashtable.o ../lib/pwdfile.o ../lib/stringtokenizer.o
-
-WEBSPYLIBS = -lhttpd
-
-# for webspy
-#DEFS = -D__DEBUG__
-
 all:	spy
 
-webspy: $(WEBSPYOBJS)
-	$(CC) -static -o $@ $(WEBSPYOBJS) $(WEBSPYLIBS) $(DEFS)
 
 spy: $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS) $(DEFS)
 
-usage: usage.o ../lib/who.o ../collection/strlist.o ../util/linefilereader.o ../lib/common.o
-	$(CC) -o $@ usage.o ../lib/common.o ../lib/who.o ../collection/strlist.o ../util/linefilereader.o $(LIBS) $(DEFS)
-
 clean:
-	rm -f *.o *~ spy webspy
+	rm -f *.o *~ spy
 
 release:
 	mkdir $(RELEASEDIR)/who

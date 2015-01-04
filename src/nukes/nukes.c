@@ -1,25 +1,5 @@
 /*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-/*
- * Tanesha Team! $Id: nukes.c,v 1.4 2003/09/27 13:13:41 sorend Exp $
+ * Tanesha Team! $Id: nukes.c,v 1.10 2002/03/15 23:29:05 flower Exp $
  */
 
 #include "glnukelog.h"
@@ -109,7 +89,7 @@ void nukes_print_single(nukelog_t *n, int pos, char *body) {
 	reason = n->reason;
 	sprintf(smult, "x%d", n->mult);
 
-	nukes_fit_path(n->dirname + strlen(ht_get(get_config(), NUKES_SITEROOT)), buf, 41);
+	nukes_fit_path(n->dirname + strlen(NUKES_SITEROOT), buf, 41);
 	reason = nukes_reason_next(reason, rbuf, 15);
 
 	// print first line.
@@ -144,7 +124,7 @@ void nukes_print_single(nukelog_t *n, int pos, char *body) {
 		line++;
 	}
 
-	printf(ht_get(get_config(), NUKES_DELIM));
+	printf(DELIM);
 }
 
 
@@ -255,11 +235,11 @@ int nukes_check() {
 	ctx = get_context();
 	cfg = get_config();
 
-	printf(ht_get(cfg, NUKES_HEAD));
+	printf(HEAD);
 
 	sortedlist_init(&list);
 
-	nukelog_load(&list, ht_get(cfg, NUKES_NUKELOG));
+	nukelog_load(&list, NUKES_NUKELOG);
 
 	sortedlist_reset(&list);
 
@@ -278,7 +258,7 @@ int nukes_check() {
 		nukes_print_single(t, i, singleshow);
 	}
 
-	printf(ht_get(cfg, NUKES_TAIL));
+	printf(TAIL);
 }
 
 int _nukes_numeric(char *t) {
@@ -302,7 +282,7 @@ int nukes_init(int argc, char *argv[]) {
 	char buf[20];
 
 	t = get_config();
-	ht_load_prop(t, NUKES_CONFIGFILE, '=');
+	// ht_load_prop(t, NUKES_CONFIGFILE, '=');
 
 	t = get_context();
 
@@ -322,7 +302,24 @@ int nukes_init(int argc, char *argv[]) {
 }
 
 void nukes_help() {
-  printf(ht_get(get_config(), NUKES_HELP));
+  printf("
+Syntax; site nukes <arg1> <arg2> .. <argn>
+
+Arguments can be:
+  Any word  -  Will search reason/nuker/dirname/nukee for the word.
+  Any number-  Will make output list <number> newest found nukes.
+  nuker=<n> -  Will search for items where nuker is <n>.
+  nukee=<n> -  Will search for items where nukee is <n>.
+  reason=<r>-  Will search for items where reason contains <r>.
+  status=<s>-  Will search for statuses, where <s> is nuked or unnuked.
+  factor=<f>-  Will search for nukes with factor <f>.
+
+Examples:
+  site nukes 10 nuker=flower       - List 10 latest nukes by flower
+  site nukes 3 -FLT                - List 3 latest -FLT nukes.
+  site nukes reason=size games     - List where reason contains size
+                                     and 'games' is in the nuke.
+");
 
   exit(0);
 }
@@ -332,8 +329,8 @@ void nukes_help() {
  */
 int main(int argc, char *argv[]) {
 
-	if ((argc > 1) && !strcasecmp(argv[1], "help"))
-		nukes_help();
+  if ((argc > 1) && !strcasecmp(argv[1], "help"))
+    nukes_help();
 
 	nukes_init(argc, argv);
 

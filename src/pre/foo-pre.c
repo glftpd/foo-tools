@@ -1,24 +1,4 @@
 /*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-/*
  *  foo.Pre [C-version]  (c)  tanesha team, <tanesha@tanesha.net>
  */
 #include <stdio.h>
@@ -32,7 +12,6 @@
 #include <errno.h>
 #include <fnmatch.h>
 #include <stdarg.h>
-#include <dlfcn.h>
 
 #include <lib/gllogs.h>
 #include <lib/pwdfile.h>
@@ -42,10 +21,9 @@
 #include <util/linefilereader.h>
 
 #include "foo-pre.h"
-#include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c,v 1.18 2004/09/28 06:52:24 sorend Exp $"
-#define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
+#define VERSION "$Id: foo-pre.c,v 3.1 2007/07/03 19:36:14 turbo Exp $"
+#define USAGE " * Syntax: SITE PRE <RELEASEDIR> <SECTION>\n"
 
 void quit(char *s, ...);
 extern int errno;
@@ -106,19 +84,11 @@ void pre_log(char *type, char *fmt, ...) {
  */
 char *group_get_property(char *grp, char *prop) {
 	hashtable_t *cfg = get_config();
-	char buf[300], *tmp;
+	char buf[300];
 
 	sprintf(buf, "group.%s.%s", grp, prop);
 
-	tmp = ht_get(cfg, buf);
-
-	if (!tmp) {
-		// try to get default property.
-		sprintf(buf, "group.DEFAULT.%s", prop);
-		tmp = ht_get(cfg, buf);
-	}		
-	
-	return tmp;
+	return ht_get(cfg, buf);
 }
 
 
@@ -211,7 +181,7 @@ int subdirlist_count(struct subdir_list *l) {
  */
 strlist_t * user_find_groups(char *u) {
 	linefilereader_t lfr;
-	char buf[1024], *tmp, *spc2;
+	char buf[1024], *tmp;
 	strlist_t *groups = 0;
 	hashtable_t *cfg = get_config();
 
@@ -228,15 +198,7 @@ strlist_t * user_find_groups(char *u) {
 	while (lfr_getline(&lfr, buf, 1024) > -1) {
 		if (!strncasecmp(buf, "GROUP ", 6) ||
 		    !strncasecmp(buf, "PRIVATE ", 8)) {
-
-			tmp = strchr(buf, ' ') + 1;
-
-			// fix for glftpd2.x which has 'GROUP group num'
-			spc2 = strchr(tmp, ' ');
-			if (spc2)
-				*spc2 = 0;
-
-			groups = str_add(groups, tmp);
+			groups = str_add(groups, strchr(buf, ' ') + 1);
 		}
 	}
 
@@ -402,29 +364,15 @@ int show_groupdirs(strlist_t *grps) {
  * for 'group'.
  */
 char * section_find_by_name(char *group, char *requested) {
-	char *tmpsecdir, *tmpallow, *tmpreq;
+	char *tmpsecdir, *tmpallow;
 	stringtokenizer st;
-
-	tmpreq = requested;
-
-	// if no requested, then try to set it to the 'default' section.
-	if (!tmpreq) {
-		tmpreq = group_get_property(group, PROPERTY_GROUP_DEFSEC);
-
-		if (!tmpreq) {
-			printf(" * Hm, section not specified, and no default section for group '%s'\n", group);
-			printf("%s\n", USAGE);
-
-			return 0;
-		}
-	}
 
 	st_initialize(&st, group_get_property(group, PROPERTY_GROUP_ALLOW), "|");
 
 	while (st_hasnext(&st)) {
 		tmpallow = strdup(st_next(&st));
 
-		if (!strcasecmp(tmpreq, tmpallow))
+		if (!strcasecmp(requested, tmpallow))
 			break;
 
 		free(tmpallow);
@@ -440,7 +388,7 @@ char * section_find_by_name(char *group, char *requested) {
 	tmpsecdir = section_get_property(tmpallow, PROPERTY_SECTION_DIR);
 
 	if (!tmpsecdir) {
-		printf(" * Hm, you are allowed to pre in section '%s' but the section is not.\n   configured. Bug siteop to fix his pre configuration please! :)\n", tmpreq);
+		printf(" * Hm, you are allowed to pre in section '%s' but the section is not.\n   configured. Bug siteop to fix his pre configuration please! :)\n", requested);
 
 		return 0;
 	}
@@ -507,6 +455,9 @@ char * userfile_update(creditlist_t *l) {
 
 	// try and figure a ratio to use.
 	tmp = group_get_property(group, PROPERTY_GROUP_RATIO);
+
+	if (!tmp)
+		tmp = group_get_property("DEFAULT", PROPERTY_GROUP_RATIO);
 
 	if (!tmp) {
 		printf(" * ERROR: No ratio defined for group %s, no credits given!\n", group);
@@ -604,13 +555,9 @@ filelist_t * filelist_find_by_dir(filelist_t *l, char *base, char *path, chownin
 		if (stat(buf, &st) == -1)
 			continue;
 
-		// chown file
 		chowninfo_apply_to_file(buf, chown);
 
 		if (S_ISDIR(st.st_mode)) {
-
-			// touch dir
-			touch_dir(buf);
 
 			if (strlen(path) > 0)
 				sprintf(buf, "%s/%s", path, dent->d_name);
@@ -621,9 +568,6 @@ filelist_t * filelist_find_by_dir(filelist_t *l, char *base, char *path, chownin
 			l = filelist_find_by_dir(l, base, buf, chown);
 
 		} else {
-			// touch file
-			touch_file(buf);
-
 			tmp = (filelist_t*)malloc(sizeof(filelist_t));
 
 			if (strlen(path) > 0)
@@ -830,164 +774,8 @@ int pre_replace(char *b, char *n, char *r) {
 	}
 }
 
-int pre_move_catalog(char *src, char *dest) {
-	char *tmp, movebuf[1024];
-	int rc;
 
-	// try rename.
-	rc = rename(src, dest);
-
-	if (rc == 0)
-		return 0;
-
-	tmp = ht_get(get_config(), PROPERTY_MOVE_EXTERNAL);
-
-	if (!tmp)
-		return -1;
-
-	printf(", external..");
-
-	strcpy(movebuf, tmp);
-	pre_replace(movebuf, "%S", src);
-	pre_replace(movebuf, "%D", dest);
-
-	// try external move
-	rc = system(movebuf);
-
-	// return -1 if command did not return '0' = success.
-	if (rc != 0)
-		return -1;
-
-	return 0;
-}
-
-int pre_exec_module(module_list_t *mfunc, filelist_t *files, char *path, char *argv[], struct subdir_list *subdirs) {
-	filelist_t *ftmp;
-	struct subdir_list *stmp;
-	hashtable_t *cfg;
-	char *tmpf;
-	int rc;
-
-	// run mod_func_dir on each dir
-	for (stmp = subdirs; stmp; stmp = stmp->next) {
-
-		tmpf = malloc(strlen(path) + strlen(stmp->dir) + 2);
-		if (strlen(stmp->dir) > 0)
-			sprintf(tmpf, "%s/%s", path, stmp->dir);
-		else {
-			// we got the top-dir
-			strcpy(tmpf, path);
-
-			// run the mod_func_rel on the rlsdir.
-			if (mfunc->mod_func_rel != 0) {
-				pre_log("MODULE-REL", "%s %s", mfunc->mod_name, stmp->dir);
-				rc = mfunc->mod_func_rel(tmpf, argv);
-			}
-		}
-
-		if (mfunc->mod_func_dir != 0) {
-			pre_log("MODULE-DIR", "%s %s", mfunc->mod_name, stmp->dir);
-
-			rc = mfunc->mod_func_dir(tmpf, argv);
-		}
-
-		free(tmpf);
-
-		// break if mod_func_dir signals not to continue.
-		if (rc == 0)
-			break;
-	}
-
-
-	// run mod_func_file on each file.
-	for (ftmp = files; mfunc->mod_func_file && ftmp; ftmp = ftmp->next) {
-
-		pre_log("MODULE-FILE", "%s %s", mfunc->mod_name, ftmp->file);
-
-		tmpf = malloc(strlen(ftmp->file) + strlen(path) + 2);
-		sprintf(tmpf, "%s/%s", path, ftmp->file);
-
-		rc = mfunc->mod_func_file(tmpf, argv);
-
-		free(tmpf);
-
-		// if module returns 0, then break.
-		if (rc == 0)
-			break;
-	}
-
-	return 1;
-}
-
-int pre_do_module(char *module, filelist_t *files, char *path, char *argv[], struct subdir_list *subdirs) {
-
-	void *handle;
-	module_list_t *module_func;
-	module_list_t* (*module_loader)();
-	void (*set_config)(hashtable_t *ht);
-	char *err;
-
-	pre_log("MODULE", "%s", module);
-
-	handle = dlopen(module, RTLD_LAZY);
-	if (!handle) {
-		err = dlerror();
-		pre_log("MODULE-ERROR", "%s \"%s\"", module, err);
-		printf("Error loading module %s: %s\n", module, err);
-		return 0;
-	}
-
-	module_loader = dlsym(handle, MODULE_LOADER_FUNC);
-	set_config = dlsym(handle, MODULE_SETCONFIG_FUNC);
-
-	if (!module_loader || !set_config) {
-		pre_log("MODULE-ERROR", "%s %s", module, "No loader func found");
-		printf("Error loading module %s: No loader func found\n");
-		dlclose(handle);
-		return 0;
-	}
-
-	pre_log("MODULE-RUN", "%s %s", module, path);
-
-	set_config(get_config());
-
-	// try to set environment if module allows.
-	set_config = dlsym(handle, MODULE_SETENV_FUNC);
-	if (set_config)
-		set_config(get_context());
-
-	pre_exec_module(module_loader(), files, path, argv, subdirs);
-
-	pre_log("MODULE-DONE", "%s %s", module, path);
-
-	dlclose(handle);
-
-	return 1;
-}
-
-int pre_do_modules(filelist_t *files, char *path, char *argv[], struct subdir_list *subdirs) {
-	hashtable_t *cfg, *env;
-	stringtokenizer st;
-	char *tmp;
-
-	tmp = ht_get(get_config(), PROPERTY_MODULES);
-
-	// no modules in config, return
-	if (!tmp)
-		return;
-
-	st_initialize(&st, tmp, "|");
-
-	while (st_hasnext(&st)) {
-		tmp = st_next(&st);
-
-		pre_do_module(tmp, files, path, argv, subdirs);
-	}
-
-}
-
-
-int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv[]) {
+int pre(char *section, char *dest, char *src, char *rel, char *group) {
 	hashtable_t *cfg, *env;
 
 	char buf[1024], tbuf[50], ubuf[300], *tmp;
@@ -1028,14 +816,38 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	printf(" * Moving files to destination dir.. \n");
 	printf("   -- %10.10s: %s\n", "From", src);
-	printf("   -- %10.10s: %s", "To", dest);
+	printf("   -- %10.10s: %s\n", "To", dest);
 
 	// dont forget to chown maindir
 	chowninfo_apply_to_file(src, chown);
 
 	// do the actual moving of dir.
-	if (pre_move_catalog(src, dest) == -1)
-		quit(" Failed!\n");
+	if (rename(src, dest) == -1)
+  {
+    int orig_errno = errno; // backup the 'real' errno
+    printf(" * RENAME failed, will attempt to use MV instead..\n");
+    // build move command string..
+    int len = strlen("mv ") + strlen(src) + strlen(" ") + strlen(dest) + 1;
+    char cmd[len];
+    sprintf(&cmd[0], "mv %s %s", src, dest);
+    /*printf("\ncmd={\n");
+    printf(cmd);
+    printf("\n}\n");*/
+    system(cmd);
+    int chk_src = access(src, F_OK),
+        chk_dest = access(dest, F_OK);
+    if (chk_src != 0 && chk_dest == 0)
+    {
+      printf(" * MV appears to have worked properly!\n");
+    }
+    else
+    {
+      printf("\n* MV also Failed.  Quitting! (RENAME errno=%i)\n", orig_errno);
+      //printf("Errno: %i", errno);
+		  quit("");
+    }
+		//quit(" Failed!\n");
+  }
 	else
 		printf(" Done\n");
 
@@ -1069,6 +881,10 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	// create announce.
 	tmp = group_get_property(group, PROPERTY_GROUP_ANNOUNCE);
 
+	// try default announce.
+	if (!tmp)
+		tmp = group_get_property("DEFAULT", PROPERTY_GROUP_ANNOUNCE);
+
 	if (tmp) {
 
 		strcpy(buf, tmp);
@@ -1097,15 +913,10 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	if (!gl_dupelog_add(rel))
 		printf(" * Error adding to dupelog !  (prolly wrong perms, ask sysop to fix)\n");
 
-	sprintf(buf, "%s/%s", ht_get(env, "RESOLVEDDESTINATION"), rel);
-
-	// do additional module stuff
-	pre_do_modules(files, buf, argv, subdirs);
-
 	return 1;
 }
 
-int touch_dir(char *dir) {
+int touch(char *dir) {
 	FILE *f;
 	char buf[1024];
 
@@ -1123,99 +934,30 @@ int touch_dir(char *dir) {
 	return 1;
 }
 
-// hacky file touch method
-int touch_file(char *fname) {
-	int fd, needed_chmod, rval, force = 0;
-	unsigned char byte;
-	struct stat st;
-
-	if (stat(fname, &st) == -1)
-		return 0;
-
-	// Try regular files only.
-	if (!S_ISREG(st.st_mode))
-		return 0;
-
-	needed_chmod = rval = 0;
-	if ((fd = open(fname, O_RDWR, 0)) == -1) {
-		if (!force || chmod(fname, DEFFILEMODE))
-			goto err;
-		if ((fd = open(fname, O_RDWR, 0)) == -1)
-			goto err;
-		needed_chmod = 1;
-	}
-
-	if (st.st_size != 0) {
-		if (read(fd, &byte, sizeof(byte)) != sizeof(byte))
-			goto err;
-		if (lseek(fd, (off_t)0, SEEK_SET) == -1)
-			goto err;
-		if (write(fd, &byte, sizeof(byte)) != sizeof(byte))
-			goto err;
-	} else {
-		if (write(fd, &byte, sizeof(byte)) != sizeof(byte)) {
-err:                    
-			rval = 1;
-		} else if (ftruncate(fd, (off_t)0)) {
-			rval = 1;
-		}
-	}
-
-	if (close(fd) && rval != 1) {
-		rval = 1;
-	}
-
-	if (needed_chmod && chmod(fname, st.st_mode) && rval != 1) {
-		rval = 1;
-	}
-
-	return (rval);
-}
-
 /*
  * Gets the real path of a section, trying to expands symlink if nessecary.
  */
 char *section_expand_path(char *sec) {
 	char tmp[1024], buf[1024], *tmpp;
 	int reps;
-	time_t now;
-	struct tm *tm_now;
 	struct stat st;
 
 	strcpy(tmp, section_get_property(sec, PROPERTY_SECTION_DIR));
 
-	now = time(0);
-	tm_now = localtime(&now);
+	if (stat(tmp, &st) == -1) {
+		sprintf(buf,
+				" * Hm, destination section's path (%s) doesnt exist ?\n",
+				tmp);
 
-	strftime(buf, 1024, "%d", tm_now);
-	pre_replace(tmp, "DD", buf);
+		quit(buf);
+	}
 
-	strftime(buf, 1024, "%m", tm_now);
-	pre_replace(tmp, "MM", buf);
-
-	strftime(buf, 1024, "%Y", tm_now);
-	pre_replace(tmp, "YYYY", buf);
-
-	strftime(buf, 1024, "%y", tm_now);
-	pre_replace(tmp, "YY", buf);
-
-	strftime(buf, 1024, "%w", tm_now);
-	pre_replace(tmp, "WW", buf);
-
-	strftime(buf, 1024, "%W", tm_now);
-	pre_replace(tmp, "WOY", buf);
-
-	strftime(buf, 1024, "%V", tm_now);
-	pre_replace(tmp, "CW", buf);
-	pre_replace(tmp, "KW", buf);
-	
 	// if its a link then expand it.
 	reps = readlink(tmp, buf, 1024);
 
 	if (reps != -1) {
 		if (buf[0] == '/') {
-			strncpy(tmp,buf,reps);
-			tmp[reps] = '\0'; /* ensure null terminated */
+			strncpy(tmp, buf, reps);
 			buf[reps] = 0;
 		}
 		else {
@@ -1226,14 +968,6 @@ char *section_expand_path(char *sec) {
 			strncpy(tmpp + 1, buf, reps);
 			*(tmpp + 1 + reps) = 0;
 		}
-	}
-
-	if (stat(tmp, &st) == -1) {
-		sprintf(buf,
-				" * Hm, destination section's path (%s) doesnt exist ?\n",
-				tmp);
-
-		quit(buf);
 	}
 
 	return strdup(tmp);
@@ -1248,16 +982,11 @@ int pre_handler(int argc, char *argv[]) {
 	struct stat st;
 	char source[1024], destination[1024], *tmp, *group;
 	char buf[1024];
-	int rc;
 
 	env = get_context();
 	cfg = get_config();
 
 	pre_log("START", "%s %s %s", ht_get(env, PROPERTY_USER), argv[1], argv[2]);
-
-	// set etcdir for the pwd functions
-	if (tmp = ht_get(cfg, PROPERTY_ETCDIR))
-		pwd_set_etcdir(tmp);
 
 	if (tmp = ht_get(cfg, PROPERTY_TEXT_HEAD))
 		printf(tmp);
@@ -1267,7 +996,7 @@ int pre_handler(int argc, char *argv[]) {
 	if (!groups)
 		quit(" * Error finding your groups, go bug sysop!\n");
 
-	if (argc < 2) {
+	if (argc < 3) {
 		printf(USAGE);
 
 		show_groupdirs(groups);
@@ -1279,10 +1008,10 @@ int pre_handler(int argc, char *argv[]) {
 	if (strchr(argv[1], '/'))
 		quit(" * You cant give paths in releasename ('/' not allowed)!\n");
 
-	char *sourcebis = getcwd(NULL, 0);
+	getcwd(source, 300);
 
 	// check if we are in a position to pre.
-	group = group_find_by_dir(groups, sourcebis);
+	group = group_find_by_dir(groups, source);
 
 	if (!group) {
 		printf(" * You are not in the group-dir of any of your groups.\n\n");
@@ -1292,13 +1021,13 @@ int pre_handler(int argc, char *argv[]) {
 		quit(0);
 	}
 
-	pre_log("GROUP", "%s %s", sourcebis, group);
+	pre_log("GROUP", "%s %s", source, group);
 
 	printf(" * Looks like this is going to be a %s pre..\n", group);
 	ht_put(env, PROPERTY_GROUP, group);
 
 	// check if we have chosen a valid destination for our pre.
-	dest_section = section_find_by_name(group, argc > 2 ? argv[2] : 0);
+	dest_section = section_find_by_name(group, argv[2]);
 
 	if (!dest_section) {
 		show_groupdirs(groups);
@@ -1312,9 +1041,7 @@ int pre_handler(int argc, char *argv[]) {
 	destpath = section_expand_path(dest_section);
 	ht_put(env, "RESOLVEDDESTINATION", destpath);
 
-        strcpy(source, sourcebis);
-        strcat(source, "/");
-        strcat(source, argv[1]);
+	sprintf(source, "%s/%s", source, argv[1]);
 
 	// check if source dir is okay.
 	if ((stat(source, &st) == -1) || !S_ISDIR(st.st_mode)) {
@@ -1324,37 +1051,16 @@ int pre_handler(int argc, char *argv[]) {
 	}
 
 	// touch the source.
-	touch_dir(source);
+	touch(source);
 
 	// check if destination dir exists.
 	sprintf(destination, "%s/%s", destpath, argv[1]);
-
-	rc = stat(destination, &st);
-
-	// try rename if requested
-	if ((rc == 0) && (argc > 3) && (!strcasecmp(argv[3], "force"))) {
-
-		sprintf(buf, "%s_TRADING", destination);
-		rc = rename(destination, buf);
-
-		if (rc == 0)
-			printf(" + Renamed existing to %s_TRADING ..\n", argv[1]);
-		else
-			printf(" ! Failed rename existing to %s_TRADING ..\n", argv[1]);
-	}
-
-	// check if destination exists.
 	if (stat(destination, &st) == -1)
-		pre(dest_section, destination, source, argv[1], group, argv);
+		pre(dest_section, destination, source, argv[1], group);
 	else {
-		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n");
+		sprintf(source, " * Hm destination already exists. You're too late with pre!");
 		quit(source);
 	}
-
-	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
-	pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\"",
-			ht_get(env, PROPERTY_USER), group,
-			argv[1], destpath);
 
 	return 0;
 }
@@ -1364,19 +1070,10 @@ int pre_handler(int argc, char *argv[]) {
  */
 int pre_init() {
 	hashtable_t *tmp;
-	char *sanity;
 
 	// load config.
 	tmp = get_config();
 	ht_load_prop(tmp, PRE_CONFIGFILE, '=');
-
-	// lame check on environment. prevents idiots from sending me
-	// 'why does it segv when i run it ???' questions.
-	sanity = getenv("TAGLINE");
-	if (!sanity) {
-		printf("Did not find environment for glftpd, please run only from within glftpd as 'site' command!\n");
-		exit(1);
-	}
 
 	// put env variables into the context.
 	tmp = get_context();

@@ -1,36 +1,12 @@
 /*
- * foo-tools, a collection of utilities for glftpd users.
- * Copyright (C) 2003  Tanesha FTPD Project, www.tanesha.net
- *
- * This file is part of foo-tools.
- *
- * foo-tools is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * foo-tools is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with foo-tools; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-/*
  * Library to handle adding/updating some glftpd logfiles.
  *
- * $Id: gllogs.h 70 2004-09-05 08:09:33Z sorend $
+ * $Id: gllogs.h,v 1.1.1.1 2001/04/30 10:49:37 sd Exp $
  * Maintained by: Flower
  */
 
 #include <fcntl.h>
 #include <time.h>
-#include <stdint.h>
-#include <inttypes.h>
-
-typedef unsigned short int ushort;
 
 // define some locations for where to find glftpd logs.
 #define DUPEFILE "/ftp-data/logs/dupefile"
@@ -38,6 +14,24 @@ typedef unsigned short int ushort;
 #define DIRLOG "/ftp-data/logs/dirlog"
 #define GLFTPDLOG "/ftp-data/logs/glftpd.log"
 #define GLMSGPATH "/ftp-data/msgs"
+
+struct dupefile {
+    char filename[256];
+    time_t timeup;
+    char uploader[25];
+};
+
+struct dirlog {
+    ushort status;     // 0 = NEWDIR, 1 = NUKE, 2 = UNNUKE, 3 = DELETED
+    time_t uptime;
+    ushort uploader;    /* Libc6 systems use ushort in place of uid_t/gid_t */
+    ushort group;
+    ushort files;
+    long bytes;
+    char dirname[255];
+    struct dirlog *nxt;
+    struct dirlog *prv;
+};
 
 /*
  * Adds an entry to the dupefile log.
@@ -71,9 +65,6 @@ int gl_dupelog_add(char *rel);
  * Example: gl_gllog_add("My program is still alive");
  */
 int gl_gllog_add(char *str);
-
-// alternative gllog add with logfile specified.
-int gl_gllog_add_alt(char *str, char *logfile);
 
 /*
  * Special method to add a string to be announced.
