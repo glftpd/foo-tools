@@ -29,7 +29,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <collection/strlist.h>
 
 #define MAX_FILELEN 256

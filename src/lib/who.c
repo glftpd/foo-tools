@@ -138,7 +138,7 @@ int who_transfer_file(struct ONLINE *o, char *b) {
       r++;
 
   if (strstr(o->currentdir, s))
-    sprintf(b, "%s", o->currentdir);
+    sprintf(b, o->currentdir);
   else
     sprintf(b, "%s/%s", o->currentdir, s);
 

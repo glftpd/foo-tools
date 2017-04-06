@@ -25,7 +25,6 @@
  */
 
 #include <string.h>
-#include <stdio.h>
 
 // project includes
 #include "mod_chmod.h"

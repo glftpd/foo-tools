@@ -27,9 +27,6 @@
  * $Source: /home/cvs/footools/footools/src/lib/macro.h,v $
  * Author: Soren
  */
-
-#include <stdlib.h>
-
 struct macro_list {
 	char *mac_rep;
 	char *mac_key;

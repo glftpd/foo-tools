@@ -32,7 +32,6 @@
 #define _sfv_h
 
 #include <stdio.h>
-#include <stdlib.h>
 
 /*
  * Structure holding info about a sfv-file.

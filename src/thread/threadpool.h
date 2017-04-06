@@ -28,8 +28,6 @@
 #define _threadpool_h
 
 #include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define TP_DEF_MIN 5
 #define TP_DEF_MAX 10

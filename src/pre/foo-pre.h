@@ -26,8 +26,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-typedef unsigned short int ushort;
-
 #define PRE_CONFIGFILE "/etc/pre.cfg"
 #define PRE_LOGFILE "/ftp-data/logs/foo-pre.log"
 

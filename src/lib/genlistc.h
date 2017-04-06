@@ -27,7 +27,6 @@
  * Author: Soren
  */
 #include <stdio.h>
-#include <stdlib.h>
 
 #define INSERT_NOORDER	0
 #define	INSERT_SORTED	1

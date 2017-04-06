@@ -20,6 +20,7 @@
  */
 /*
  *  foo.Pre [C-version]  (c)  tanesha team, <tanesha@tanesha.net>
+    slv 02082012 - mp3 genre added to PRE output (instead of in mod_idmp3)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,8 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c,v 1.18 2004/09/28 06:52:24 sorend Exp $"
+//#define VERSION "$Id: foo-pre.c,v 1.18 2004/09/28 06:52:24 sorend Exp $"
+#define VERSION "$Id: foo-pre.c,v 1.19 2012/08/03 17:46:00 sorend, slv Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);
@@ -52,6 +54,8 @@ extern int errno;
 
 hashtable_t *_config = 0;
 hashtable_t *_envctx = 0;
+
+char *id3_genre;
 
 /*
  * Acecssor method for configuration.
@@ -1030,6 +1034,19 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	printf("   -- %10.10s: %s\n", "From", src);
 	printf("   -- %10.10s: %s", "To", dest);
 
+        /*
+   	 * slv 02082012 - get filename.mp3 and call get_mp3_genre(filename).
+         */
+	// get genre.
+        for (ftmp = files; ftmp; ftmp = ftmp->next) {
+		tmp = strrchr(ftmp->file, '.');
+		if (!strcmp(tmp, ".mp3")) {
+			sprintf(buf, "%s/%s", src, ftmp->file);
+			get_mp3_genre(buf);
+			break;
+		}
+	}
+
 	// dont forget to chown maindir
 	chowninfo_apply_to_file(src, chown);
 
@@ -1087,6 +1104,7 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 		pre_replace(buf, "%g", ht_get(env, PROPERTY_USERGROUP));
 		pre_replace(buf, "%D", section_get_property(section, PROPERTY_SECTION_NAME));
 		pre_replace(buf, "%R", rel);
+		pre_replace(buf, "%I", id3_genre);
 
 		gl_gllog_add(buf);
 
@@ -1205,17 +1223,12 @@ char *section_expand_path(char *sec) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(tmp, "WOY", buf);
 
-	strftime(buf, 1024, "%V", tm_now);
-	pre_replace(tmp, "CW", buf);
-	pre_replace(tmp, "KW", buf);
-	
 	// if its a link then expand it.
 	reps = readlink(tmp, buf, 1024);
 
 	if (reps != -1) {
 		if (buf[0] == '/') {
-			strncpy(tmp,buf,reps);
-			tmp[reps] = '\0'; /* ensure null terminated */
+			strncpy(tmp, buf, reps);
 			buf[reps] = 0;
 		}
 		else {
@@ -1352,10 +1365,10 @@ int pre_handler(int argc, char *argv[]) {
 	}
 
 	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
-	pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\"",
+	//slv added: "<genre>"
+	pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
 			ht_get(env, PROPERTY_USER), group,
-			argv[1], destpath);
-
+			argv[1], destpath, id3_genre);
 	return 0;
 }
 
