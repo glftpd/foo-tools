@@ -36,8 +36,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdint.h>
-#include <strings.h>
-#include <stdio.h>
 
 #define TRANS_NONE 0
 #define TRANS_UP 1

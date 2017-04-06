@@ -24,8 +24,6 @@
 #define _date_h
 
 #include <time.h>
-#include <stdio.h>
-#include <string.h>
 
 struct date {
 	int mon;

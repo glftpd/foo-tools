@@ -37,7 +37,6 @@ mandir = $(prefix)/man/man1
 PROG =	mp3info
 SRCS =	mp3info.c textfunc.c mp3curs.c mp3tech.c
 OBJS =  mp3info.o textfunc.o mp3curs.o mp3tech.o
-XSRC =	gmp3info.c
 XOBJ =  mp3tech.o
 RM = /bin/rm
 INSTALL = /usr/bin/install -c
@@ -47,21 +46,18 @@ LIBS = -lncurses
 CC = gcc
 CFLAGS = -g -O2 -Wall -fPIC
 
-all: mp3info gmp3info doc
+all: mp3info doc
 
 doc: mp3info.txt
 
 mp3info: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
-gmp3info: $(XSRC) $(XOBJ) 
-	$(CC) $(XSRC) $(CFLAGS) -o $@ $(XOBJ) `pkg-config --cflags --libs gtk+-2.0`
-
 mp3info.txt: mp3info.1
 	groff -t -e -mandoc -Tascii mp3info.1 | col -bx > mp3info.txt
 
 clean: 
-	$(RM) -f $(OBJS) $(XOBJ) mp3info gmp3info core
+	$(RM) -f $(OBJS) $(XOBJ) mp3info core
 
 dist: clean doc
 
@@ -73,15 +69,10 @@ install-mp3info: mp3info
 	$(INSTALL) mp3info $(bindir)/mp3info
 	$(INSTALL) mp3info.1 $(mandir)/mp3info.1
 
-install-gmp3info: gmp3info
-	$(STRIP) gmp3info
-	$(INSTALL) gmp3info $(bindir)/gmp3info
-
-install: install-mp3info install-gmp3info
+install: install-mp3info
 
 
 uninstall:
 	rm -f $(bindir)/mp3info
-	rm -f $(bindir)/gmp3info
 	rm -f $(mandir)/mp3info.1
 

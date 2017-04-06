@@ -4,10 +4,10 @@ include ../Makefile.config
 
 SRCDIR = ..
 
-LIBS = ../collection/strlist.o ../lib/gllogs.o ../lib/pwdfile.o ../util/linefilereader.o ../collection/hashtable.o ../lib/stringtokenizer.o ./gl_userfile.o
+LIBS = ../collection/strlist.o ../lib/gllogs.o ../lib/pwdfile.o ../util/linefilereader.o ../collection/hashtable.o ../lib/stringtokenizer.o ./gl_userfile.o ./mp3genre/mp3genre.o
 
 foo-pre: foo-pre.o $(LIBS)
-	$(CC) -o $@ $< $(LIBS) -ldl
+	$(CC) -o $@ $< mp3genre/mp3genre.o $(LIBS) -ldl
 
 foo.Pre: foo.Pre.o
 	$(CC) -o $@ $< $(LIBS)

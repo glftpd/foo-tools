@@ -25,7 +25,7 @@
  */
 
 #include <string.h>
-#include <stdio.h>
+
 // project includes
 #include "mod_symlink.h"
 #include "../foo-pre.h"
