@@ -27,6 +27,8 @@
 
 #include <checker/frame.h>
 #include <collection/hashtable.h>
+#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "mod_nfo.h"
 

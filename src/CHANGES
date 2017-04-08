@@ -70,6 +70,17 @@ Nov  1 2011: * Fixed mktime timeout on configure (thks to peakz)
              * Fixed chroot gentoo bug for foo-pre.
              * Added a little help file.
 Nov  2 2011: * Fixed a bug about "you're not in any of your predir" :)
+Mar 31 2013: * Fixed a strncpy bug while resolving links on x64 env. which lead to a "destination section's path doesnt exist" (overflow).
+
+Nov  2 2013: * compilation fixes
+Nov 16 2013: * deleted some generated files and update configure
+Mar  9 2014: * added current mp3info version
+Mar  9 2014: * added stack protection flags to compilation
 
 //slv
 Aug 08 2012: * MP3 genre added to PRE output (instead of in mod_idmp3)
+
+//glftpd-scripts
+Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs
+Sep 15 2015: * fix compile warning
+

@@ -27,6 +27,8 @@
 #ifndef _sortedlist_h
 #define _sortedlist_h
 
+#include <stdlib.h>
+
 // holds list items.
 struct sortedlist_item {
 	void *obj;

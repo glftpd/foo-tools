@@ -130,7 +130,7 @@ installation;
    "cp foo-pre /glftpd/bin/; cp pre.cfg /glftpd/etc/"
 
  * Set correct permissions on foo-pre, it needs setuid bit set.
-   "chown root /gfltpd/bin/foo-pre; chmod 4711 /glftpd/bin/foo-pre"
+   "chown root /glftpd/bin/foo-pre; chmod 4711 /glftpd/bin/foo-pre"
 
  * Add foo-pre in your glftpd.conf.
    "site_cmd PRE EXEC /bin/foo-pre"

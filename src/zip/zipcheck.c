@@ -28,6 +28,8 @@
 #include <checker/frame.h>
 #include <collection/hashtable.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include "mod_zip.h"
 

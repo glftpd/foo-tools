@@ -235,7 +235,7 @@ int gl_site_msg(char *from, char *to, char *msg) {
 		return 0;
 
 	t = time(0);
-	sprintf(buf, ctime(&t));
+	sprintf(buf, "%s", ctime(&t));
 	p = (char*)&buf;
 	while (*p)
 		if (*p == '\n')

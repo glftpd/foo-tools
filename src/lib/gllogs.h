@@ -30,6 +30,8 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+typedef unsigned short int ushort;
+
 // define some locations for where to find glftpd logs.
 #define DUPEFILE "/ftp-data/logs/dupefile"
 #define DUPELOG "/ftp-data/logs/dupelog"

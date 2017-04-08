@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <util/linefilereader.h>
+#include <stdio.h>
 #include "stringtokenizer.h"
 #include "pwdfile.h"
 
