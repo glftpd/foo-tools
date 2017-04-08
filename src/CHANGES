@@ -79,6 +79,11 @@ Mar  9 2014: * added stack protection flags to compilation
 
 //slv
 Aug 08 2012: * MP3 genre added to PRE output (instead of in mod_idmp3)
+Apr 09 2017: * cleaned up files
+Apr 09 2017: * created makefile for mp3genre, fixed a few compiler warnings
+Apr 09 2017: * merged commits 2014/15 commits from glftpd/foo-tools.git
+Apr 09 2017: * updated mp3 genres from pzs-ng/zipscript/src/multimedia.c
+
 
 //glftpd-scripts
 Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs
