@@ -45,8 +45,7 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-//#define VERSION "$Id: foo-pre.c,v 1.18 2004/09/28 06:52:24 sorend Exp $"
-#define VERSION "$Id: foo-pre.c,v 1.19 2012/08/03 17:46:00 sorend, slv Exp $"
+#define VERSION "$Id: foo-pre.c,v 1.19 2017/04/07 17:46:00 sorend, slv Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);
@@ -1223,12 +1222,17 @@ char *section_expand_path(char *sec) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(tmp, "WOY", buf);
 
+	strftime(buf, 1024, "%V", tm_now);
+	pre_replace(tmp, "CW", buf);
+	pre_replace(tmp, "KW", buf);
+
 	// if its a link then expand it.
 	reps = readlink(tmp, buf, 1024);
 
 	if (reps != -1) {
 		if (buf[0] == '/') {
 			strncpy(tmp, buf, reps);
+			tmp[reps] = '\0'; /* ensure null terminated */
 			buf[reps] = 0;
 		}
 		else {

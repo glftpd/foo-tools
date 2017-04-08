@@ -22,7 +22,8 @@ FOOBNCOBJS = foobnc.o $(GENOBJS) ../util/linereaderbuffer.o hammerprotect.o
 #DEFS = -DADMINPORT
 SRCDIR = .. -I/usr/local/lib
 
-all:	foobnc
+#all:	foobnc
+all:
 
 
 foobnc: $(FOOBNCOBJS)

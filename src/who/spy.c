@@ -22,6 +22,8 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "spy_view.h"
 #include "spy.h"
 #include "../lib/who.h"
