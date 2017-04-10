@@ -1,0 +1,39 @@
+Instructions foo-pre mp3genre:
+==============================
+
+Ugly hack for foo-pre to add mp3 genre in PRE output (instead of in mod_idmp3).
+This will add a new "genre" variable which you can use in PRE announces.
+
+compile as usual;
+-----------------
+
+$ ./configure
+$ make build
+etc
+(you do not need the mod_id3 module)
+
+configure pre.cfg;
+-------------------
+
+The mp3genre hack introduces a new "%I" "macro":
+group.DEFAULT.announce=PRE: "%PP/%R" "%R" "%G" "%D" "%F" "%S" "%C" "%W" "%U" "%g" "%T" "%I"
+
+If you have any other announces defined do not forget to add it to those too.
+
+change ngBot.conf;
+------------------
+
+add genre variable:
+set variables(PRE) "%pf %releasename %pregroup %section %files %mbytes %cds %who %user %g_name %tagline %genre"
+
+also change theme, eg default.zst:
+announce.PRE = "[%b{%c1{pre}   }][%section] %b{%relname} by %b{%pregroup} in %b{%files} files (%b{%mbytes}MB) of %b{%genre}."
+
+example output;
+---------------
+
+mp3 with genre:
+Mon Jan 01 00:00:00 2017 PRE: "/site/mp3/0101/Example-Release-GRP" "Example-Release-GRP" "GRP" "mp3" "1" "10.0" "1" "user/10l.0Mb" "user" "GRP" "Tagline" "Pop"
+
+release without genre:
+Mon Jan 01 00:00:00 2017 PRE: "/site/mv/week-01/Example-Release-GRP" "Example-Release-GRP" "GRP" "mv" "1" "100.0" "1" "user/100.0Mb" "user" GRP" "Tagline" "n/a"
