@@ -155,4 +155,6 @@ struct module_list {
 
 typedef struct module_list module_list_t;
 
+char *mp3_genre = "Unknown";
+
 #endif

@@ -1,5 +1,5 @@
 /*
- * slv 02082012 - mp3genre.c:
+ * slv 20170414 - mp3genre.c:
  *
  *	reads last 128 bytes of mp3 and extracts genre tag
  *	ph33r my ugly "code" ;o
@@ -14,16 +14,16 @@
 
 #include "mp3genre.h"
 
-int get_mp3_genre(const char* filename) {
+char *get_mp3_genre(const char* filename) {
 	FILE *fp;
 	unsigned char id3_genre_num[1];
-	char *id3_genre = "n/a";
+	char *id3_genre = "Unknown";
 	char mp3_fbuf[2];
 	if (!(fp=fopen(filename,"rb"))) {
-		return 1;
+		return NULL;
 	}
 	if (fseek(fp,-128,SEEK_END)) {
-		return 1;
+		return NULL;
 	} else {
 	        fread(mp3_fbuf,1,3,fp); mp3_fbuf[3] = '\0';
 	        id3_genre_num[0]=255;
@@ -35,4 +35,5 @@ int get_mp3_genre(const char* filename) {
 			}
 		}
 	}
+	return id3_genre;
 }
