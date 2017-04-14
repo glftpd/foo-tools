@@ -20,7 +20,7 @@
  */
 /*
  *  foo.Pre [C-version]  (c)  tanesha team, <tanesha@tanesha.net>
-    slv 02082012 - mp3 genre added to PRE output (instead of in mod_idmp3)
+    slv 20170414 - mp3 genre added to PRE output (instead of in mod_idmp3)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +45,7 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c,v 1.19 2017/04/07 17:46:00 sorend, slv Exp $"
+#define VERSION "$Id: foo-pre.c,v 1.19 2017/04/14 14:14:00 sorend, slv Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);
@@ -54,10 +54,8 @@ extern int errno;
 hashtable_t *_config = 0;
 hashtable_t *_envctx = 0;
 
-char *id3_genre;
-
 /*
- * Acecssor method for configuration.
+ * Acessor method for configuration.
  */
 hashtable_t * get_config() {
 	if (!_config) {
@@ -1008,6 +1006,8 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	pass = pwd_getpwnam(ht_get(env, PROPERTY_USER));
 
+	char *gtmp;
+
 	if (!pass) {
 		printf(" * Error, cannot get your passwd entry! \n");
 		return 0;
@@ -1034,14 +1034,15 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	printf("   -- %10.10s: %s", "To", dest);
 
         /*
-   	 * slv 02082012 - get filename.mp3 and call get_mp3_genre(filename).
+   	 * slv - get filename.mp3 and call get_mp3_genre(filename).
          */
 	// get genre.
         for (ftmp = files; ftmp; ftmp = ftmp->next) {
 		tmp = strrchr(ftmp->file, '.');
 		if (!strcmp(tmp, ".mp3")) {
 			sprintf(buf, "%s/%s", src, ftmp->file);
-			get_mp3_genre(buf);
+			sprintf(gtmp, "%s", get_mp3_genre(buf));
+			mp3_genre = gtmp;
 			break;
 		}
 	}
@@ -1103,7 +1104,7 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 		pre_replace(buf, "%g", ht_get(env, PROPERTY_USERGROUP));
 		pre_replace(buf, "%D", section_get_property(section, PROPERTY_SECTION_NAME));
 		pre_replace(buf, "%R", rel);
-		pre_replace(buf, "%I", id3_genre);
+		pre_replace(buf, "%I", mp3_genre);
 
 		gl_gllog_add(buf);
 
@@ -1368,11 +1369,10 @@ int pre_handler(int argc, char *argv[]) {
 		quit(source);
 	}
 
-	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
-	//slv added: "<genre>"
+	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>" // slv added: "<genre>"
 	pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
 			ht_get(env, PROPERTY_USER), group,
-			argv[1], destpath, id3_genre);
+			argv[1], destpath, mp3_genre);
 	return 0;
 }
 

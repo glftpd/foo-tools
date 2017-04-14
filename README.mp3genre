@@ -1,8 +1,8 @@
-Instructions foo-pre mp3genre:
-==============================
+Instructions foo-pre with mp3genre:
+===================================
 
-Ugly hack for foo-pre to add mp3 genre in PRE output (instead of in mod_idmp3).
-This will add a new "genre" variable which you can use in PRE announces.
+This is an ugly hack for foo-pre to add mp3 genre in PRE output (instead of in mod_idmp3).
+It will add a new "genre" variable which you can use in PRE announces.
 
 compile as usual;
 -----------------
