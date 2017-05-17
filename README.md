@@ -15,12 +15,9 @@
 ## TODO:
 
 ### foo-pre
-- [ ] switch from mp3genre to master branch
-- [X] add option in pre.cfg disable genre completely(?)
 - [ ] replace pre/mp3genre by pzs-ng code or other id3 lib instead
-- [X] change bytes to mb/gb: "Totals of this pre for announce: 3F 28734928B"
 - [ ] FLAC support?
 
 ### spy
-- [ ] look into libhttpd.h since it's LGPL now (http://www.hughes.com.au/products/libhttpd)
+- [X] look into libhttpd.h since it's LGPL now (http://www.hughes.com.au/products/libhttpd)
 
