@@ -8,7 +8,7 @@
 
 - [README.1st](README.1st) Original README file
 - [CHANGES](src/CHANGES) CHANGELOG
-- [src/README.1st] (src/README.1st) Building instructions
+- [README.1st](src/README.1st) Building instructions
 - [doc](doc) Documentation on installing/running the programs
 - [README.mp3genre](src/pre/README.mp3genre) mp3genre specific README (install/configure)
 
