@@ -1023,8 +1023,6 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	else
 		addmp3genre = 0;
 	
-	printf("DEBUG: addmp3genre %i\n", addmp3genre);
-
 	chown = chowninfo_find_by_group(group);
 
 	olduid = getuid();
@@ -1040,7 +1038,6 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	// convert bytes.
 	if (bcount>=(1024*1024) && bcount<(1024*1024*1024)) { unit = "Mb"; bconv = (float)bcount/(1024*1024); }
 	if (bcount>=(1024*1024*1024)) { unit = "Gb"; bconv = (float)bcount/(1024*1024*1024); }
-//	printf(" * Totals of this pre for announce: %dF %.1f\n", fnum, bcount );
 	printf(" * Totals of this pre for announce: %dF %.1f%s\n", fnum, bconv, unit);
 
 	// get credits.
