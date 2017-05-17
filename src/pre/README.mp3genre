@@ -20,6 +20,8 @@ group.DEFAULT.announce=PRE: "%PP/%R" "%R" "%G" "%D" "%F" "%S" "%C" "%W" "%U" "%g
 
 If you have any other announces defined do not forget to add it to those too.
 
+Make sure addmp3genretogllog is set to "1".
+
 change ngBot.conf;
 ------------------
 
