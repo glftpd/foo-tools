@@ -1007,11 +1007,23 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	pass = pwd_getpwnam(ht_get(env, PROPERTY_USER));
 
 	char *gtmp;
+	char *unit = "B";
+	float bconv;
+	int addmp3genre;
 
 	if (!pass) {
 		printf(" * Error, cannot get your passwd entry! \n");
 		return 0;
 	}
+	
+	tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
+
+	if (tmp)
+		addmp3genre = atoi(tmp);
+	else
+		addmp3genre = 0;
+	
+	printf("DEBUG: addmp3genre %i\n", addmp3genre);
 
 	chown = chowninfo_find_by_group(group);
 
@@ -1024,7 +1036,12 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	// get totals.
 	flist_size(files, &bcount, &fnum);
-	printf(" * Totals of this pre for announce: %dF %.0fB\n", fnum, bcount);
+
+	// convert bytes.
+	if (bcount>=(1024*1024) && bcount<(1024*1024*1024)) { unit = "Mb"; bconv = (float)bcount/(1024*1024); }
+	if (bcount>=(1024*1024*1024)) { unit = "Gb"; bconv = (float)bcount/(1024*1024*1024); }
+//	printf(" * Totals of this pre for announce: %dF %.1f\n", fnum, bcount );
+	printf(" * Totals of this pre for announce: %dF %.1f%s\n", fnum, bconv, unit);
 
 	// get credits.
 	credits = creditlist_create_from_filelist(files);
@@ -1037,13 +1054,15 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
    	 * slv - get filename.mp3 and call get_mp3_genre(filename).
          */
 	// get genre.
-        for (ftmp = files; ftmp; ftmp = ftmp->next) {
-		tmp = strrchr(ftmp->file, '.');
-		if (!strcmp(tmp, ".mp3")) {
-			sprintf(buf, "%s/%s", src, ftmp->file);
-			sprintf(gtmp, "%s", get_mp3_genre(buf));
-			mp3_genre = gtmp;
-			break;
+	if (addmp3genre) {
+	        for (ftmp = files; ftmp; ftmp = ftmp->next) {
+			tmp = strrchr(ftmp->file, '.');
+			if (!strcmp(tmp, ".mp3")) {
+				sprintf(buf, "%s/%s", src, ftmp->file);
+				sprintf(gtmp, "%s", get_mp3_genre(buf));
+				mp3_genre = gtmp;
+				break;
+			}
 		}
 	}
 
@@ -1104,7 +1123,8 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 		pre_replace(buf, "%g", ht_get(env, PROPERTY_USERGROUP));
 		pre_replace(buf, "%D", section_get_property(section, PROPERTY_SECTION_NAME));
 		pre_replace(buf, "%R", rel);
-		pre_replace(buf, "%I", mp3_genre);
+		if (addmp3genre)
+			pre_replace(buf, "%I", mp3_genre);
 
 		gl_gllog_add(buf);
 
@@ -1268,6 +1288,8 @@ int pre_handler(int argc, char *argv[]) {
 	char buf[1024];
 	int rc;
 
+	int addmp3genre;
+
 	env = get_context();
 	cfg = get_config();
 
@@ -1285,6 +1307,8 @@ int pre_handler(int argc, char *argv[]) {
 	if (!groups)
 		quit(" * Error finding your groups, go bug sysop!\n");
 
+        tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
+
 	if (argc < 2) {
 		printf(USAGE);
 
@@ -1292,6 +1316,11 @@ int pre_handler(int argc, char *argv[]) {
 
 		quit(0);
 	}
+
+        if (tmp)
+                addmp3genre = atoi(tmp);
+        else
+                addmp3genre = 0;
 
 	// check if someone are trying to fool us.
 	if (strchr(argv[1], '/'))
@@ -1369,10 +1398,16 @@ int pre_handler(int argc, char *argv[]) {
 		quit(source);
 	}
 
-	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>" // slv added: "<genre>"
-	pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-			ht_get(env, PROPERTY_USER), group,
-			argv[1], destpath, mp3_genre);
+	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
+	// slv added: "<genre>"
+	if (addmp3genre)
+		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
+				ht_get(env, PROPERTY_USER), group,
+				argv[1], destpath, mp3_genre);
+	else
+		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
+				ht_get(env, PROPERTY_USER), group,
+				argv[1], destpath);
 	return 0;
 }
 
