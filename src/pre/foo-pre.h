@@ -72,6 +72,8 @@ typedef unsigned short int ushort;
 #define MODULE_SETCONFIG_FUNC "set_config"
 #define MODULE_SETENV_FUNC "set_env"
 
+#define PROPERTY_ADDMP3GENRE "addmp3genretogllog"
+
 /*
  * Holds info about chowns
  */
