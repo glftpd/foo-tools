@@ -71,3 +71,21 @@ Nov  1 2011: * Fixed mktime timeout on configure (thks to peakz)
              * Added a little help file.
 Nov  2 2011: * Fixed a bug about "you're not in any of your predir" :)
 Mar 31 2013: * Fixed a strncpy bug while resolving links on x64 env. which lead to a "destination section's path doesnt exist" (overflow).
+
+Nov  2 2013: * compilation fixes
+Nov 16 2013: * deleted some generated files and update configure
+Mar  9 2014: * added current mp3info version
+Mar  9 2014: * added stack protection flags to compilation
+
+//slv
+Aug 08 2012: * MP3 genre added to PRE output (instead of in mod_idmp3)
+Apr 09 2017: * cleaned up files
+Apr 09 2017: * created makefile for mp3genre, fixed a few compiler warnings
+Apr 09 2017: * merged commits 2014/15 commits from glftpd/foo-tools.git
+Apr 09 2017: * updated mp3 genres from pzs-ng/zipscript/src/multimedia.c
+
+
+//glftpd-scripts
+Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs
+Sep 15 2015: * fix compile warning
+

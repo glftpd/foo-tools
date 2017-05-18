@@ -12,6 +12,7 @@ help:
 	@echo Available targets:
 	@echo "  make build     - builds most."
 	@echo "  make show      - shows build binaries."
+	@echo "  make foobnc    - makes foobnc."
 	@echo "  make webspy    - makes webspy."
 	@echo "  make clean     - cleans."
 
@@ -26,6 +27,9 @@ show:
 	@size bouncer/simple_entry nfo/nfocleaner nukes/foo-nukes pre/foo-pre \
 	reset/foo-reset sfv/blehsfv sfv/createsfv who/spy who/webspy
 
+foobnc: foobnc
+	(cd bouncer; make foobnc)
+
 webspy: build
 	(cd who; make webspy)
 
@@ -36,8 +40,8 @@ clean:
 
 distclean: clean
 	/bin/rm -f Makefile config.h config.status config.cache config.log
-	@for dir in ${DIRS}; do \
-	  (cd $$dir && $(MAKE) distclean) \
-	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
-	done && test -z "$$fail"
+#	@for dir in ${DIRS}; do \
+#	  (cd $$dir && $(MAKE) distclean) \
+#	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+#	done && test -z "$$fail"
 
