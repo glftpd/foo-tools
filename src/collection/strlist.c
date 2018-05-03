@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fnmatch.h>
 #include <util/linefilereader.h>
 
 long str_count(strlist_t *l) {

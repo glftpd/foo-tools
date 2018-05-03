@@ -5,7 +5,11 @@
  * http://www.pzs-ng.com
  *
 */
+#include <string.h>
 #include <stdio.h>
+
+#ifndef _mp3genre_h_
+#define _mp3genre_h_
 
 char *genre_s[] = {
 	"Blues", "Classic Rock", "Country", "Dance",
@@ -47,4 +51,7 @@ char *genre_s[] = {
 	"Thrash Metal", "Anime", "JPop", "Synthpop",
 	"Unknown"
 };
+
 unsigned char genre_count=149;
+#endif
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

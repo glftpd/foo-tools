@@ -29,6 +29,7 @@
 #include <string.h>
 
 // libhttpd includes
+// #include <httpd.h>
 #include <httpd.h>
 
 // project includes

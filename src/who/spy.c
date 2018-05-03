@@ -113,6 +113,9 @@ int main(int argc, char *argv[]) {
 	unsigned long ipckey;
 	char glconf[300];
 
+	void spy_view_handler(spy_list_t *who);
+	void spy_view_deinit();
+
 	if (argc > 1)
 		strcpy(glconf, argv[1]);
 	else

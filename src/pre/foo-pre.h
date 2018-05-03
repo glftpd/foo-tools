@@ -157,6 +157,15 @@ struct module_list {
 
 typedef struct module_list module_list_t;
 
-char *mp3_genre = "Unknown";
+int touch_dir(char *dir);
+int touch_file(char *fname);
+
+//DEBUG:
+// not needed?
+// char *mp3_genre = "Unknown";
+char *get_mp3_genre(const char* filename);
+//extern char* mp3_genre;
+//extern char mp3_genre[40];
 
 #endif
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

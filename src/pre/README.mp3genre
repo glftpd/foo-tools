@@ -15,6 +15,9 @@ etc
 configure pre.cfg;
 -------------------
 
+Enable mp3genre:
+addmp3genretogllog=1
+
 The mp3genre hack introduces a new "%I" "macro":
 group.DEFAULT.announce=PRE: "%PP/%R" "%R" "%G" "%D" "%F" "%S" "%C" "%W" "%U" "%g" "%T" "%I"
 

@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <stdarg.h>
+#include <ctype.h>
 #include <lib/dirlist.h>
 
 // the windows.

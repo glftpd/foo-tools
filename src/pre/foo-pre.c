@@ -20,7 +20,7 @@
  */
 /*
  *  foo.Pre [C-version]  (c)  tanesha team, <tanesha@tanesha.net>
-    slv 20170414 - mp3 genre added to PRE output (instead of in mod_idmp3)
+ slv 20170414 - mp3 genre added to PRE output (instead of in mod_idmp3)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +45,7 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c,v 1.19 2017/04/14 14:14:00 sorend, slv Exp $"
+#define VERSION "$Id: foo-pre.c,v 1.19 2018/05/02 13:37:00 sorend, slv Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);
@@ -53,6 +53,9 @@ extern int errno;
 
 hashtable_t *_config = 0;
 hashtable_t *_envctx = 0;
+
+// TODO: check if its better to use extern keyword in header
+char mp3_genre[40];
 
 /*
  * Acessor method for configuration.
@@ -87,14 +90,25 @@ void pre_log(char *type, char *fmt, ...) {
 	va_list va;
 	FILE *f;
 
+	char fdate[12], ftime[10];
+	time_t now;
+	struct tm *tm_now;
+
+	now = time(0);
+	tm_now = localtime(&now);
+
+	strftime(fdate, 1024, "%Y-%m-%d", tm_now);
+	strftime(ftime, 1024, "%H:%M:%S", tm_now);
+
 	f = (FILE*)ht_get(env, "logfh");
 
 	if (!f) {
 		f = fopen(PRE_LOGFILE, "a");
 		ht_put_obj(env, "logfh", f);
 	}
-
-	fprintf(f, "%s: ", type);
+	// slv: added date/time
+	//	fprintf(f, "%s: ", type);
+	fprintf(f, "%s %s %s: ", fdate, ftime, type);
 	va_start(va, fmt);
 	vfprintf(f, fmt, va);
 	va_end(va);
@@ -117,8 +131,8 @@ char *group_get_property(char *grp, char *prop) {
 		// try to get default property.
 		sprintf(buf, "group.DEFAULT.%s", prop);
 		tmp = ht_get(cfg, buf);
-	}		
-	
+	}
+
 	return tmp;
 }
 
@@ -228,7 +242,7 @@ strlist_t * user_find_groups(char *u) {
 
 	while (lfr_getline(&lfr, buf, 1024) > -1) {
 		if (!strncasecmp(buf, "GROUP ", 6) ||
-		    !strncasecmp(buf, "PRIVATE ", 8)) {
+				!strncasecmp(buf, "PRIVATE ", 8)) {
 
 			tmp = strchr(buf, ' ') + 1;
 
@@ -348,7 +362,7 @@ char * group_find_by_dir(strlist_t *grps, char *path) {
  *
  * Outputs info about a user's groups and the groupdirs.
  *
- */ 
+ */
 int show_groupdirs(strlist_t *grps) {
 	strlist_iterator_t *i;
 	char *tmpgroup, *tmppredir, *tmpallowed, *sitedir;
@@ -366,7 +380,7 @@ int show_groupdirs(strlist_t *grps) {
 
 	for (i = str_iterator(grps); str_iterator_hasnext(i); ) {
 		tmpgroup = str_iterator_next(i);
-		
+
 		tmppredir = group_get_property(tmpgroup, PROPERTY_GROUP_DIR);
 		tmpallowed = group_get_property(tmpgroup, PROPERTY_GROUP_ALLOW);
 
@@ -378,7 +392,7 @@ int show_groupdirs(strlist_t *grps) {
 		st_initialize(&dirst, tmppredir, "|");
 		st_initialize(&allowst, tmpallowed, "|");
 		strcpy(buf, tmpgroup);
-		
+
 		while (st_hasnext(&dirst) || st_hasnext(&allowst)) {
 			tmppredir = st_next(&dirst);
 			tmpallowed = st_next(&allowst);
@@ -501,7 +515,7 @@ char * userfile_update(creditlist_t *l) {
 	if ((gl_stat_section == -1) && (gl_credit_section == -1)) {
 		printf(" * ERROR: No gl_stat_section or gl_credit_section defined for\n");
 		printf("          section %s, %s got no stats/credits for pre !\n", section,
-			   pass->name);
+				pass->name);
 
 		return "";
 	}
@@ -597,7 +611,7 @@ filelist_t * filelist_find_by_dir(filelist_t *l, char *base, char *path, chownin
 
 	while ((dent = readdir(dh))) {
 		if ((!strcmp(dent->d_name, ".")) ||
-		    (!strcmp(dent->d_name, "..")))
+				(!strcmp(dent->d_name, "..")))
 			continue;
 
 		sprintf(buf, "%s/%s/%s", base, path, dent->d_name);
@@ -809,8 +823,8 @@ void reverse_dirlog_add(struct subdir_list *tsub, char *dest, char *rel, pwdfile
 
 	if (!gl_dirlog_add(buf, uid, gid, tsub->files, tsub->bytes))
 		printf(" * Error adding to dirlog: %s/%s (%dF %.1fMb)\n",
-		       rel, tsub->dir,
-		       tsub->files, (float)tsub->bytes/(1024*1024));
+				rel, tsub->dir,
+				tsub->files, (float)tsub->bytes/(1024*1024));
 }
 
 /*
@@ -975,7 +989,7 @@ int pre_do_modules(filelist_t *files, char *path, char *argv[], struct subdir_li
 
 	// no modules in config, return
 	if (!tmp)
-		return;
+		return 0;
 
 	st_initialize(&st, tmp, "|");
 
@@ -991,7 +1005,7 @@ int pre_do_modules(filelist_t *files, char *path, char *argv[], struct subdir_li
 int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv[]) {
 	hashtable_t *cfg, *env;
 
-	char buf[1024], tbuf[50], ubuf[300], *tmp;
+	char buf[1024], tbuf[50], ubuf[300], *tmp, *tmpf;
 	filelist_t *files, *ftmp;
 	creditlist_t *credits, *tcred;
 	struct subdir_list *subdirs;
@@ -1006,7 +1020,11 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	pass = pwd_getpwnam(ht_get(env, PROPERTY_USER));
 
-	char *gtmp;
+	//	char *gtmp;
+	//	char *mp3_genre;
+	char mp3_genre[40] = "Unknown";
+
+
 	char *unit = "B";
 	float bconv;
 	int addmp3genre;
@@ -1015,14 +1033,14 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 		printf(" * Error, cannot get your passwd entry! \n");
 		return 0;
 	}
-	
+
 	tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
 
 	if (tmp)
 		addmp3genre = atoi(tmp);
 	else
 		addmp3genre = 0;
-	
+
 	chown = chowninfo_find_by_group(group);
 
 	olduid = getuid();
@@ -1047,21 +1065,61 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	printf("   -- %10.10s: %s\n", "From", src);
 	printf("   -- %10.10s: %s", "To", dest);
 
-        /*
-   	 * slv - get filename.mp3 and call get_mp3_genre(filename).
-         */
+	/*
+	 * slv - get filename.mp3 and call get_mp3_genre(filename).
+	 */
 	// get genre.
+
+	// TODO: cleanup here
+	/*
+	   if (addmp3genre) {
+	   for (ftmp = files; ftmp; ftmp = ftmp->next) {
+	   tmp = strrchr(ftmp->file, '.');
+	   if (!strcmp(tmp, ".mp3")) {
+	   if (!strcmp(ftmp->file, ".mp3")) {
+	//sprintf(buf, "%s/%s", src, ftmp->file);
+	//sprintf(buf, "%s/%s", src, tmp);
+	//sprintf(gtmp, "%s", get_mp3_genre(buf));
+	printf ("DEBUG: %s\n", ftmp->file);
+	//mp3_genre = gtmp;
+	break;
+	}
+	}
+	}
+	}
+	 */
+
+//                        printf ("\nDEBUG0: strncmp %s %i\n", flist_getfilename(ftmp), strncmp(flist_getfilename(ftmp), ".mp3", 4));
+//                        printf ("\nDEBUG0: strcmp %s %i\n", flist_getfilename(ftmp), strcmp(flist_getfilename(ftmp), ".mp3"));
+//                        printf ("\nDEBUG0: strcasecmp %s %d\n", flist_getfilename(ftmp), strcasecmp(flist_getfilename(ftmp), ".mp3"));
+//                        printf ("\nDEBUG0: strcmp+strrchr %s %i\n", flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
+//                        if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") = 0 ) printf ("DEBUG0: if - 0");
+//                        tmpf = malloc(strlen(ftmp->file));
+//			if (!strncmp(flist_getfilename(ftmp), ".mp3", 4))
+//			if (strncmp(flist_getfilename(ftmp), ".mp3", 4) != 4 )
 	if (addmp3genre) {
-	        for (ftmp = files; ftmp; ftmp = ftmp->next) {
-			tmp = strrchr(ftmp->file, '.');
-			if (!strcmp(tmp, ".mp3")) {
-				sprintf(buf, "%s/%s", src, ftmp->file);
-				sprintf(gtmp, "%s", get_mp3_genre(buf));
-				mp3_genre = gtmp;
+		for (ftmp = files; ftmp; ftmp = ftmp->next) {
+			printf ("\nDEBUG0: ftmp->file %s\n", ftmp->file);
+			if (!strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3")) {
+				tmpf = flist_getfilename(ftmp);
+                                printf ("\nDEBUG0: *got mp3* flist_getfilename %s ftmp %s \n", flist_getfilename(ftmp), ftmp->file);
+				printf ("\nDEBUG1: tmpf, break %s\n", tmpf);
 				break;
 			}
 		}
 	}
+	if (strlen(tmpf) > 0) {
+		printf ("\nDEBUG2: if tmpf - list_getfilename - %s\n", flist_getfilename(ftmp));
+		printf ("\nDEBUG2: if tmpf - ftmp->file %s\n", ftmp->file);
+		printf ("\nDEBUG2: tmpf %s\n", tmpf);
+		sprintf(buf, "%s/%s", src, ftmp->file);
+		sprintf(buf, "%s/%s", src, tmpf);
+		printf ("\nDEBUG3: tmpf %s\nbuf %s\nftmpfile %s\n", tmpf, buf, ftmp->file);
+		sprintf(mp3_genre, "%s", get_mp3_genre(buf));
+		printf ("\nDEBUG3: get_mp3_genre %s\n", get_mp3_genre(buf));
+		//free(tmpf);
+	}
+	//quit(0);
 
 	// dont forget to chown maindir
 	chowninfo_apply_to_file(src, chown);
@@ -1189,7 +1247,7 @@ int touch_file(char *fname) {
 			goto err;
 	} else {
 		if (write(fd, &byte, sizeof(byte)) != sizeof(byte)) {
-err:                    
+err:
 			rval = 1;
 		} else if (ftruncate(fd, (off_t)0)) {
 			rval = 1;
@@ -1304,9 +1362,11 @@ int pre_handler(int argc, char *argv[]) {
 	if (!groups)
 		quit(" * Error finding your groups, go bug sysop!\n");
 
-        tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
+	tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
 
 	if (argc < 2) {
+		// TODO: cleanup
+		printf("\nDEBUG: tmp: %s (PROPERTY_ADDMP3GENRE)\n", tmp);
 		printf(USAGE);
 
 		show_groupdirs(groups);
@@ -1314,10 +1374,19 @@ int pre_handler(int argc, char *argv[]) {
 		quit(0);
 	}
 
-        if (tmp)
-                addmp3genre = atoi(tmp);
-        else
-                addmp3genre = 0;
+	/*
+	   if (tmp)
+	   addmp3genre = atoi(tmp);
+	   else
+	   addmp3genre = 0;
+	 */
+	if (tmp) {
+		addmp3genre = atoi(tmp);
+		printf("\nDEBUG: if tmp: %s addmp3genre %i\n", tmp, addmp3genre);
+	} else {
+		addmp3genre = 0;
+		printf("\nDEBUG: else tmp: %s addmp3genre %i\n", tmp, addmp3genre);
+	}
 
 	// check if someone are trying to fool us.
 	if (strchr(argv[1], '/'))
@@ -1356,9 +1425,9 @@ int pre_handler(int argc, char *argv[]) {
 	destpath = section_expand_path(dest_section);
 	ht_put(env, "RESOLVEDDESTINATION", destpath);
 
-        strcpy(source, sourcebis);
-        strcat(source, "/");
-        strcat(source, argv[1]);
+	strcpy(source, sourcebis);
+	strcat(source, "/");
+	strcat(source, argv[1]);
 
 	// check if source dir is okay.
 	if ((stat(source, &st) == -1) || !S_ISDIR(st.st_mode)) {
@@ -1387,16 +1456,25 @@ int pre_handler(int argc, char *argv[]) {
 			printf(" ! Failed rename existing to %s_TRADING ..\n", argv[1]);
 	}
 
+	// TODO: cleanup
+	printf("DEBUG: argv1 %s\n", argv[1]);
+	printf("DEBUG: source %s\n", source);
+	printf("DEBUG: source bis %s\n", sourcebis );
+
 	// check if destination exists.
 	if (stat(destination, &st) == -1)
 		pre(dest_section, destination, source, argv[1], group, argv);
+
 	else {
+		//TODO: fix force msg "-H FORCE"
 		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n");
+		//DEBUG:
+		//		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n", argv[1], dest_section);
 		quit(source);
 	}
 
 	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
-	// slv added: "<genre>"
+	// slv: added "<genre>"
 	if (addmp3genre)
 		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
 				ht_get(env, PROPERTY_USER), group,
@@ -1469,4 +1547,4 @@ void quit(char *s, ...) {
 
 	exit(0);
 }
-
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

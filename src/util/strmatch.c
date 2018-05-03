@@ -20,6 +20,7 @@
  */
 
 
+#include <ctype.h>
 #include "strmatch.h"
 
 int _strmatch_patmat(const char *pat, const char *str, int options) {

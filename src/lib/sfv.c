@@ -39,6 +39,7 @@
 #include <sys/mman.h>
 #include <string.h>
 #include <glob.h>
+#include <ctype.h>
 #include "sfv_table.h"
 #include <util/linefilereader.h>
 
