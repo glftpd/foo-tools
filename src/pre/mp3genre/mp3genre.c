@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 char *get_mp3_genre(const char* filename) {
 
 	unsigned char id3_genre_num[1];
-	char *id3_genre = "Unknown";
+        char *id3_genre = "Unknown";
 	FILE *f, *mp3file;
 	char mp3_fbuf[4];
 
@@ -56,11 +56,9 @@ char *get_mp3_genre(const char* filename) {
 	printf("%s (%d)\n",id3_genre,id3_genre_num[0]);
 #endif
 #ifdef DEBUG
-# ifdef PRE_LOGFILE
-	f = fopen(PRE_LOGFILE, "a");
-# else
-	f = fopen("mp3genre.log", "a");
-# endif
+	f = fopen("/ftp-data/logs/foo-pre.log", "a");
+	if (!f)
+		f = fopen("mp3genre.log", "a");
 	char fdate[12], ftime[10];
 	time_t now;
 	struct tm *tm_now;
