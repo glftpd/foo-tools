@@ -1005,7 +1005,7 @@ int pre_do_modules(filelist_t *files, char *path, char *argv[], struct subdir_li
 int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv[]) {
 	hashtable_t *cfg, *env;
 
-	char buf[1024], tbuf[50], ubuf[300], *tmp, *tmpf;
+	char buf[1024], tbuf[50], ubuf[300], *tmp;
 	filelist_t *files, *ftmp;
 	creditlist_t *credits, *tcred;
 	struct subdir_list *subdirs;
@@ -1019,10 +1019,6 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	env = get_context();
 
 	pass = pwd_getpwnam(ht_get(env, PROPERTY_USER));
-
-	//	char *gtmp;
-	//	char *mp3_genre;
-	char mp3_genre[40] = "Unknown";
 
 
 	char *unit = "B";
@@ -1040,6 +1036,12 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 		addmp3genre = atoi(tmp);
 	else
 		addmp3genre = 0;
+
+	//	char *gtmp;
+	//	char *mp3_genre;
+	char *tmpf = NULL;
+	char mp3_genre[40] = "Unknown";
+	
 
 	chown = chowninfo_find_by_group(group);
 
@@ -1070,56 +1072,62 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	 */
 	// get genre.
 
-	// TODO: cleanup here
-	/*
-	   if (addmp3genre) {
-	   for (ftmp = files; ftmp; ftmp = ftmp->next) {
-	   tmp = strrchr(ftmp->file, '.');
-	   if (!strcmp(tmp, ".mp3")) {
-	   if (!strcmp(ftmp->file, ".mp3")) {
-	//sprintf(buf, "%s/%s", src, ftmp->file);
-	//sprintf(buf, "%s/%s", src, tmp);
-	//sprintf(gtmp, "%s", get_mp3_genre(buf));
-	printf ("DEBUG: %s\n", ftmp->file);
-	//mp3_genre = gtmp;
-	break;
+	// TODO: test666, emtpy tmpf, cleanup here
+/*
+	if (addmp3genre) {
+		for (ftmp = files; ftmp; ftmp = ftmp->next) {
+			tmp = strrchr(ftmp->file, '.');
+			if (!strcmp(tmp, ".mp3")) {
+				if (!strcmp(ftmp->file, ".mp3")) {
+					//sprintf(buf, "%s/%s", src, ftmp->file);
+					//sprintf(buf, "%s/%s", src, tmp);
+					//sprintf(gtmp, "%s", get_mp3_genre(buf));
+					printf ("DEBUG: %s\n", ftmp->file);
+					//mp3_genre = gtmp;
+					break;
+				}
+			}
+		}
 	}
-	}
-	}
-	}
-	 */
+*/
 
 //                        printf ("\nDEBUG0: strncmp %s %i\n", flist_getfilename(ftmp), strncmp(flist_getfilename(ftmp), ".mp3", 4));
 //                        printf ("\nDEBUG0: strcmp %s %i\n", flist_getfilename(ftmp), strcmp(flist_getfilename(ftmp), ".mp3"));
 //                        printf ("\nDEBUG0: strcasecmp %s %d\n", flist_getfilename(ftmp), strcasecmp(flist_getfilename(ftmp), ".mp3"));
-//                        printf ("\nDEBUG0: strcmp+strrchr %s %i\n", flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
 //                        if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") = 0 ) printf ("DEBUG0: if - 0");
-//                        tmpf = malloc(strlen(ftmp->file));
+//                        
 //			if (!strncmp(flist_getfilename(ftmp), ".mp3", 4))
 //			if (strncmp(flist_getfilename(ftmp), ".mp3", 4) != 4 )
 	if (addmp3genre) {
 		for (ftmp = files; ftmp; ftmp = ftmp->next) {
-			printf ("\nDEBUG0: ftmp->file %s\n", ftmp->file);
-			if (!strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3")) {
-				tmpf = flist_getfilename(ftmp);
-                                printf ("\nDEBUG0: *got mp3* flist_getfilename %s ftmp %s \n", flist_getfilename(ftmp), ftmp->file);
+			printf ("\nDEBUG0: ftmpfile %s\n", ftmp->file);
+			printf ("\nDEBUG0: strcmp+strrchr %s %i\n", flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
+			if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") == 0) {
+				printf ("\nDEBUG0: *got mp3* flist_getfilename %s ftmp %s \n", flist_getfilename(ftmp), ftmp->file);
+				tmpf = malloc(strlen(ftmp->file));
+				sprintf(tmpf,"%s",flist_getfilename(ftmp));
 				printf ("\nDEBUG1: tmpf, break %s\n", tmpf);
 				break;
 			}
 		}
+//	quit(0);
+//		printf ("\nDEBUG0: strnlen tmpf %s\n", strlen(tmpf));
+		if ((tmpf != NULL) && (strlen(tmpf) > 0)) {
+			printf ("\nDEBUG2: if tmpf - list_getfilename - %s\n", flist_getfilename(ftmp));
+			printf ("\nDEBUG2: if tmpf - ftmp->file %s\n", ftmp->file);
+			printf ("\nDEBUG2: tmpf %s\n", tmpf);
+			sprintf(buf, "%s/%s", src, ftmp->file);
+			sprintf(buf, "%s/%s", src, tmpf);
+			printf ("\nDEBUG3: tmpf %s\nbuf %s\nftmpfile %s\n", tmpf, buf, ftmp->file);
+			//sprintf(mp3_genre, "%s", get_mp3_genre(buf));
+			//printf ("\nDEBUG3: get_mp3_genre %s\n", get_mp3_genre(buf));
+			free(tmpf);
+		} else {
+			sprintf(mp3_genre, "%s", "leeg");
+			printf ("\nDEBUG4: else\n");
+		}
 	}
-	if (strlen(tmpf) > 0) {
-		printf ("\nDEBUG2: if tmpf - list_getfilename - %s\n", flist_getfilename(ftmp));
-		printf ("\nDEBUG2: if tmpf - ftmp->file %s\n", ftmp->file);
-		printf ("\nDEBUG2: tmpf %s\n", tmpf);
-		sprintf(buf, "%s/%s", src, ftmp->file);
-		sprintf(buf, "%s/%s", src, tmpf);
-		printf ("\nDEBUG3: tmpf %s\nbuf %s\nftmpfile %s\n", tmpf, buf, ftmp->file);
-		sprintf(mp3_genre, "%s", get_mp3_genre(buf));
-		printf ("\nDEBUG3: get_mp3_genre %s\n", get_mp3_genre(buf));
-		//free(tmpf);
-	}
-	//quit(0);
+//	quit(0);
 
 	// dont forget to chown maindir
 	chowninfo_apply_to_file(src, chown);
@@ -1366,7 +1374,7 @@ int pre_handler(int argc, char *argv[]) {
 
 	if (argc < 2) {
 		// TODO: cleanup
-		printf("\nDEBUG: tmp: %s (PROPERTY_ADDMP3GENRE)\n", tmp);
+		//printf("\nDEBUG: tmp: %s (PROPERTY_ADDMP3GENRE)\n", tmp);
 		printf(USAGE);
 
 		show_groupdirs(groups);
@@ -1375,11 +1383,11 @@ int pre_handler(int argc, char *argv[]) {
 	}
 
 	/*
-	   if (tmp)
-	   addmp3genre = atoi(tmp);
-	   else
-	   addmp3genre = 0;
-	 */
+	if (tmp)
+		addmp3genre = atoi(tmp);
+	else
+		addmp3genre = 0;
+	*/
 	if (tmp) {
 		addmp3genre = atoi(tmp);
 		printf("\nDEBUG: if tmp: %s addmp3genre %i\n", tmp, addmp3genre);
