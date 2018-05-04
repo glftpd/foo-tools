@@ -54,8 +54,7 @@ extern int errno;
 hashtable_t *_config = 0;
 hashtable_t *_envctx = 0;
 
-// TODO: check if its better to use extern keyword in header
-char mp3_genre[40];
+char mp3_genre[40] = "Unknown";
 
 /*
  * Acessor method for configuration.
@@ -1039,10 +1038,9 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	//	char *gtmp;
 	//	char *mp3_genre;
+	//	char mp3_genre[40] = "Unknown";
 	char *tmpf = NULL;
-	char mp3_genre[40] = "Unknown";
 	
-
 	chown = chowninfo_find_by_group(group);
 
 	olduid = getuid();
@@ -1104,8 +1102,8 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 			printf ("\nDEBUG0: strcmp+strrchr %s %i\n", flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
 			if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") == 0) {
 				printf ("\nDEBUG0: *got mp3* flist_getfilename %s ftmp %s \n", flist_getfilename(ftmp), ftmp->file);
-				tmpf = malloc(strlen(ftmp->file));
-				sprintf(tmpf,"%s",flist_getfilename(ftmp));
+				tmpf = malloc(strlen(flist_getfilename(ftmp)));
+				sprintf(tmpf,"%s", flist_getfilename(ftmp));
 				printf ("\nDEBUG1: tmpf, break %s\n", tmpf);
 				break;
 			}
@@ -1116,16 +1114,25 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 			printf ("\nDEBUG2: if tmpf - list_getfilename - %s\n", flist_getfilename(ftmp));
 			printf ("\nDEBUG2: if tmpf - ftmp->file %s\n", ftmp->file);
 			printf ("\nDEBUG2: tmpf %s\n", tmpf);
-			sprintf(buf, "%s/%s", src, ftmp->file);
+			//sprintf(buf, "%s/%s", src, flist_getfilename(ftmp));
 			sprintf(buf, "%s/%s", src, tmpf);
-			printf ("\nDEBUG3: tmpf %s\nbuf %s\nftmpfile %s\n", tmpf, buf, ftmp->file);
+			printf ("\nDEBUG3: tmpf %s\nDEBUG3: buf %s\nDEBUG3: flist_gfn %s\n", tmpf, buf, flist_getfilename(ftmp));
+			
+			//if (tmp != NULL)
+			//sprintf(mp3_genre, "%s", tmp);
 			//sprintf(mp3_genre, "%s", get_mp3_genre(buf));
-			//printf ("\nDEBUG3: get_mp3_genre %s\n", get_mp3_genre(buf));
+			//sprintf(tmp, "%s", get_mp3_genre(buf));
+
+			tmp = get_mp3_genre(buf);
+			if ((tmp != NULL) && (strlen(tmp) > 0))
+				sprintf(mp3_genre, "%s", tmp);
+			printf ("\nDEBUG3: tmp %s\n", tmp);
 			free(tmpf);
-		} else {
-			sprintf(mp3_genre, "%s", "leeg");
-			printf ("\nDEBUG4: else\n");
-		}
+		}	
+//		} else {
+//			sprintf(mp3_genre, "%s", "EMPTY");
+//			printf ("\nDEBUG4: else\n");
+//		}
 	}
 //	quit(0);
 
