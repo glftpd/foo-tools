@@ -18,7 +18,7 @@
 - [ ] replace pre/mp3genre by pzs-ng code or other id3 lib instead
 - [ ] FLAC support?
 - [X] [#5](https://github.com/glftpd/foo-tools/issues/5) add option to force using mv external 
-- [X] add audiosort after pre
+- [ ] add audiosort after pre
 
 ### spy
 - [X] look into libhttpd.h since it's LGPL now (http://www.hughes.com.au/products/libhttpd)
