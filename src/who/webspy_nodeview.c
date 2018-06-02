@@ -39,8 +39,8 @@ char *webspy_nodeview_item(struct ONLINE *o, int pos, time_t now) {
 	ml = ml_addint(ml, NODEVIEWITEM_POS, pos);
 	ml = ml_addint(ml, NODEVIEWITEM_PID, o->procid);
 	ml = ml_addstring(ml, NODEVIEWITEM_USERNAME, o->username);
-
-	spy_makeage(o->tstart.tv_sec, now, agebuf);
+	
+        spy_makeage(o->tstart.tv_sec, now, agebuf);
 	ml = ml_addstring(ml, NODEVIEWITEM_IDLE, agebuf);
 					  
 	sprintf(tbuf, o->status);

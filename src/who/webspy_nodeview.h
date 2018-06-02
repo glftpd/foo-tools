@@ -25,7 +25,6 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-// #include <httpd.h>
 #include <httpd.h>
 #include "webspy.h"
 

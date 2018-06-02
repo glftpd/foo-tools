@@ -29,7 +29,6 @@
 #include <string.h>
 
 // libhttpd includes
-// #include <httpd.h>
 #include <httpd.h>
 
 // project includes
@@ -76,7 +75,7 @@ hashtable_t *get_context() {
 
 void spy_makeage(time_t t, time_t age, char *buf) {
 	time_t days=0,hours=0,mins=0,secs=0;
-        
+
 	if (t>=age)
 		sprintf(buf,"0m 0s");
 	else {
@@ -122,6 +121,7 @@ void spy_who_init() {
 
 	rc = who_init(who, ipckey);
 
+
 	if (rc != 1) {
 		printf("could not attach shared memory of glftpd.\n");
 		exit(1);
@@ -144,7 +144,9 @@ void spy_util_init() {
 }
 
 int spy_http_auth(httpd *server) {
-	char *user, *pass;
+return 0;
+// DEBUG:
+/*	char *user, *pass;
 
 	user = ht_get(get_config(), PROPERTY_HTTP_USER);
 	pass = ht_get(get_config(), PROPERTY_HTTP_PASS);
@@ -162,6 +164,7 @@ int spy_http_auth(httpd *server) {
 	}
 
 	return 1;
+*/
 }
 
 
@@ -171,7 +174,7 @@ char * spy_var_join(httpd *server) {
 	hashtable_item_t *i;
 	int nlen = 0;
 	char *nv;
-
+printf("\nDEBUG: spyvarjoin\n");
 	ht_init(&ht);
 
 	tv = httpdGetVariableByName(server, "pid");
@@ -224,6 +227,7 @@ void spy_http_create_view(httpd *server) {
 	struct macro_list *ml = 0;
 	int i;
 
+/*
 	for (i = 0; webspy_modules[i].name != 0; i++) {
 
 		// get output from module.
@@ -237,19 +241,25 @@ void spy_http_create_view(httpd *server) {
 
 		printf("done with module: %s\n", webspy_modules[i].name);
 	}
+*/
 
 	// handle refresh tag.
-	moduleout = spy_var_join(server);
-	ml = ml_addstring(ml, INDEX_REFRESH, moduleout);
-	free(moduleout);
+//	moduleout = spy_var_join(server);
 
-	index = ml_replacebuf(ml, ht_get(get_config(), PROPERTY_HTML_INDEX));
+//	ml = ml_addstring(ml, INDEX_REFRESH, moduleout);
+//	free(moduleout);
 
-	ml_free(ml);
+//	index = ml_replacebuf(ml, ht_get(get_config(), PROPERTY_HTML_INDEX));
+//      printf("\nDEBUG: ml %s index %s\n", ml, index);
+	//ml_free(ml);
+        printf ("\nDEBUG: server %i\n", server);
+//	httpdOutput(server, index);
+//	httpdOutput(server, "test");
+        httpdPrintf(server,"TEST");
 
-	httpdOutput(server, index);
+exit(0);
 
-	free(index);
+	//free(index);
 
 }
 
@@ -258,16 +268,17 @@ void spy_http_serve(httpd *server) {
 
 	int rc;
 
-	rc = spy_http_auth(server);
-
-	if (!rc)
-		return;
+//	rc = spy_http_auth(server);
+// DEBUG:
+//	if (!rc)
+//		return;
 
 	spy_http_create_view(server);
 
 }
 
-void spy_http_init() {
+//void spy_http_init() {
+httpd* spy_http_init() {
 
 	httpd *server;
 	char *tmp, *host = 0;
@@ -284,13 +295,15 @@ void spy_http_init() {
 	host = ht_get(get_config(), PROPERTY_HTTP_HOST);
 
 	server = httpdCreate(host, port);
+printf ("\nDEBUG: create server %i\n", server);
 
 	if (!server) {
 		printf("error creating http server.\n");
 		exit(1);
 	}
 
-	httpdAddCContent(server, "/", "index.html", HTTP_TRUE, 0, spy_http_serve);
+	//httpdAddCContent(server, "/", "index.html", HTTP_TRUE, 0, spy_http_serve);
+	httpdAddCContent(server, "/", "index.html", HTTP_TRUE, NULL, spy_http_serve);
 
 	tmp = ht_get(get_config(), PROPERTY_HTTP_ACCESS_LOG);
 	if (tmp) {
@@ -303,6 +316,7 @@ void spy_http_init() {
 	printf("+ Http access on: http://%s:%d/index.html\n", host, port);
 
 	ht_put_obj(get_context(), SERVER_ATTR, server);
+        return server;
 
 }
 
@@ -329,8 +343,8 @@ int spy_http_run() {
 	spy_who_init();
 
 	// init http server
-	spy_http_init();
-
+	server = spy_http_init();
+printf("DEBUG: run server %i",server);
 	// go to background.
 	// spy_daemonize();
 
@@ -338,7 +352,7 @@ int spy_http_run() {
 	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
 
-	server = (httpd*)ht_get(get_context(), SERVER_ATTR);
+	//server = (httpd*)ht_get(get_context(), SERVER_ATTR);
 
 	// serve http loop.
 	while(1) {

@@ -847,14 +847,28 @@ int pre_replace(char *b, char *n, char *r) {
 int pre_move_catalog(char *src, char *dest) {
 	char *tmp, movebuf[1024];
 	int rc;
+	hashtable_t *cfg = get_config();
+	int mv_force_ext;
 
-	// try rename.
-	rc = rename(src, dest);
+	tmp = ht_get(cfg, PROPERTY_MOVE_FORCE_EXT);
 
-	if (rc == 0)
-		return 0;
+	if (tmp)
+		mv_force_ext = atoi(tmp);
+	else
+		mv_force_ext = 0;
 
 	tmp = ht_get(get_config(), PROPERTY_MOVE_EXTERNAL);
+
+        if (!mv_force_ext) {
+		printf("DEBUG4: if mv_force_ext is not 1\n");
+		// try rename.
+		rc = rename(src, dest);
+
+		printf("DEBUG4: rc : %s", rc);
+		if (rc == 0)
+			printf("DEBUG4:i return rc : %s", rc);
+			return 0;
+	}
 
 	if (!tmp)
 		return -1;
@@ -1019,7 +1033,6 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 
 	pass = pwd_getpwnam(ht_get(env, PROPERTY_USER));
 
-
 	char *unit = "B";
 	float bconv;
 	int addmp3genre;
@@ -1070,7 +1083,7 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	 */
 	// get genre.
 
-	// TODO: test666, emtpy tmpf, cleanup here
+	// TODO: testing+cleanup here
 /*
 	if (addmp3genre) {
 		for (ftmp = files; ftmp; ftmp = ftmp->next) {
@@ -1363,7 +1376,10 @@ int pre_handler(int argc, char *argv[]) {
 	env = get_context();
 	cfg = get_config();
 
-	pre_log("START", "%s %s %s", ht_get(env, PROPERTY_USER), argv[1], argv[2]);
+	if (argc > 2)
+		pre_log("START", "\"%s\" \"%s\" \"%s\"", ht_get(env, PROPERTY_USER), argv[1], argv[2]);
+	else
+		pre_log("START", "\"%s\" \"%s\"", ht_get(env, PROPERTY_USER), argv[1]);
 
 	// set etcdir for the pwd functions
 	if (tmp = ht_get(cfg, PROPERTY_ETCDIR))
@@ -1389,19 +1405,10 @@ int pre_handler(int argc, char *argv[]) {
 		quit(0);
 	}
 
-	/*
 	if (tmp)
 		addmp3genre = atoi(tmp);
 	else
 		addmp3genre = 0;
-	*/
-	if (tmp) {
-		addmp3genre = atoi(tmp);
-		printf("\nDEBUG: if tmp: %s addmp3genre %i\n", tmp, addmp3genre);
-	} else {
-		addmp3genre = 0;
-		printf("\nDEBUG: else tmp: %s addmp3genre %i\n", tmp, addmp3genre);
-	}
 
 	// check if someone are trying to fool us.
 	if (strchr(argv[1], '/'))
@@ -1420,7 +1427,7 @@ int pre_handler(int argc, char *argv[]) {
 		quit(0);
 	}
 
-	pre_log("GROUP", "%s %s", sourcebis, group);
+	pre_log("GROUP", "\"%s\" \"%s\"", sourcebis, group);
 
 	printf(" * Looks like this is going to be a %s pre..\n", group);
 	ht_put(env, PROPERTY_GROUP, group);
@@ -1479,25 +1486,26 @@ int pre_handler(int argc, char *argv[]) {
 	// check if destination exists.
 	if (stat(destination, &st) == -1)
 		pre(dest_section, destination, source, argv[1], group, argv);
-
 	else {
-		//TODO: fix force msg "-H FORCE"
-		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n");
-		//DEBUG:
-		//		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n", argv[1], dest_section);
+		//TODO: test fix force msg "-H FORCE" and split up line
+		//sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n");
+		tmp = "(this will rename the existing dir, which you can then nuke or wipe afterwards!)";
+		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   %s\n", argv[1], dest_section, tmp);
+		printf("DEBUG: source:\n\n%s\n\n", source);
 		quit(source);
 	}
 
-	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>"
-	// slv: added "<genre>"
+	// log DONE: "<preuser>" "<pregroup>" "<release>" "<destinationdir>" [ slv: added "<genre>" ]
 	if (addmp3genre)
 		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-				ht_get(env, PROPERTY_USER), group,
-				argv[1], destpath, mp3_genre);
+			ht_get(env, PROPERTY_USER), group,
+			argv[1], destpath, mp3_genre);
 	else
-		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-				ht_get(env, PROPERTY_USER), group,
-				argv[1], destpath);
+		pre_log("DONE", "\"%s\" \"%s\" \"%s\" \"%s\"",
+			ht_get(env, PROPERTY_USER), group,
+			argv[1], destpath);
+	
+
 	return 0;
 }
 

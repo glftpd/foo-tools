@@ -41,3 +41,4 @@ config.log
 autom4te.cache/
 *.swp
 
+webspy-access.log

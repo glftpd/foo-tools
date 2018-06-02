@@ -66,7 +66,7 @@ char *get_mp3_genre(const char* filename) {
 	tm_now = localtime(&now);
 	strftime(fdate, 1024, "%Y-%m-%d", tm_now);
 	strftime(ftime, 1024, "%H:%M:%S", tm_now);
-	fprintf(f, "%s %s MP3GENRE: %s %s\n", fdate, ftime, filename, id3_genre);
+	fprintf(f, "%s %s MP3GENRE: \"%s\" \"%s\"\n", fdate, ftime, filename, id3_genre);
 	fclose(f);
 #endif
 	return id3_genre;
