@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 
 // project includes
@@ -65,7 +66,7 @@ module_list_t mod_sitenfoadd_info = {
 	// module name
 	"site nfo adder",
 
-	// moduel dir func
+	// module dir func
 	mod_sitenfoadd_dir_func,
 
 	// module file func

@@ -26,6 +26,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 // project includes
 #include "mod_chmod.h"
@@ -52,7 +53,7 @@ module_list_t mod_chmod_info = {
 	// module name
 	"file chmodder",
 
-	// moduel dir func
+	// module dir func
 	mod_chmod_dir_func,
 
 	// module file func

@@ -50,7 +50,7 @@ module_list_t mod_nfohandler_info = {
 	// module name
 	"nfo info extractor",
 
-	// moduel dir func
+	// module dir func
 	0,
 
 	// module file func

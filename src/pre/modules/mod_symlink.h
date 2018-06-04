@@ -22,6 +22,8 @@
 #ifndef mod_symlink_h
 #define mod_symlink_h
 
+int _symlink_find_relative(char *from, char *to, char *relative);
+
 //#define PROPERTY_MOD_CHMOD_FILES "mod_chmod.files"
 //#define PROPERTY_MOD_CHMOD_DIRS "mod_chmod.dirs"
 #define PROPERTY_MOD_SYMLINK_SECTION_PROP "symlink_in"

@@ -37,6 +37,7 @@
 
 // footools includes
 #include <collection/hashtable.h>
+#include <lib/gllogs.h>
 
 // in foo-pre
 hashtable_t *_mod_idmp3_cfg = 0;
@@ -55,7 +56,7 @@ module_list_t mod_idmp3_info = {
 	// module name
 	"mp3 id extractor",
 
-	// moduel dir func
+	// module dir func
 	0,
 
 	// module file func

@@ -19,10 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef mod_chmod_h
-#define mod_chmod_h
+#ifndef mod_audiosort_h_
+#define mod_audiosort_h
 
-#define PROPERTY_MOD_CHMOD_FILES "mod_chmod.files"
-#define PROPERTY_MOD_CHMOD_DIRS "mod_chmod.dirs"
+#define PROPERTY_MOD_AUDIOSORT_BIN "mod_audiosort.bin"
 
 #endif
