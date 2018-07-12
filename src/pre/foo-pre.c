@@ -106,7 +106,7 @@ void pre_log(char *type, char *fmt, ...) {
 		ht_put_obj(env, "logfh", f);
 	}
 	// slv: added date/time
-	//	fprintf(f, "%s: ", type);
+	//fprintf(f, "%s: ", type);
 	fprintf(f, "%s %s %s: ", fdate, ftime, type);
 	va_start(va, fmt);
 	vfprintf(f, fmt, va);
@@ -859,14 +859,12 @@ int pre_move_catalog(char *src, char *dest) {
 
 	tmp = ht_get(get_config(), PROPERTY_MOVE_EXTERNAL);
 
+        //only rename if 'force ext mv' option is not set in cfg
         if (!mv_force_ext) {
-		printf("DEBUG4: if mv_force_ext is not 1\n");
 		// try rename.
 		rc = rename(src, dest);
 
-		printf("DEBUG4: rc : %s", rc);
 		if (rc == 0)
-			printf("DEBUG4:i return rc : %s", rc);
 			return 0;
 	}
 
@@ -1036,6 +1034,7 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	char *unit = "B";
 	float bconv;
 	int addmp3genre;
+	int debugmp3 = 0;
 
 	if (!pass) {
 		printf(" * Error, cannot get your passwd entry! \n");
@@ -1049,9 +1048,7 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	else
 		addmp3genre = 0;
 
-	//	char *gtmp;
-	//	char *mp3_genre;
-	//	char mp3_genre[40] = "Unknown";
+	//char mp3_genre[40] = "Unknown";
 	char *tmpf = NULL;
 	
 	chown = chowninfo_find_by_group(group);
@@ -1081,73 +1078,40 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	/*
 	 * slv - get filename.mp3 and call get_mp3_genre(filename).
 	 */
-	// get genre.
-
-	// TODO: testing+cleanup here
-/*
+	// get genre
 	if (addmp3genre) {
 		for (ftmp = files; ftmp; ftmp = ftmp->next) {
-			tmp = strrchr(ftmp->file, '.');
-			if (!strcmp(tmp, ".mp3")) {
-				if (!strcmp(ftmp->file, ".mp3")) {
-					//sprintf(buf, "%s/%s", src, ftmp->file);
-					//sprintf(buf, "%s/%s", src, tmp);
-					//sprintf(gtmp, "%s", get_mp3_genre(buf));
-					printf ("DEBUG: %s\n", ftmp->file);
-					//mp3_genre = gtmp;
-					break;
-				}
+			if (debugmp3) {
+				printf ("\nDEBUG0: ftmp->file: %s\n", ftmp->file);
+				printf ("\nDEBUG0: strrchr, strcmp flist_getfilename(ftmp) \".mp3\": %s %i\n",
+					flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
 			}
-		}
-	}
-*/
-
-//                        printf ("\nDEBUG0: strncmp %s %i\n", flist_getfilename(ftmp), strncmp(flist_getfilename(ftmp), ".mp3", 4));
-//                        printf ("\nDEBUG0: strcmp %s %i\n", flist_getfilename(ftmp), strcmp(flist_getfilename(ftmp), ".mp3"));
-//                        printf ("\nDEBUG0: strcasecmp %s %d\n", flist_getfilename(ftmp), strcasecmp(flist_getfilename(ftmp), ".mp3"));
-//                        if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") = 0 ) printf ("DEBUG0: if - 0");
-//                        
-//			if (!strncmp(flist_getfilename(ftmp), ".mp3", 4))
-//			if (strncmp(flist_getfilename(ftmp), ".mp3", 4) != 4 )
-	if (addmp3genre) {
-		for (ftmp = files; ftmp; ftmp = ftmp->next) {
-			printf ("\nDEBUG0: ftmpfile %s\n", ftmp->file);
-			printf ("\nDEBUG0: strcmp+strrchr %s %i\n", flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
 			if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") == 0) {
-				printf ("\nDEBUG0: *got mp3* flist_getfilename %s ftmp %s \n", flist_getfilename(ftmp), ftmp->file);
-				tmpf = malloc(strlen(flist_getfilename(ftmp)));
+				if (debugmp3) { printf ("\nDEBUG0: got mp3 - flist_getfilename(tfmp): %s ftmp->file: %s\n", flist_getfilename(ftmp), ftmp->file); }
+				//tmpf = malloc(strlen(flist_getfilename(ftmp))+2);
+				tmpf = malloc(strlen(ftmp->file)+2);
 				sprintf(tmpf,"%s", flist_getfilename(ftmp));
-				printf ("\nDEBUG1: tmpf, break %s\n", tmpf);
+				if (debugmp3) { printf ("\nDEBUG1: tmpf: %s, break %s\n", tmpf); }
 				break;
 			}
 		}
-//	quit(0);
-//		printf ("\nDEBUG0: strnlen tmpf %s\n", strlen(tmpf));
+		if (debugmp3) { printf ("\nDEBUG1: strnlen(tmpf): %s\n", strlen(tmpf)); }
 		if ((tmpf != NULL) && (strlen(tmpf) > 0)) {
-			printf ("\nDEBUG2: if tmpf - list_getfilename - %s\n", flist_getfilename(ftmp));
-			printf ("\nDEBUG2: if tmpf - ftmp->file %s\n", ftmp->file);
-			printf ("\nDEBUG2: tmpf %s\n", tmpf);
-			//sprintf(buf, "%s/%s", src, flist_getfilename(ftmp));
+			if (debugmp3) {
+				printf ("\nDEBUG2: if tmpf - flist_getfilename(ftmp): %s\n", flist_getfilename(ftmp));
+				printf ("\nDEBUG2: if tmpf - ftmp->file: %s\n", ftmp->file);
+				printf ("\nDEBUG2: tmpf %s\n", tmpf);
+			}
 			sprintf(buf, "%s/%s", src, tmpf);
-			printf ("\nDEBUG3: tmpf %s\nDEBUG3: buf %s\nDEBUG3: flist_gfn %s\n", tmpf, buf, flist_getfilename(ftmp));
-			
-			//if (tmp != NULL)
-			//sprintf(mp3_genre, "%s", tmp);
-			//sprintf(mp3_genre, "%s", get_mp3_genre(buf));
-			//sprintf(tmp, "%s", get_mp3_genre(buf));
-
+			if (debugmp3) { printf ("\nDEBUG3: tmpf: %s\nDEBUG3: buf: %s\nDEBUG3: flist_getfilename(ftmp): %s\n", tmpf, buf, flist_getfilename(ftmp)); }
+			//tmp = NULL;
 			tmp = get_mp3_genre(buf);
 			if ((tmp != NULL) && (strlen(tmp) > 0))
 				sprintf(mp3_genre, "%s", tmp);
-			printf ("\nDEBUG3: tmp %s\n", tmp);
+			if (debugmp3) {printf ("\nDEBUG3: tmp: %s\n", tmp); }
 			free(tmpf);
 		}	
-//		} else {
-//			sprintf(mp3_genre, "%s", "EMPTY");
-//			printf ("\nDEBUG4: else\n");
-//		}
 	}
-//	quit(0);
 
 	// dont forget to chown maindir
 	chowninfo_apply_to_file(src, chown);
@@ -1396,8 +1360,6 @@ int pre_handler(int argc, char *argv[]) {
 	tmp = ht_get(cfg, PROPERTY_ADDMP3GENRE);
 
 	if (argc < 2) {
-		// TODO: cleanup
-		//printf("\nDEBUG: tmp: %s (PROPERTY_ADDMP3GENRE)\n", tmp);
 		printf(USAGE);
 
 		show_groupdirs(groups);
@@ -1478,20 +1440,12 @@ int pre_handler(int argc, char *argv[]) {
 			printf(" ! Failed rename existing to %s_TRADING ..\n", argv[1]);
 	}
 
-	// TODO: cleanup
-	printf("DEBUG: argv1 %s\n", argv[1]);
-	printf("DEBUG: source %s\n", source);
-	printf("DEBUG: source bis %s\n", sourcebis );
-
 	// check if destination exists.
 	if (stat(destination, &st) == -1)
 		pre(dest_section, destination, source, argv[1], group, argv);
 	else {
-		//TODO: test fix force msg "-H FORCE" and split up line
-		//sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   (this will rename the existing dir, which you can then nuke or wipe afterwards!)\n");
 		tmp = "(this will rename the existing dir, which you can then nuke or wipe afterwards!)";
 		sprintf(source, " * Hm destination already exists. You're too late with pre!\n + Use SITE PRE %s %s FORCE to force pre.\n   %s\n", argv[1], dest_section, tmp);
-		printf("DEBUG: source:\n\n%s\n\n", source);
 		quit(source);
 	}
 

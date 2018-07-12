@@ -24,13 +24,6 @@
  * $Id: mod_audiosort.c,v 1.1 2018/06/04 09:00:00 slv Exp $
  */
 
-/* TODO:
-- use mod_func_rel instead of dir ?
-- test and verify section env var is working with ht_get + real pre's
-- make sure * is checked, no segfaults
-- cleanup;)
-*/
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,7 +34,9 @@
 #include "../foo-pre.h"
 
 // footools includes
+#include <lib/stringtokenizer.h>
 #include <collection/hashtable.h>
+#include <collection/strlist.h>
 
 // in foo-pre
 hashtable_t *_mod_audiosort_cfg = 0;
@@ -50,38 +45,54 @@ hashtable_t *_mod_audiosort_env = 0;
 void set_config(hashtable_t *cfg) {
 	_mod_audiosort_cfg = cfg;
 }
-void set_env(hashtable_t *env) {
-        _mod_audiosort_env = env;
-}
-/*
 hashtable_t *get_config() {
 	return _mod_audiosort_cfg;
-*/
+}
+
+void set_env(hashtable_t *env) {
+	_mod_audiosort_env = env;
+}
 hashtable_t *get_env() {
-        return _mod_audiosort_env;;
+	return _mod_audiosort_env;
 }
 
-hashtable_t *cfg = 0;
-hashtable_t *get_config() {
-        return cfg;
+/*
+ * Gets configuration properties in the a|b|c|d format as a strlist.
+ */
+strlist_t * config_get_split_property(char *prop) {
+        hashtable_t *cfg = get_config();
+        char *tmp;
+        stringtokenizer st;
+        strlist_t *l = 0;
+
+        tmp = ht_get(cfg, prop);
+
+        st_initialize(&st, tmp, "|");
+        while (st_hasnext(&st)) {
+                tmp = st_next(&st);
+
+                l = str_add(l, tmp);
+        }
+
+	return l;
 }
 
-// prototype for file handling function.
-//int mod_audiosort_file_func(char *filepath, char *argv[]);
-int mod_audiosort_dir_func(char *dir, char *argv[]);
+
+// prototype for rel handling function.
+int mod_audiosort_rel_func(char *dir, char *argv[]);
 
 module_list_t mod_audiosort_info = {
 	// module name
 	"audiosorter",
 
 	// module dir func
-	mod_audiosort_dir_func,
+	0,
 
 	// module file func
-	//mod_audiosort_file_func,
+	0,
 
 	// module rel func
-	0,
+	mod_audiosort_rel_func,
 
 	// struct module_list entry
 	0
@@ -95,210 +106,115 @@ module_list_t *module_loader() {
 	return &mod_audiosort_info;
 }
 
-//int _mod_chmod_dchmod = -1;
-//int _mod_audiosort_bin = -1;
-//char _mod_audiosort_bin;
-
-/*
-int _mod_chmod_getdchmod() {
-  char *tmp;
-
-  if (_mod_chmod_dchmod == -1) {
-
-    tmp = ht_get(get_config(), PROPERTY_MOD_CHMOD_DIRS);
-    if (tmp)
-      _mod_chmod_dchmod = atoi(tmp);
-
-  }
-
-  return _mod_chmod_dchmod;
-}
-int _mod_audiosort_getbin() {
-  char *tmp;
-
-  if (_mod_audiosort_bin == -1) {
-
-    tmp = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_BIN);
-    if (tmp)
-      _mod_audiosort_bin = atoi(tmp);
-
-  }
-
-  return _mod_audiosort_bin;
-}
-char _mod_audiosort_getbin() {
-  char *tmp;
-  hashtable_t *cfg;
-  tmp = ht_get(cfg, PROPERTY_MOD_AUDIOSORT_BIN);
-  return *tmp;
-}
-*/
-char * section_get_property(char *sec, char *prop) {
-        hashtable_t *cfg = get_config();
-        char buf[300];
-
-        sprintf(buf, "section.%s.%s", sec, prop);
-
-        return ht_get(cfg, buf);
-}
-int section_get_int_property(char *s, char *p) {
-        char *tmp;
-
-        tmp = section_get_property(s, p);
-
-        if (!tmp)
-                return -1;
-
-        if (!strcasecmp(tmp, "none"))
-                return -1;
-
-        return atoi(tmp);
-}
 int pre_replace(char *b, char *n, char *r) {
-        char *t, *save;
-        int i=0;
+	char *t, *save;
+	int i=0;
 
-        while (t=strstr(b, n)) {
-                save=(char*)malloc(strlen(t)-strlen(n)+1);
-                strcpy(save, t+strlen(n));
-                *t=0;
-                strcat(b, r);
-                strcat(b, save);
-                free(save);
-                i++;
-        }
+	while (t=strstr(b, n)) {
+		save=(char*)malloc(strlen(t)-strlen(n)+1);
+		strcpy(save, t+strlen(n));
+		*t=0;
+		strcat(b, r);
+		strcat(b, save);
+		free(save);
+		i++;
+	}
 }
 
 
-int mod_audiosort_dir_func(char *dir, char *argv[]) {
-  char buf[1024], *tmp, *audiosort_bin, *section, *s_path;
-  FILE *f;
+int mod_audiosort_rel_func(char *dir, char *argv[]) {
+	char buf[1024], *tmp, *audiosort_bin, *section, *s_path;
+	strlist_t *a_sections;
+	strlist_iterator_t *iter;
+	FILE *f;
+	int debug = 1;
+
+	section = ht_get(get_env(),"section");
+	if (!section)
+		return 1;
+
+	//a_sections = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_SECTIONS);
+        //if (strcmp(section, a_sections)) {
+	//	if (debug) { printf("MODULE-DEBUG: section in a_sections\n"); }
+        //}
 /*
-//  hashtable_t *cfg = get_config();
-//  hashtable_t *env = get_env();
-
-        hashtable_t *_envctx = 0;
-
-        hashtable_t * get_context() {
-                if (!_envctx) {
-                        _envctx = malloc(sizeof(hashtable_t));
-                       ht_init(_envctx);
-                }
-
-                return _envctx;
-        }
-
-//        hashtable_t *cfg = get_context();
-        hashtable_t *env = get_context();
+	a_sections = config_get_split_property(PROPERTY_MOD_AUDIOSORT_SECTIONS);
+        for (iter = str_iterator(a_sections); str_iterator_hasnext(iter); ) {
+                tmp = str_iterator_next(iter);
+		if (str_search(a_sections, section, 0))
+			if (debug) { printf("MODULE-DEBUG: section is in a_sections\n"); }
+			return 0;
 */
+	//if (strlist_match(section, a_sections) == 0)
 
-cfg = malloc(sizeof(hashtable_t));
-ht_init(cfg);
-ht_load(cfg, "testpre.cfg");
+	if (debug) { printf("MODULE-DEBUG: dir: %s section: %s\n", dir, section); }
 
-//  section = ht_get(get_env(), "section");
-//  section = "mp3";
-//  section = ht_get(env,"section");
-  printf("section: %s\n", getenv("section"));
-  section = getenv("section");
-  printf("DEBUG: dir: %s section: %s\n", dir, section);
+	// get the dir of the section.
+	sprintf(buf, "section.%s.%s", section, PROPERTY_SECTION_DIR);
+	if (debug) { printf("MODULE-DEBUG: buf: %s\n", buf); }
 
-  // get the dir of the section.
-  sprintf(buf, "section.%s.%s", section, PROPERTY_SECTION_DIR);
-  printf("DEBUG: buf: %s\n", buf);
+	s_path = ht_get(get_config(), buf);
 
-  s_path = ht_get(cfg, buf);
-/*
-  s_path = "/jail/glftpd/site/incoming/mp3/0604";
-  int i = section_get_int_property(section, PROPERTY_SECTION_DIR);
-  printf("DEBUG: section get int prop: %s\n", i);
-  s_path = section_get_property(section, PROPERTY_SECTION_DIR);
-*/
-  // return if missing configuration.
-  if (!s_path) {
-    printf("DEBUG: missing cfg, s_path: %s\n", s_path);
-    return 1;
-  }
+	// return if missing configuration.
+	if (!s_path) {
+		if (debug) { printf("MODULE-DEBUG: missing cfg, s_path: %s\n", s_path); }
+		return 1;
+	}
 
-  printf("DEBUG: s_path: %s\n", s_path);
-//  exit(0);
+	if (debug) { printf("MODULE-DEBUG: s_path: %s\n", s_path); }
 
-  // get the rlsname
-  tmp = strrchr(dir, '/');
-  if (!tmp)
-      return 1;
-  tmp++;
-  printf("DEBUG: tmp: %s\n", tmp);
+	// get the rlsname
+	tmp = strrchr(dir, '/');
+	if (!tmp)
+		return 1;
+	tmp++;
+	if (debug) { printf("MODULE-DEBUG: tmp: %s\n", tmp); }
 
-  audiosort_bin = ht_get(cfg, PROPERTY_MOD_AUDIOSORT_BIN);
+	audiosort_bin = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_BIN);
 
-  if (!audiosort_bin)
-    audiosort_bin = "/bin/audiosort";
-  
-  printf("DEBUG: audiosort_bin: %s\n", audiosort_bin);
-  f = fopen(audiosort_bin, "r");
-  if (!f)
-    return 1;
+	if (!audiosort_bin)
+		audiosort_bin = "/bin/audiosort";
 
-  //int mode;
+	if (debug) { printf("MODULE-DEBUG: audiosort_bin: %s\n", audiosort_bin); }
+	f = fopen(audiosort_bin, "r");
+	if (!f)
+		return 1;
 
-  //mode = _mod_chmod_getdchmod();
+	if (debug) { printf("MODULE-DEBUG: dir: %s argv0 %s argv1: %s argv2: %s\nMODULE-DEBUG: section: %s s_path: %s\n",
+		dir, argv[0], argv[1], argv[2], section, s_path); }
 
-  //if (mode == -1)
-  //  return 0;
+	time_t now;
+	struct tm *tm_now;
 
-  //if (chmod(dir, mode) == -1)
-  //  printf("chmod %s failed!\n", dir);
-  //printf("DEBUG: dir: %s argv0 %s argv1: %s argv2: %s argv3: %s\n", dir, argv[0], argv[1], argv[2], argv[3]);
-  printf("DEBUG: dir: %s argv0 %s argv1: %s argv2: %s section: %s s_path: %s\n", dir, argv[0], argv[1], argv[2], section, s_path);
+	now = time(0);
+	tm_now = localtime(&now);
 
-        time_t now;
-        struct tm *tm_now;
+	strftime(buf, 1024, "%d", tm_now);
+	pre_replace(s_path, "DD", buf);
 
-        now = time(0);
-        tm_now = localtime(&now);
+	strftime(buf, 1024, "%m", tm_now);
+	pre_replace(s_path, "MM", buf);
 
-        strftime(buf, 1024, "%d", tm_now);
-        pre_replace(s_path, "DD", buf);
+	strftime(buf, 1024, "%Y", tm_now);
+	pre_replace(s_path, "YYYY", buf);
 
-        strftime(buf, 1024, "%m", tm_now);
-        pre_replace(s_path, "MM", buf);
+	strftime(buf, 1024, "%y", tm_now);
+	pre_replace(s_path, "YY", buf);
 
-        strftime(buf, 1024, "%Y", tm_now);
-        pre_replace(s_path, "YYYY", buf);
+	strftime(buf, 1024, "%w", tm_now);
+	pre_replace(s_path, "WW", buf);
 
-        strftime(buf, 1024, "%y", tm_now);
-        pre_replace(s_path, "YY", buf);
+	strftime(buf, 1024, "%W", tm_now);
+	pre_replace(s_path, "WOY", buf);
 
-        strftime(buf, 1024, "%w", tm_now);
-        pre_replace(s_path, "WW", buf);
+	if (debug) {
+		printf("MODULE-DEBUG: /bin/audiosort %s/%s\n", s_path, tmp); }
+		sprintf(buf, "/bin/audiosort %s/%s >/dev/null 2>&1", s_path, tmp);
+	}
+	if (system(buf) == -1)
+		printf("audiosorting %s failed!\n", dir);
 
-        strftime(buf, 1024, "%W", tm_now);
-        pre_replace(s_path, "WOY", buf);
-
-  sprintf(buf, "/bin/audiosort %s/%s", s_path, argv[1]);
-  if (system(buf) == -1)
-    printf("audiosorting %s failed!\n", dir);
-
-  return 1;
+	return 1;
 }
 
-/*
-// file func.
-int mod_chmod_file_func(char *filepath, char *argv[]) {
-
-  hashtable_t *cfg;
-  int mode;
-
-  mode = _mod_chmod_getfchmod();
-
-  if (mode == -1)
-    return 0;
-
-  if (chmod(filepath, mode) == -1)
-    printf("chmod %s failed!\n", filepath);
-
-  return 1;
-}
-*/
-
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

@@ -23,5 +23,6 @@
 #define mod_audiosort_h
 
 #define PROPERTY_MOD_AUDIOSORT_BIN "mod_audiosort.bin"
+#define PROPERTY_MOD_AUDIOSORT_SECTIONS "mod_audiosort.sections"
 
 #endif

@@ -12,13 +12,20 @@
 - [doc](doc) Documentation on installing/running the programs
 - [README.mp3genre](src/pre/README.mp3genre) mp3genre specific README (install/configure)
 
+### Modules:
+- [src/pre/modules/README.mod_audiosort](README.mod_audiosort)
+- [src/pre/modules/README.mod_chmod](README.mod_chmod)
+- [src/pre/modules/README.mod_idmp3](README.mod_idmp3)
+- [src/pre/modules/README.mod_nfohandler](README.mod_nfohandler)
+- [src/pre/modules/README.mod_sitenfoadd](README.mod_sitenfoadd)
+
 ## TODO:
 
 ### foo-pre
 - [ ] replace pre/mp3genre by pzs-ng code or other id3 lib instead
 - [ ] FLAC support?
 - [X] [#5](https://github.com/glftpd/foo-tools/issues/5) add option to force using mv external 
-- [ ] add audiosort after pre
+- [X] add audiosort after pre
 
 ### spy
 - [X] look into libhttpd.h since it's LGPL now (http://www.hughes.com.au/products/libhttpd)
