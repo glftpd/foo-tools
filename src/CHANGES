@@ -92,6 +92,7 @@ May 02 2018: * "refactored" mp3genre and related code - again :)
 May 02 2018: * added debug and standalone options to mp3genre
 May 28 2018: * added option to pre.cfg always use external move program
 May 28 2018: * fixed force late pre msg
+Jun 04 2018: * added audiosort module
 
 //glftpd-scripts
 Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs

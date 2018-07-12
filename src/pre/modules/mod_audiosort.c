@@ -21,7 +21,7 @@
 /*
  * Module that runs pzs-ng's audiosort on pre release
  * Author, slv.
- * $Id: mod_audiosort.c,v 1.1 2018/06/04 09:00:00 slv Exp $
+ * $Id: mod_audiosort.c,v 1.1 2018/07/12 21:00:00 slv Exp $
  */
 
 #include <string.h>
@@ -125,27 +125,30 @@ int pre_replace(char *b, char *n, char *r) {
 int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	char buf[1024], *tmp, *audiosort_bin, *section, *s_path;
 	strlist_t *a_sections;
-	strlist_iterator_t *iter;
+	strlist_iterator_t *i;
 	FILE *f;
+	int found = 0;
 	int debug = 1;
 
 	section = ht_get(get_env(),"section");
 	if (!section)
 		return 1;
 
-	//a_sections = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_SECTIONS);
-        //if (strcmp(section, a_sections)) {
-	//	if (debug) { printf("MODULE-DEBUG: section in a_sections\n"); }
-        //}
-/*
 	a_sections = config_get_split_property(PROPERTY_MOD_AUDIOSORT_SECTIONS);
-        for (iter = str_iterator(a_sections); str_iterator_hasnext(iter); ) {
-                tmp = str_iterator_next(iter);
-		if (str_search(a_sections, section, 0))
-			if (debug) { printf("MODULE-DEBUG: section is in a_sections\n"); }
-			return 0;
-*/
-	//if (strlist_match(section, a_sections) == 0)
+        for (i = str_iterator(a_sections); str_iterator_hasnext(i); ) {
+                tmp = str_iterator_next(i);
+		if (strcmp(tmp, section) == 0) {
+			found++;
+			if (debug) { printf("MODULE-DEBUG: strcmp tmp: \"%s\" section: \"%s\" found: %i\n", tmp, section, found); }
+			break;
+		}
+	}
+	str_close(a_sections);
+	free(i);
+	if (!found) {
+		if (debug) { printf("MODULE-DEBUG: no a_sections found: %i\n", found); }
+		return 1;
+	}
 
 	if (debug) { printf("MODULE-DEBUG: dir: %s section: %s\n", dir, section); }
 
@@ -171,7 +174,6 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	if (debug) { printf("MODULE-DEBUG: tmp: %s\n", tmp); }
 
 	audiosort_bin = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_BIN);
-
 	if (!audiosort_bin)
 		audiosort_bin = "/bin/audiosort";
 
@@ -180,8 +182,10 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	if (!f)
 		return 1;
 
-	if (debug) { printf("MODULE-DEBUG: dir: %s argv0 %s argv1: %s argv2: %s\nMODULE-DEBUG: section: %s s_path: %s\n",
-		dir, argv[0], argv[1], argv[2], section, s_path); }
+	if (debug) { 
+		printf("MODULE-DEBUG: dir: %s section: %s s_path: %s\n", dir, section, s_path);
+		printf("MODULE-DEBUG: argv0 %s argv1: %s argv2: %s\n", argv[0], argv[1], argv[2]);
+	}
 
 	time_t now;
 	struct tm *tm_now;
@@ -207,10 +211,8 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(s_path, "WOY", buf);
 
-	if (debug) {
-		printf("MODULE-DEBUG: /bin/audiosort %s/%s\n", s_path, tmp); }
-		sprintf(buf, "/bin/audiosort %s/%s >/dev/null 2>&1", s_path, tmp);
-	}
+	if (debug) { printf("MODULE-DEBUG: /bin/audiosort %s/%s\n", s_path, tmp); }
+	sprintf(buf, "/bin/audiosort %s/%s >/dev/null 2>&1", s_path, tmp);
 	if (system(buf) == -1)
 		printf("audiosorting %s failed!\n", dir);
 

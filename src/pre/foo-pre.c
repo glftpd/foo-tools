@@ -45,7 +45,7 @@
 #include "foo-pre.h"
 #include "gl_userfile.h"
 
-#define VERSION "$Id: foo-pre.c,v 1.19 2018/05/02 13:37:00 sorend, slv Exp $"
+#define VERSION "$Id: foo-pre.c,v 1.20 2018/07/12 07:33:10 sorend, slv Exp $"
 #define USAGE " * Syntax: SITE PRE <RELEASEDIR> [SECTION]\n"
 
 void quit(char *s, ...);

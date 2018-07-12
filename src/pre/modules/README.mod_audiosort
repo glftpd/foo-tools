@@ -22,9 +22,11 @@ modules=/bin/premodules/mod_other.so|/bin/premodules/mod_whatever.so|/bin/premod
 Configuring:
 ------------
 
-Add the module to the modules list in pre.cfg and add one property thats points to the audiosort binary:
+Add the module to the modules list in pre.cfg and add property thats points to the audiosort binary
+and define section(s) where audiosort should be run:
 
 #
 # properties for audiosort module.
 #
 mod_audiosort.bin=/bin/audiosort
+mod_audiosort.sections=flac|mp3
