@@ -128,8 +128,9 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	strlist_iterator_t *i;
 	FILE *f;
 	int found = 0;
+#ifdef DEBUG
 	int debug = 1;
-
+#endif
 	section = ht_get(get_env(),"section");
 	if (!section)
 		return 1;

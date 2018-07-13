@@ -25,7 +25,7 @@ mod_symlink.so: mod_symlink.o
 	$(CC) -g -shared -Wl,-soname,mod_symlink.so -o $@ $< $(LIBS)
 
 mod_audiosort.so: mod_audiosort.o
-	$(CC) -g -shared -Wl,-soname,mod_audiosort.so -o $@ $< $(LIBS)
+	$(CC) -g -shared -Wl,-soname,mod_audiosort.so -o $@ $< $(LIBS) $(SRCDIR)/collection/strlist.o
 
 tester: tester.o
 	$(CC) -o $@ $< ../../collection/hashtable.o ../../util/linefilereader.o -ldl

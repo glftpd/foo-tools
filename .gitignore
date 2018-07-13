@@ -41,4 +41,13 @@ config.log
 autom4te.cache/
 *.swp
 
-webspy-access.log
+*.bak
+*.log
+*.new
+
+# Includes
+!testing/mover/Makefile
+!testing/new/Makefile
+!unsorted-older/kicker/Makefile
+!unsorted-older/lastraces/Makefile
+

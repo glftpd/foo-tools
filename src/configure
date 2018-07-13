@@ -5547,7 +5547,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile bouncer/Makefile checker/Makefile collection/Makefile lib/Makefile nfo/Makefile nukes/Makefile pre/Makefile pre/modules/Makefile reset/Makefile sfv/Makefile thread/Makefile unzip/Makefile util/Makefile who/Makefile zip/Makefile"
+ac_config_files="$ac_config_files Makefile bouncer/Makefile checker/Makefile collection/Makefile lib/Makefile nfo/Makefile nukes/Makefile pre/Makefile pre/modules/Makefile pre/modules/mp3info/Makefile pre/mp3genre/Makefile reset/Makefile sfv/Makefile thread/Makefile unzip/Makefile util/Makefile who/Makefile zip/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6253,6 +6253,8 @@ do
     "nukes/Makefile") CONFIG_FILES="$CONFIG_FILES nukes/Makefile" ;;
     "pre/Makefile") CONFIG_FILES="$CONFIG_FILES pre/Makefile" ;;
     "pre/modules/Makefile") CONFIG_FILES="$CONFIG_FILES pre/modules/Makefile" ;;
+    "pre/modules/mp3info/Makefile") CONFIG_FILES="$CONFIG_FILES pre/modules/mp3info/Makefile" ;;
+    "pre/mp3genre/Makefile") CONFIG_FILES="$CONFIG_FILES pre/mp3genre/Makefile" ;;
     "reset/Makefile") CONFIG_FILES="$CONFIG_FILES reset/Makefile" ;;
     "sfv/Makefile") CONFIG_FILES="$CONFIG_FILES sfv/Makefile" ;;
     "thread/Makefile") CONFIG_FILES="$CONFIG_FILES thread/Makefile" ;;
