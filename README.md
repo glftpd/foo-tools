@@ -47,6 +47,7 @@ Addons for foo-pre; modules add functions but are not build into foo-pre binary
 - [ ] FLAC support?
 - [X] [#5](https://github.com/glftpd/foo-tools/issues/5) add option to force using mv external 
 - [X] add audiosort after pre
+- [ ] prebw after pre (mod_prebw)
 
 ### spy
 
