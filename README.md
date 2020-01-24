@@ -1,6 +1,6 @@
 # foo-tools
 
-## Updates:
+## Updates
 
 This is an updated version of foo-tools:
 
@@ -12,7 +12,7 @@ This is an updated version of foo-tools:
 
 For more details see [CHANGELOG](src/CHANGES)
 
-## Documentation:
+## Documentation
 
 - [README.1st](README.1st) Original README file
 - [src/CHANGES](src/CHANGES) CHANGELOG
@@ -21,13 +21,13 @@ For more details see [CHANGELOG](src/CHANGES)
 - [doc](doc) Documentation on installing/running the programs
 - [README.mp3genre](src/pre/README.mp3genre) mp3genre specific README (install/configure)
 
-### mp3genre:
+### mp3genre
 
 mp3genre for foo-pre; adds mp3 genre in PRE output without module
 
 check README on how to install/configure
 
-### Modules:
+### Modules
 
 Addons for foo-pre; modules add functions but are not build into foo-pre binary
 
@@ -39,7 +39,7 @@ Addons for foo-pre; modules add functions but are not build into foo-pre binary
 - [src/pre/modules/README.mod_sitenfoadd](src/pre/modules/README.mod_sitenfoadd)
 - [src/pre/modules/README.mod_symlink](src/pre/modules/README.mod_symlink)
 
-## TODO:
+## TODO
 
 ### foo-pre
 

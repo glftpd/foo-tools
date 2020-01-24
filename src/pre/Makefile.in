@@ -13,6 +13,13 @@ foo-pre: foo-pre.o $(LIBS)
 foo.Pre: foo.Pre.o
 	$(CC) -o $@ $< $(LIBS)
 
+foo-pre.debug: foo-pre.o $(LIBS)
+	$(MAKE) -C mp3genre
+	$(CC) -DDEBUG -o $@ $< $(LIBS) $(OBJS) -ldl
+
+foo.Pre.debug: foo.Pre.o
+	$(CC) -DDEBUG -o $@ $< $(LIBS)
+
 all: foo-pre
 
 clean:

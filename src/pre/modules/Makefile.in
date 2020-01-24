@@ -27,8 +27,11 @@ mod_symlink.so: mod_symlink.o
 mod_audiosort.so: mod_audiosort.o
 	$(CC) -g -shared -Wl,-soname,mod_audiosort.so -o $@ $< $(LIBS) $(SRCDIR)/collection/strlist.o
 
+mod_audiosort.so.debug: mod_audiosort.o
+	$(CC) -DDEBUG -g -shared -Wl,-soname,mod_audiosort.so -o $@ $< $(LIBS) $(SRCDIR)/collection/strlist.o
+
 tester: tester.o
-	$(CC) -o $@ $< ../../collection/hashtable.o ../../util/linefilereader.o -ldl
+	$(CC) -g -o $@ $< ../../collection/hashtable.o ../../util/linefilereader.o $(SRCDIR)/lib/gllogs.o -ldl
 
 clean:
 	(cd mp3info; make clean)

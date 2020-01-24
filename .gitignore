@@ -43,7 +43,10 @@ autom4te.cache/
 
 *.bak
 *.log
-*.new
+*.debug
+*_debug
+*_new
+*_old
 
 # Includes
 !testing/mover/Makefile

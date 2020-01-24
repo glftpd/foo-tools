@@ -140,53 +140,71 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
                 tmp = str_iterator_next(i);
 		if (strcmp(tmp, section) == 0) {
 			found++;
+#ifdef DEBUG
 			if (debug) { printf("MODULE-DEBUG: strcmp tmp: \"%s\" section: \"%s\" found: %i\n", tmp, section, found); }
+#endif
 			break;
 		}
 	}
 	str_close(a_sections);
 	free(i);
 	if (!found) {
+#ifdef DEBUG
 		if (debug) { printf("MODULE-DEBUG: no a_sections found: %i\n", found); }
+#endif
 		return 1;
 	}
 
+#ifdef DEBUG
 	if (debug) { printf("MODULE-DEBUG: dir: %s section: %s\n", dir, section); }
+#endif
 
 	// get the dir of the section.
 	sprintf(buf, "section.%s.%s", section, PROPERTY_SECTION_DIR);
+#ifdef DEBUG
 	if (debug) { printf("MODULE-DEBUG: buf: %s\n", buf); }
+#endif
 
 	s_path = ht_get(get_config(), buf);
 
 	// return if missing configuration.
 	if (!s_path) {
+#ifdef DEBUG
 		if (debug) { printf("MODULE-DEBUG: missing cfg, s_path: %s\n", s_path); }
+#endif
 		return 1;
 	}
 
+#ifdef DEBUG
 	if (debug) { printf("MODULE-DEBUG: s_path: %s\n", s_path); }
+#endif
 
 	// get the rlsname
 	tmp = strrchr(dir, '/');
 	if (!tmp)
 		return 1;
 	tmp++;
+#ifdef DEBUG
 	if (debug) { printf("MODULE-DEBUG: tmp: %s\n", tmp); }
+#endif
 
 	audiosort_bin = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_BIN);
 	if (!audiosort_bin)
 		audiosort_bin = "/bin/audiosort";
 
+#ifdef DEBUG
 	if (debug) { printf("MODULE-DEBUG: audiosort_bin: %s\n", audiosort_bin); }
+#endif
 	f = fopen(audiosort_bin, "r");
 	if (!f)
 		return 1;
 
+#ifdef DEBUG
 	if (debug) { 
 		printf("MODULE-DEBUG: dir: %s section: %s s_path: %s\n", dir, section, s_path);
 		printf("MODULE-DEBUG: argv0 %s argv1: %s argv2: %s\n", argv[0], argv[1], argv[2]);
 	}
+#endif
 
 	time_t now;
 	struct tm *tm_now;

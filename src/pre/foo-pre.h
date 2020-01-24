@@ -162,13 +162,5 @@ int touch_dir(char *dir);
 int touch_file(char *fname);
 char *get_mp3_genre(const char* filename);
 
-//TODO: cleanup
-//DEBUG:
-// not needed?
-// char *mp3_genre = "Unknown";
-//extern char* mp3_genre;
-//extern char mp3_genre[40];
-
-
 #endif
 /* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

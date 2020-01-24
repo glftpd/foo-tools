@@ -1034,7 +1034,9 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	char *unit = "B";
 	float bconv;
 	int addmp3genre;
-	int debugmp3 = 0;
+#ifdef DEBUG
+	int debugmp3 = 1;
+#endif
 
 	if (!pass) {
 		printf(" * Error, cannot get your passwd entry! \n");
@@ -1081,34 +1083,48 @@ int pre(char *section, char *dest, char *src, char *rel, char *group, char *argv
 	// get genre
 	if (addmp3genre) {
 		for (ftmp = files; ftmp; ftmp = ftmp->next) {
+#ifdef DEBUG
 			if (debugmp3) {
 				printf ("\nDEBUG0: ftmp->file: %s\n", ftmp->file);
 				printf ("\nDEBUG0: strrchr, strcmp flist_getfilename(ftmp) \".mp3\": %s %i\n",
 					flist_getfilename(ftmp), strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3"));
 			}
+#endif
 			if (strcmp(strrchr(flist_getfilename(ftmp), '.'), ".mp3") == 0) {
+#ifdef DEBUG
 				if (debugmp3) { printf ("\nDEBUG0: got mp3 - flist_getfilename(tfmp): %s ftmp->file: %s\n", flist_getfilename(ftmp), ftmp->file); }
 				//tmpf = malloc(strlen(flist_getfilename(ftmp))+2);
+#endif
 				tmpf = malloc(strlen(ftmp->file)+2);
 				sprintf(tmpf,"%s", flist_getfilename(ftmp));
+#ifdef DEBUG
 				if (debugmp3) { printf ("\nDEBUG1: tmpf: %s, break %s\n", tmpf); }
+#endif
 				break;
 			}
 		}
+#ifdef DEBUG
 		if (debugmp3) { printf ("\nDEBUG1: strnlen(tmpf): %s\n", strlen(tmpf)); }
+#endif
 		if ((tmpf != NULL) && (strlen(tmpf) > 0)) {
+#ifdef DEBUG
 			if (debugmp3) {
 				printf ("\nDEBUG2: if tmpf - flist_getfilename(ftmp): %s\n", flist_getfilename(ftmp));
 				printf ("\nDEBUG2: if tmpf - ftmp->file: %s\n", ftmp->file);
 				printf ("\nDEBUG2: tmpf %s\n", tmpf);
 			}
+#endif
 			sprintf(buf, "%s/%s", src, tmpf);
+#ifdef DEBUG
 			if (debugmp3) { printf ("\nDEBUG3: tmpf: %s\nDEBUG3: buf: %s\nDEBUG3: flist_getfilename(ftmp): %s\n", tmpf, buf, flist_getfilename(ftmp)); }
 			//tmp = NULL;
+#endif
 			tmp = get_mp3_genre(buf);
 			if ((tmp != NULL) && (strlen(tmp) > 0))
 				sprintf(mp3_genre, "%s", tmp);
+#ifdef DEBUG
 			if (debugmp3) {printf ("\nDEBUG3: tmp: %s\n", tmp); }
+#endif
 			free(tmpf);
 		}	
 	}
