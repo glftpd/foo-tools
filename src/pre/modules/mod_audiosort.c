@@ -21,7 +21,7 @@
 /*
  * Module that runs pzs-ng's audiosort on pre release
  * Author, slv.
- * $Id: mod_audiosort.c,v 1.1 2018/07/12 21:00:00 slv Exp $
+ * $Id: mod_audiosort.c,v 1.11 2020/01/25 21:00:00 slv Exp $
  */
 
 #include <string.h>
