@@ -230,8 +230,18 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(s_path, "WOY", buf);
 
-	if (debug) { printf("MODULE-DEBUG: /bin/audiosort %s/%s\n", s_path, tmp); }
-	sprintf(buf, "/bin/audiosort %s/%s >/dev/null 2>&1", s_path, tmp);
+	sprintf(buf, "%s '%s/%s' >/dev/null 2>&1", audiosort_bin, s_path, tmp);
+#ifdef DEBUG
+	if (debug) { 
+		printf("MODULE-DEBUG: %s\n", buf);
+		f = fopen("mod_audiosort.log", "a");
+		char fdate[12], ftime[10];
+		strftime(fdate, 1024, "%Y-%m-%d", tm_now);
+		strftime(ftime, 1024, "%H:%M:%S", tm_now);
+		fprintf(f, "%s %s MODULE-DEBUG: %s\n", fdate, ftime, buf);
+		fclose(f);
+	}
+#endif
 	if (system(buf) == -1)
 		printf("audiosorting %s failed!\n", dir);
 

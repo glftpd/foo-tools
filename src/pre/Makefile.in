@@ -23,7 +23,7 @@ foo.Pre.debug: foo.Pre.o
 all: foo-pre
 
 clean:
-	rm -f *.o *~ foo.Pre foo-pre
+	rm -f *.o *~ foo.Pre foo-pre foo.Pre.debug foo-pre.debug
 	$(MAKE) -C mp3genre $@
 
 release:
