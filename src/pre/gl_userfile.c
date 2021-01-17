@@ -23,6 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "gl_userfile.h"
 
@@ -234,6 +237,11 @@ int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, l
 	if (lfr_open(&lfr, userfile) < 0)
 		return -1;
 
+	// stat current userfile so we can preserve uid/gid
+	struct stat userfile_sb;
+	if (stat(userfile, &userfile_sb) == -1)
+		return -1;
+
 	ufnew = malloc(strlen(userfile) + 10);
 	sprintf(ufnew, "%s.pre-tmp", userfile);
 	out = fopen(ufnew, "w");
@@ -263,6 +271,9 @@ int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, l
 	fclose(out);
 	lfr_close(&lfr);
 
+	// chown new userfile to uid/gid from old userfile
+	chown(ufnew, userfile_sb.st_uid, userfile_sb.st_gid);
+
 	rename(ufnew, userfile);
 
 	free(ufnew);
@@ -287,6 +298,11 @@ int gl_userfile_set_stats(char *userfile, int files, long kbytes, int seconds, s
 		username = tmp;
 
 	if (lfr_open(&lfr, userfile) < 0)
+		return -1;
+
+	// stat current userfile so we can preserve uid/gid
+	struct stat userfile_sb;
+	if (stat(userfile, &userfile_sb) == -1)
 		return -1;
 
 	ufnew = malloc(strlen(userfile) + 10);
@@ -328,6 +344,9 @@ int gl_userfile_set_stats(char *userfile, int files, long kbytes, int seconds, s
 
 	fclose(out);
 	lfr_close(&lfr);
+
+	// chown new userfile to uid/gid from old userfile
+	chown(ufnew, userfile_sb.st_uid, userfile_sb.st_gid);
 
 	rename(ufnew, userfile);
 
