@@ -103,7 +103,7 @@ gl_section_stat_t * _gl_get_sec_stats(gl_stat_t *s, int sec) {
 }
 
 char * _gl_tostring_stats(gl_stat_t *s) {
-	char *tmp = malloc(100), stbuf[100];
+	char *tmp = malloc(1000), stbuf[1000];
 	gl_section_stat_t *t;
 	int i = 0;
 
@@ -171,7 +171,7 @@ char * _gl_userfile_add_credits(char *str, long credits, int sec) {
 	stringtokenizer st;
 	long long tmpcred;
 	int i = 0;
-	char buf[300], credstr[300];
+	char buf[1000], credstr[1000];
 
 	st_initialize(&st, str, " ");
 
@@ -274,7 +274,7 @@ int gl_userfile_add_stats(char *userfile, int files, long kbytes, int seconds, l
 int gl_userfile_set_stats(char *userfile, int files, long kbytes, int seconds, strlist_t *types, int (*callback)(gl_stat_t *stat)) {
 
 	linefilereader_t lfr;
-	char *ufnew, *tmp, buf[1024], cbuf[100], *username;
+	char *ufnew, *tmp, buf[1024], cbuf[1000], *username;
 	int rc = 0;
 	FILE *out;
 
@@ -304,7 +304,7 @@ int gl_userfile_set_stats(char *userfile, int files, long kbytes, int seconds, s
 
 		tmp = strchr(buf, ' ');
 
-		bzero(cbuf, 100);
+		bzero(cbuf, 1000);
 
 		if (tmp)
 			strncpy(cbuf, buf, tmp - buf);
