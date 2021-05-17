@@ -16,7 +16,7 @@ standalone.debug:
 all: mp3genre
 
 clean:
-	rm -f *.o *~
+	rm -f *.o *~ mp3genre
 
 release:
 	mkdir -p $(RELEASEDIR)/pre/mp3genre

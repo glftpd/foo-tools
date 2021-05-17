@@ -41,15 +41,5 @@ Addons for foo-pre; modules add functions but are not build into foo-pre binary
 
 ## TODO
 
-### foo-pre
-
-- [ ] replace pre/mp3genre by pzs-ng code or other id3 lib instead
-- [ ] FLAC support?
-- [X] [#5](https://github.com/glftpd/foo-tools/issues/5) add option to force using mv external 
-- [X] add audiosort after pre
-- [ ] prebw after pre (mod_prebw)
-
-### spy
-
-- [X] look into libhttpd.h since it's LGPL now (http://www.hughes.com.au/products/libhttpd)
+Moved to [TODO.md](TODO.md)
 

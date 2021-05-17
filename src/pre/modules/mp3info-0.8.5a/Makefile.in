@@ -44,7 +44,7 @@ STRIP = strip
 
 LIBS = -lncurses
 CC = gcc
-CFLAGS = -g -O2 -Wall -fPIC
+CFLAGS = -g -O2 -Wall -fPIC -Wno-stringop-truncation -Wno-stringop-overflow
 
 all: mp3info doc
 

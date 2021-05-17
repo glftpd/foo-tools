@@ -32,6 +32,8 @@ lfrtest
 spy
 webspy
 zipcheck
+tester
+mp3genre
 
 Makefile
 config.h
@@ -45,6 +47,8 @@ autom4te.cache/
 *.log
 *.debug
 *_debug
+*.new
+*.old
 *_new
 *_old
 

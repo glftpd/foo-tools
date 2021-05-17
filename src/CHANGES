@@ -77,6 +77,10 @@ Nov 16 2013: * deleted some generated files and update configure
 Mar  9 2014: * added current mp3info version
 Mar  9 2014: * added stack protection flags to compilation
 
+//glftpd-scripts
+Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs
+Sep 15 2015: * fix compile warning
+
 //slv
 Aug 08 2012: * MP3 genre added to PRE output (instead of in mod_idmp3)
 Apr 09 2017: * cleaned up files
@@ -94,8 +98,7 @@ May 28 2018: * added option to pre.cfg always use external move program
 May 28 2018: * fixed force late pre msg
 Jun 04 2018: * added audiosort module
 Jan 25 2020: * fixed audiosort mod: pre dirs are enclosed in single quote now
-
-//glftpd-scripts
-Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for dated pre-dirs
-Sep 15 2015: * fix compile warning
+Apr 16 2021: * fixed overflow adding stats with multiple stat_section lines w/ seperate creds:
+                 'malloc(): invalid (next) size (unsorted)' (or 'stack smashing detected')
+               (thanks MickMouse, SoniCFL, f*)
 
