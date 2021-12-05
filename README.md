@@ -21,11 +21,16 @@ For more details see [CHANGELOG](src/CHANGES)
 - [doc](doc) Documentation on installing/running the programs
 - [README.mp3genre](src/pre/README.mp3genre) mp3genre specific README (install/configure)
 
-### mp3genre
+### Mp3genre
 
-mp3genre for foo-pre; adds mp3 genre in PRE output without module
+Includes optional 'mp3genre' for foo-pre which adds mp3 genre in PRE output, without a module.
 
-check README on how to install/configure
+Example:
+```
+[PRE] [MP3] Aritist-Title-WEB-2021-GRP by GRP with 10 files (100MB) of Pop.
+```
+
+Check [README.mp3genre](src/pre/README.mp3genre) on details how to install/configure
 
 ### Modules
 
