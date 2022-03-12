@@ -48,6 +48,7 @@
 #include <lib/sockop.h>
 #include <util/linereaderbuffer.h>
 #include <collection/strlist.h>
+#include <bouncer/hammerprotect.h>
 
 // admin port use httpd
 #include <httpd.h>
@@ -457,7 +458,7 @@ int entry_max_sim_get(context_t *ctx) {
 void *entry_bounce_handler(bouncer_arg_t *bnc) {
 	selectfds_t *fds, *iter_fd = 0;
 	char xferbuf[BUFSIZE], tmpbuf[BUFSIZE], *tmp;
-    char ident[300], ip[50], ftpport[50];
+	char ident[300], ip[50], ftpport[50];
 	int len, valid_connection = 0, rc, port, isbounced, i;
 	long data_timeout;
 
@@ -465,7 +466,7 @@ void *entry_bounce_handler(bouncer_arg_t *bnc) {
 	fds = sock_fd_add(0, bnc->client_fd, bnc->server_fd);
 	fds = sock_fd_add(fds, bnc->server_fd, bnc->client_fd);
 
-    // get timeout val.
+	// get timeout val.
 	tmp = ht_get(bnc->context->cfg, PROPERTY_DATA_TIMEOUT);
 	data_timeout = atol(tmp);
 
@@ -473,7 +474,7 @@ void *entry_bounce_handler(bouncer_arg_t *bnc) {
 	printf("Data timeout: %d\n", data_timeout);
 #endif
 
-    while (1) {
+	while (1) {
 		rc = sock_fd_select(fds, data_timeout);
 
 		// if there was timeout, then end this one.
@@ -496,7 +497,7 @@ void *entry_bounce_handler(bouncer_arg_t *bnc) {
 				}
 
 				sock_fd_close(fds);
-				return;
+				return NULL;
 			}
 
 			bnc->bytes_out += len;
@@ -509,10 +510,11 @@ void *entry_bounce_handler(bouncer_arg_t *bnc) {
 
 			if (rc <= 0) {
 				sock_fd_close(fds);
-				return;
+				return NULL;
 			}
 		}
-    }
+	}
+        return NULL;
 }
 
 int entry_property_true(hashtable_t *cfg, char *p) {
@@ -537,7 +539,7 @@ void *entry_setup_handler(void *arg) {
 	char *tmp, ident[MAX_BUFSIZE], buf[MAX_BUFSIZE];
 	int rc, on = 1, port;
 	long connect_timeout;
-    struct sockaddr_in name;
+	struct sockaddr_in name;
 
 	a = (bouncer_arg_t*)arg;
 
@@ -567,7 +569,7 @@ void *entry_setup_handler(void *arg) {
 		if (rc < 0) {
 			entry_close(a);
 
-			return;
+			return NULL;
 		}
 	}
 
@@ -576,12 +578,12 @@ void *entry_setup_handler(void *arg) {
 
 	if (a->server_fd < 0) {
 		entry_bouncer_error(a, MSG_ERROR_CONNECT_REMOTE);
-		return;
+		return NULL;
 	}
 
     if (sock_connect(a->server_fd, (struct sockaddr*)&a->server_name, sizeof(a->server_name), connect_timeout/1000) < 0) {
 		entry_bouncer_error(a, MSG_ERROR_CONNECT_REMOTE);
-		return;
+		return NULL;
 	}
 
 	// lookup+send ident if thats what we need.
@@ -597,7 +599,7 @@ void *entry_setup_handler(void *arg) {
 
 		if (rc <= 0) {
 			entry_close(a);
-			return;
+			return NULL;
 		}
 	}
 
@@ -607,7 +609,7 @@ void *entry_setup_handler(void *arg) {
 
 	entry_log("worker finished. session-traffic: %lu bytes", a->bytes_out);
 
-	return;
+	return NULL;
 }
 
 
@@ -782,7 +784,7 @@ void *entry_port_run(void *args) {
 	if (st_count(&st) != 3) {
 		entry_log("invalid portconfig '%s' shutting down port.", tmp);
 		st_finalize(&st);
-		return;
+		return NULL;
 	}
 
 	s_ipport = st_next(&st);
@@ -800,7 +802,7 @@ void *entry_port_run(void *args) {
 
 	if (!entry_init_hostport(&ctx.bind_to, s_ipport)) {
 		entry_log("could not create host from %s", s_ipport);
-		return;
+		return NULL;
 	}
 
 	while (1) {

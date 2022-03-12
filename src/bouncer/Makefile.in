@@ -9,6 +9,7 @@
 # Use this one to run the bouncer on a win32 box with cygwin.
 #DEFS = -DDEBUG=1 -DWIN32
 #DEFS = -DDNVIEW
+DEFS = -L../lib -I../lib 
 
 include ../Makefile.config
 
@@ -22,16 +23,15 @@ FOOBNCOBJS = foobnc.o $(GENOBJS) ../util/linereaderbuffer.o hammerprotect.o
 #DEFS = -DADMINPORT
 SRCDIR = .. -I/usr/local/lib
 
-#all:	foobnc
-all:
+all:	libhttpd foobnc
 
 libhttpd:
-	$(MAKE) -C ../lib libhttpd
+	cd ../lib && make libhttpd
 
 foobnc: $(FOOBNCOBJS)
 	$(CC) -o $@ $(FOOBNCOBJS) -L/usr/local/lib -lpthread -lhttpd $(DEFS)
 
 clean:
-	rm -f *.o *~ simple_entry entry datanode *.pid
+	@rm -f *.o *~ simple_entry entry datanode *.pid
 
 

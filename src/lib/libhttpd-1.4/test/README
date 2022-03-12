@@ -1,0 +1,7 @@
+Included here is a very simple test application.  It creates a web
+server with only 3 pages of content (1 normal dynamic page, one static
+page, and one dynamic page that accepts data) and a dynamic wildard
+directory.
+
+Run test_httpd and connect to it with a browser to see the server in
+operation.

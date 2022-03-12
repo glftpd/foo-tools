@@ -1,0 +1,6 @@
+CFLAGS= -g -I../src
+EXTRA_LIBS= ../src/libhttpd.a -L$(EMBER_INST_DIR)/lib $(EMBER_LIB) 
+
+!program test_httpd test_httpd.c
+
+test_httpd: ../src/libhttpd.a

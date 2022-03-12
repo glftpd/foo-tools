@@ -1,0 +1,77 @@
+# Configure template for libhttpd
+# When run through GNU autoconf it will generate the configure script.
+
+AC_INIT(Site.mm.in)
+AC_CONFIG_HEADER(src/config.h)
+
+VERSION="0.1 ALPHA 1"
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(VERSION)
+
+
+echo "Configuring libhttpd"
+
+echo $ECHO_N "Do you want to include support for Ember scripts (n) : $ECHO_C"
+read EMBER
+if test "$EMBER." = "y." -o "$EMBER." = "Y."
+then
+	HAVE_EMBER="#define HAVE_EMBER"
+	echo "Ember support included"
+	echo $ECHO_N "checking for Ember... $ECHO_C"
+	if test -d /usr/local/ember
+	then
+        	INST_DIR="/usr/local/ember"
+	fi
+	if test -d /usr/ember
+	then
+        	INST_DIR="/usr/ember"
+	fi
+	if test -d /opt/ember
+	then
+        	INST_DIR="/opt/ember"
+	fi
+	if test -d /usr/local/nk/ember
+	then
+        	INST_DIR="/usr/local/nk/ember"
+	fi
+	if test -d /opt/nk/ember
+	then
+        	INST_DIR="/opt/nk/ember"
+	fi
+	if test "$INST_DIR." = "."
+	then
+        	echo "UNKNOWN"
+        	echo "Can't find the installation directory"
+        	$ECHO_N "Where is Ember installed? $ECHO_C"
+        	read INST_DIR
+	fi
+	echo "found in $INST_DIR"
+	AC_DEFINE_UNQUOTED(HAVE_EMBER)
+	EMBER_LIB="-lember";
+fi
+EMBER_INSTALL_DIR="$INST_DIR"
+AC_DEFINE_UNQUOTED(EMBER_INSTALL_DIR,$EMBER_INSTALL_DIR)
+AC_SUBST(HAVE_EMBER)
+AC_SUBST(EMBER_LIB)
+AC_SUBST(EMBER_INSTALL_DIR)
+
+AC_PROG_CC
+if test "$ac_cv_prog_CC" = "gcc"; 
+then
+	WALL=-Wall
+else
+	WALL=
+fi
+AC_DEFINE_UNQUOTED(WALL, "$WALL")
+AC_SUBST(WALL)
+
+AC_PROG_RANLIB
+
+AC_CHECK_HEADERS(string.h strings.h stdarg.h unistd.h)
+AC_HAVE_LIBRARY(socket)
+AC_HAVE_LIBRARY(nsl)
+AC_OUTPUT(Site.mm)
+echo
+echo "HTTPD Library Configuration complete"
+echo
+

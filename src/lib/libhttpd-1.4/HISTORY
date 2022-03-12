@@ -1,0 +1,70 @@
+Version  1.4	2 JFeb 2005
+--------------------------
+
+* 	Fixed problem with the authentication routine prototypes
+	and return values from httpdAuthenticate
+
+*	Added support for custom error pages via the 
+	httpdSetErrorFunction() api entry.
+
+*	Added support for Ember callbacks for generation of dynamic 
+	content
+
+*	Added variable expansion in all text/* content type pages.
+
+*	Added httpdSetVariableValue() api entry
+
+*	Added host header info to the request structure
+
+
+
+Version  1.3	25 Oct 2002
+--------------------------
+
+* 	Fixed possible buffer overrun vulnerabilities
+
+*	Rolled in Win32 port from Dimitry Kloper
+	<dimka _at_ cs.technion.ac.il>
+
+
+
+Version  1.2	16 Oct 2002
+--------------------------
+*	Added host and port command line options to test server code
+
+*	Added httpdAuthenticate and httpdForceAuthenticate to the API
+	library to support Basic HTTP authentication.
+
+*	NOTE : Added a timeout arg to the httpdGetConnection() api call.  
+	If the arg is non-null then it is passed to select as the max
+	time we are prepared to wait for a connection.  A null value
+	will force it to block and a non-null value with the fields
+	set to 0 will force a poll (just like select).
+	httpdGetConnect() now returns -1 on error, 0 on timeout, 1 if
+	a connection was accepted.
+
+*	Added version.c and version/vendor globals to the library
+
+*	Added api routine httpdFreeVariables() that interfaces with the
+	internal code that clears the symbol table.  The table is
+	automatically cleared when httpdEndRequest() is called but
+	this allows the application to do it if needed.
+
+*	Added IP Access Control List support via the httpdAddAcl(),
+	httpdSetDefaultAcl() and httpdCheckAcl() API routines.  An
+	ACL is constructed by specifying address block / action
+	pairs where an address block is specified in CIDR notation
+	(e.g. 10.1.1.0/24) and the action is either a permit or deny.
+
+
+Version  1.1	15 Mar 2002
+--------------------------
+*	Added httpdAddCWildcardContent( ) API function and associated
+	backend code.
+
+*	Corrected an error in the documentation of httpdAddWildcardContent( )
+
+
+Version  1.0	4 Mar 2002
+--------------------------
+Initial Release.

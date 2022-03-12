@@ -1,0 +1,17 @@
+#
+# General configuration guff for Makegen
+#
+
+#
+# OS version
+#
+OS_NAME="$OS_NAME"
+OS_RELEASE="$OS_RELEASE"
+OS_ARCH="$OS_ARCH"
+OS_TYPE="$OS_TYPE"
+
+ranlib="ranlib"
+cpp="cpp"
+chmod="chmod"
+chgrp="chgrp"
+chown="chown"

@@ -1,0 +1,38 @@
+Frequently Asked Questions
+--------------------------
+
+Building Software
+
+	1. I get compilation about missing types
+	2. I get link errors about unresolved symbols
+
+HTTPD Configuration
+
+	3. I can't get the web server to bind to a particular hostname
+
+-------
+1. I get compilation about missing types
+
+Answer: Include the header file that is shipped with this library.  It
+is usually installed in /usr/local/include and is called httpd.h.  
+Just add
+	#include <httpd.h>
+
+to your code and compile it with the following compiler flag
+
+	-I /usr/local/include
+
+-------
+2. I get link errors about unresolved symbols
+
+Answer: You are not linking against the library.  The library archive is
+installed in /usr/local/lib by default.  Add the following to your link
+command
+	-L /usr/local/lib -lhttpd
+
+-------
+3. I can't get  the web server to bind to a particular hostname
+
+Answer: The httpdCreate( ) function does not take a hostname, only an
+IP address.  Replace the hostname with the IP Address of the host and
+everything should be fine.

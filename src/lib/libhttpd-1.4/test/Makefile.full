@@ -1,0 +1,108 @@
+#
+# This is a "makegen" generated Makefile based on Makefile.tmpl
+#
+# Makegen has been developed as part of Minerva by David J. Hughes
+#
+# ********************   DO NOT EDIT THIS BY HAND   ********************
+#
+
+SHELL=/bin/sh
+
+#
+# Project top directory and current directory (SOURCE_DIR can be redefined)
+#
+
+TOP=..
+SOURCE_DIR=.
+
+#
+# OS Information
+#
+OS_NAME=Linux
+OS_RELEASE=5.10.0-11-amd64
+OS_ARCH=x86_64
+OS_TYPE=_OS_UNIX
+
+#
+# Site specific configuration
+#
+
+
+COMPILER= gcc
+WALL= 
+VERSION= "0.1 ALPHA 1"
+INST_DIR= /usr/local/nk
+CC_ONLY_FLAGS= -I$(TOP)/src
+
+#
+# Database Library information
+#
+
+DB_INC_DIR= /usr/local/msql3/include
+DB_LIB_DIR= /usr/local/msql3/lib    
+DB_LIB_NAME= -lmsql
+
+
+
+#
+# Things below here shouldn't need to be changed
+#
+CC= $(COMPILER) $(WALL) $(CC_ONLY_FLAGS)
+LINK= $(COMPILER) $(LINK_ONLY_FLAGS)
+RANLIB= ranlib
+AR= ar
+LN_S= ln -s
+BASE_SOURCE_DIR= $(TOP)/src
+
+TARGET= @TARGET@
+
+# Extra libraries if required
+EXTRA_LIBS= 
+
+EMBER_LIB= 
+
+# Any other CFlags required
+EXTRA_CFLAGS= 
+
+# 
+EMBER_INST_DIR= 
+
+CFLAGS= -g -I$(TOP)/ -I/usr/local/include $(EXTRA_CFLAGS) -D$(OS_TYPE) -I$(EMBER_INST_DIR)/include
+LDLIBS= -L/usr/local/lib -L$(TOP)/lib -lnsl  $(EXTRA_LIBS)
+
+
+CC_FLAGS= $(CFLAGS)
+LD_LIBS= $(LDLIBS)
+
+#
+# Default Makefile Rules
+#
+
+install :: all
+
+clean ::
+	rm -f Makefile.full
+
+#
+# Makefile Rules
+#
+
+
+CFLAGS= -g -I../src
+EXTRA_LIBS= ../src/libhttpd.a -L$(EMBER_INST_DIR)/lib $(EMBER_LIB) 
+
+
+# Make rules for building test_httpd
+
+all :: test_httpd
+
+test_httpd : test_httpd.c Makefile.full 
+	$(LINK) $(CC_FLAGS) test_httpd.c -o test_httpd $(LD_LIBS) 
+
+clean :: 
+	rm -f test_httpd
+
+
+test_httpd: ../src/libhttpd.a
+
+

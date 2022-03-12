@@ -1,0 +1,174 @@
+#!/bin/sh
+#
+#	makegen generates Makefiles from simple template files.
+#	Any line in a Makefile.tmpl file that starts with "!" causes
+#	a shell script to be executed with it's output redirected into
+#	the Makefile.  This is very simple but allows me to do things
+#	like include Site.mm global definitions and protability stuff
+#	without needing the new bsd make etc.
+#
+#						bambi
+#
+
+trap "rm -f Makefile.full; echo; echo ABORT!; echo; exit 1" 1 2 3 10 15 
+
+
+# Is this a Posix or bsd-ish shell?
+
+if echo '\c' | grep -s c >/dev/null 2>&1
+then
+	ECHO_N="-n"
+	ECHO_C=""
+else
+	ECHO_N=""
+	ECHO_C='\c'
+fi
+
+
+# Load the makegen config info
+TOP=$1
+INST_DIR=$2
+export TOP
+export INST_DIR
+
+if test "$INST_DIR." = "."
+then
+	MACRO_DIR=$TOP
+else
+	MACRO_DIR=$INST_DIR
+fi
+export MACRO_DIR
+
+OS_NAME=`uname -s | sed "s,/,_,"`
+OS_RELEASE=`uname -r`
+OS_ARCH=`uname -m`
+if test $OS_NAME = "OS_2"
+then
+	OS_TYPE="_OS_OS2"
+fi
+if test $OS_NAME = "WIN32"
+then
+	OS_TYPE="_OS_WIN32"
+fi
+if test "$OS_TYPE." = "."
+then
+	OS_TYPE="_OS_UNIX"
+fi
+
+export OS_NAME
+export OS_RELEASE
+export OS_ARCH
+export OS_TYPE
+
+if test -f $TOP/makegen/makegen.cf
+then
+	. $TOP/makegen/makegen.cf
+else
+	if test -f $INST_DIR/makegen/makegen.cf
+	then
+		. $INST_DIR/makegen/makegen.cf
+	else
+		echo "Error !  Can't find makegen.cf !!"
+		exit 1
+	fi
+fi
+
+echo
+echo Regenerating Makefile.
+cat > Makefile.full << !EOF!
+#
+# This is a "makegen" generated Makefile based on Makefile.tmpl
+#
+# Makegen has been developed as part of Minerva by David J. Hughes
+#
+# ********************   DO NOT EDIT THIS BY HAND   ********************
+#
+
+SHELL=/bin/sh
+
+#
+# Project top directory and current directory (SOURCE_DIR can be redefined)
+#
+
+TOP=$TOP
+SOURCE_DIR=.
+
+#
+# OS Information
+#
+OS_NAME=$OS_NAME
+OS_RELEASE=$OS_RELEASE
+OS_ARCH=$OS_ARCH
+OS_TYPE=$OS_TYPE
+
+!EOF!
+
+cat $TOP/Site.mm >> Makefile.full
+
+echo "
+
+CC_FLAGS= \$(CFLAGS)
+LD_LIBS= \$(LDLIBS)
+
+#
+# Default Makefile Rules
+#
+
+install :: all
+
+clean ::
+	rm -f Makefile.full
+
+#
+# Makefile Rules
+#
+
+" >> Makefile.full
+
+T="	"
+NL_IFS="
+"
+TS_IFS=" 	"
+IFS="${NL_IFS}"
+
+{
+while read line
+do
+	echo $ECHO_N ".$ECHO_C"
+
+	#
+	# bash stuffs up reads sometimes by dropping a ^A around \\ escapes
+	# It's a hack, but stripping them out like this works.
+	#
+
+	line=`echo $line | sed "s///g"`
+
+	if echo $line | grep "^[ $T]*!"> /dev/null
+	then
+		command=`echo $line | \
+		sed "s,^[ $T]*!\([a-zA-Z0-9_]*\).*,${MACRO_DIR}\/makegen\/\1.mm,"`
+		args=`echo $line | \
+		sed "s,^[ $T]*!\([a-zA-Z0-9_]*\)\(.*\),\2,"`
+		IFS="$TS_IFS"
+		if test ! -f $command
+		then
+			echo
+			echo "Unknown makegen command \"$command\""
+			echo
+			rm -f Makefile.full
+			exit 2
+		fi
+		$command $args >> Makefile.full
+		IFS="$NL_IFS"
+	else
+		# The sed hack below is for 4.4BSD's shell that doesn't
+		# replace \\ with \ during a read.
+		echo "$line"  | sed "s/\\\\\\\\/\\\\/g
+				     s/\\\\\\\\/\\\\/g" >> Makefile.full
+	fi
+done
+} < Makefile.tmpl
+echo >> Makefile.full
+echo >> Makefile.full
+echo
+echo "Done."

@@ -2,6 +2,8 @@
 
 include Makefile.config
 
+.PHONY: all help build foolibs libhttpd show foobnc webspy clean distclean
+
 # build order.
 DIRS = lib util collection thread checker nfo pre nukes bouncer who unzip \
 	zip reset sfv
@@ -21,16 +23,24 @@ build:
 	@for x in $(DIRS); do \
 		(cd $$x; make) \
 	done
+foolibs:
+	@echo Building libs ..
+	@for x in lib util collection thread; do \
+		(cd $$x; make) \
+	done
+
+libhttpd:
+	@(cd lib; make libhttpd)
 
 show:
 	@echo These are the programs build ..
 	@size bouncer/simple_entry nfo/nfocleaner nukes/foo-nukes pre/foo-pre \
-	reset/foo-reset sfv/blehsfv sfv/createsfv who/spy who/webspy
+	  reset/foo-reset sfv/blehsfv sfv/createsfv who/spy who/webspy
 
-foobnc: build
+foobnc: foolibs libhttpd	
 	(cd bouncer; make foobnc)
 
-webspy: build
+webspy: foolibs libhttpd
 	(cd who; make webspy)
 
 clean:

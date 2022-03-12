@@ -25,6 +25,7 @@
 // std imports
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <collection/strlist.h>
 #include <collection/hashtable.h>

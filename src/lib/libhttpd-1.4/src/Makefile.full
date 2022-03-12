@@ -1,0 +1,150 @@
+#
+# This is a "makegen" generated Makefile based on Makefile.tmpl
+#
+# Makegen has been developed as part of Minerva by David J. Hughes
+#
+# ********************   DO NOT EDIT THIS BY HAND   ********************
+#
+
+SHELL=/bin/sh
+
+#
+# Project top directory and current directory (SOURCE_DIR can be redefined)
+#
+
+TOP=..
+SOURCE_DIR=.
+
+#
+# OS Information
+#
+OS_NAME=Linux
+OS_RELEASE=5.10.0-11-amd64
+OS_ARCH=x86_64
+OS_TYPE=_OS_UNIX
+
+#
+# Site specific configuration
+#
+
+
+COMPILER= gcc
+WALL= 
+VERSION= "0.1 ALPHA 1"
+INST_DIR= /usr/local/nk
+CC_ONLY_FLAGS= -I$(TOP)/src
+
+#
+# Database Library information
+#
+
+DB_INC_DIR= /usr/local/msql3/include
+DB_LIB_DIR= /usr/local/msql3/lib    
+DB_LIB_NAME= -lmsql
+
+
+
+#
+# Things below here shouldn't need to be changed
+#
+CC= $(COMPILER) $(WALL) $(CC_ONLY_FLAGS)
+LINK= $(COMPILER) $(LINK_ONLY_FLAGS)
+RANLIB= ranlib
+AR= ar
+LN_S= ln -s
+BASE_SOURCE_DIR= $(TOP)/src
+
+TARGET= @TARGET@
+
+# Extra libraries if required
+EXTRA_LIBS= 
+
+EMBER_LIB= 
+
+# Any other CFlags required
+EXTRA_CFLAGS= 
+
+# 
+EMBER_INST_DIR= 
+
+CFLAGS= -g -I$(TOP)/ -I/usr/local/include $(EXTRA_CFLAGS) -D$(OS_TYPE) -I$(EMBER_INST_DIR)/include
+LDLIBS= -L/usr/local/lib -L$(TOP)/lib -lnsl  $(EXTRA_LIBS)
+
+
+CC_FLAGS= $(CFLAGS)
+LD_LIBS= $(LDLIBS)
+
+#
+# Default Makefile Rules
+#
+
+install :: all
+
+clean ::
+	rm -f Makefile.full
+
+#
+# Makefile Rules
+#
+
+
+protocol.o : protocol.c Makefile.full
+	$(CC) $(CC_FLAGS) -c protocol.c
+
+clean ::
+	rm -f protocol.o
+
+api.o : api.c Makefile.full
+	$(CC) $(CC_FLAGS) -c api.c
+
+clean ::
+	rm -f api.o
+
+version.o : version.c Makefile.full
+	$(CC) $(CC_FLAGS) -c version.c
+
+clean ::
+	rm -f version.o
+
+ip_acl.o : ip_acl.c Makefile.full
+	$(CC) $(CC_FLAGS) -c ip_acl.c
+
+clean ::
+	rm -f ip_acl.o
+
+ember.o : ember.c Makefile.full
+	$(CC) $(CC_FLAGS) -c ember.c
+
+clean ::
+	rm -f ember.o
+
+all :: libhttpd.a
+
+libhttpd.a :  protocol.o api.o version.o ip_acl.o ember.o Makefile.full
+	$(AR) rc libhttpd.a  protocol.o api.o version.o ip_acl.o ember.o
+	ranlib libhttpd.a
+
+clean :: 
+	rm -f libhttpd.a
+
+install ::
+	if test -f /usr/local/lib/libhttpd.a;\
+	then\
+		rm -f /usr/local/lib/libhttpd.a.old;\
+		mv /usr/local/lib/libhttpd.a /usr/local/lib/libhttpd.a.old;\
+	fi;\
+	cp libhttpd.a /usr/local/lib/libhttpd.a
+	ranlib /usr/local/lib/libhttpd.a
+	chmod 744 /usr/local/lib/libhttpd.a
+
+install ::
+	if test -f /usr/local/include/httpd.h;\
+	then\
+		rm -f /usr/local/include/httpd.h.old;\
+		mv /usr/local/include/httpd.h /usr/local/include/httpd.h.old;\
+	fi;\
+	cp httpd.h /usr/local/include/httpd.h
+	chmod 744 /usr/local/include/httpd.h
+
+
+
