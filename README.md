@@ -1,5 +1,9 @@
 # foo-tools
 
+Besides the more recent updates, the rest of the code base is preserved here mainly for historical reasons.
+
+This software comes without any claims regarding security or support about how to use it.
+
 ## Changes
 
 This is a modified and updated version of foo-tools by Tanesha Team:
