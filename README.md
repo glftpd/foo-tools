@@ -4,10 +4,6 @@
 
 This is a modified and updated version of foo-tools by Tanesha Team:
 
-## Changes
-
-This is a modified and updated version of foo-tools by Tanesha Team:
-
 - modification to foo-pre; shows mp3 genre in PRE line (no module needed)
 - added date/time in foo-pre.log
 - added mod_audiosort, mod_prebw
