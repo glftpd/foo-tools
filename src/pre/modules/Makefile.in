@@ -6,7 +6,7 @@ SRCDIR = ../..
 
 LIBS = $(SRCDIR)/lib/macro.o $(SRCDIR)/lib/gllogs.o $(SRCDIR)/lib/pwdfile.o $(SRCDIR)/util/linefilereader.o $(SRCDIR)/collection/hashtable.o $(SRCDIR)/lib/stringtokenizer.o
 
-all: mod_idmp3.so mod_sitenfoadd.so mod_nfohandler.so mod_chmod.so mod_symlink.so mod_audiosort.so
+all: mod_idmp3.so mod_sitenfoadd.so mod_nfohandler.so mod_chmod.so mod_symlink.so mod_audiosort.so mod_prebw.so
 
 mod_idmp3.so: mod_idmp3.o
 	(cd mp3info; make)
@@ -27,15 +27,22 @@ mod_symlink.so: mod_symlink.o
 mod_audiosort.so: mod_audiosort.o
 	$(CC) $(CFLAGS) -shared -Wl,-soname,mod_audiosort.so -o $@ $< $(LIBS) $(SRCDIR)/collection/strlist.o
 
-mod_audiosort.so.debug: 
+mod_prebw.so: mod_prebw.o
+	$(CC) $(CFLAGS) -shared -Wl,-soname,mod_prebw.so -o $@ $< $(LIBS) $(SRCDIR)/collection/strlist.o
+
+mod_audiosort_debug.so:
 	$(CC) -g -DDEBUG -c mod_audiosort.c -I${SRCDIR}
-	$(CC) -g -shared -Wl,-soname,mod_audiosort.so -o $@ mod_audiosort.o.debug $(LIBS) $(SRCDIR)/collection/strlist.o
+	$(CC) -g -shared -Wl,-soname,mod_audiosort.so -o $@ mod_audiosort.o $(LIBS) $(SRCDIR)/collection/strlist.o
+
+mod_prebw_debug.so:
+	$(CC) -g -DDEBUG -c mod_prebw.c -I${SRCDIR}
+	$(CC) -g -shared -Wl,-soname,mod_prebw.so -o $@ mod_prebw.o $(LIBS) $(SRCDIR)/collection/strlist.o
 
 tester: tester.o
 	$(CC) -g -o $@ $< ../../collection/hashtable.o ../../util/linefilereader.o $(SRCDIR)/lib/gllogs.o -ldl
 
 clean:
 	(cd mp3info; make clean)
-	rm -f *.o *~ *.so *.so.debug
+	rm -f *.o *~ *.so
 
 

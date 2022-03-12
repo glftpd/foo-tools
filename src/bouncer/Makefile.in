@@ -25,6 +25,8 @@ SRCDIR = .. -I/usr/local/lib
 #all:	foobnc
 all:
 
+libhttpd:
+	$(MAKE) -C ../lib libhttpd
 
 foobnc: $(FOOBNCOBJS)
 	$(CC) -o $@ $(FOOBNCOBJS) -L/usr/local/lib -lpthread -lhttpd $(DEFS)

@@ -1,13 +1,13 @@
 /*
  * slv 20180502 - mp3genre.c:
  *
- *	reads last 128 bytes of mp3 and extracts genre tag
- *	ph33r my ugly "code" ;o
+ * reads last 128 bytes of mp3 and extracts genre tag
+ * ph33r my ugly "code" ;o
  *
- *      to compile as standalone binary:
- *        gcc -DSTANDALONE -o mp3genre mp3genre.c
- *        use -DDEBUG to enable debug logging to
- *        foo-pre log or mp3genre.log (standalone)
+ * to compile as standalone binary:
+ *      gcc -DSTANDALONE -o mp3genre mp3genre.c
+ *      use -DDEBUG to enable debug logging to
+ *      foo-pre log or mp3genre.log (standalone)
  *
  * this file is based in part on:
  *

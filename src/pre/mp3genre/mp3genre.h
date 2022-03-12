@@ -1,7 +1,9 @@
 /*
  * slv 20170414 - headers for mp3genre.c
  *
- * from pzs-ng zipscript/src/multimedia.c
+ * From pzs-ng zipscript/src/multimedia.c
+ * Copyright (c) 2007, project-zs-ng team
+ * All rights reserved.
  * http://www.pzs-ng.com
  *
 */
@@ -28,7 +30,7 @@ char *genre_s[] = {
 	"Electronic", "Pop-Folk", "Eurodance", "Dream",
 	"Southern Rock", "Comedy", "Cult", "Gangsta",
 	"Top 40", "Christian Rap", "Pop_Funk", "Jungle",
-	"Native American", "Cabaret", "New Wave", "Psychadelic",
+	"Native American", "Cabaret", "New Wave", "Psychedelic",
 	"Rave", "Showtunes", "Trailer", "Lo-Fi",
 	"Tribal", "Acid Punk", "Acid Jazz", "Polka",
 	"Retro", "Musical", "Rock & Roll", "Hard Rock",
@@ -49,9 +51,18 @@ char *genre_s[] = {
 	"Christian Gangsta Rap", "Heavy Metal", "Black Metal", "Crossover",
 	"Contemporary Christian", "Christian Rock", "Merengue", "Salsa",
 	"Thrash Metal", "Anime", "JPop", "Synthpop",
-	"Unknown"
+	"Abstract", "Art Rock", "Baroque", "Bhangra",
+	"Big Beat", "Breakbeat", "Chillout", "Downtempo",
+	"Dub", "EBM", "Eclectic", "Electro", "Electroclash",
+	"Emo", "Experimental", "Garage", "Global",
+	"IDM", "Illbient", "Industro-Goth", "Jam Band",
+	"Krautrock", "Leftfield", "Lounge", "Math Rock",
+	"New Romantic", "Nu-Breakz", "Post-Punk", "Post-Rock",
+	"Psytrance", "Shoegaze", "Space Rock", "Trop Rock",
+	"World Music", "Neoclassical", "Audiobook", "Audio Theatre",
+	"Neue Deutsche Welle", "Podcast", "Indie Rock", "G-Funk",
+	"Dubstep", "Garage Rock", "Psybient", "Unknown"
 };
-
-unsigned char genre_count=149;
+unsigned char genre_count=193;
 #endif
 /* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

@@ -27,7 +27,7 @@ show:
 	@size bouncer/simple_entry nfo/nfocleaner nukes/foo-nukes pre/foo-pre \
 	reset/foo-reset sfv/blehsfv sfv/createsfv who/spy who/webspy
 
-foobnc: foobnc
+foobnc: build
 	(cd bouncer; make foobnc)
 
 webspy: build

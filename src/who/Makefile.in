@@ -20,7 +20,8 @@ WEBSPYLIBS = -lhttpd
 all:  spy
 
 webspy: $(WEBSPYOBJS)
-	$(CC) -static -o $@ $(WEBSPYOBJS) $(WEBSPYLIBS) $(DEFS)
+	$(MAKE) -C ../lib libhttpd
+	$(CC) -static -o webspy $(WEBSPYOBJS) $(WEBSPYLIBS) $(DEFS)
 
 spy: $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS) $(DEFS)

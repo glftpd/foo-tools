@@ -14,8 +14,14 @@ SRCDIR = ..
 
 OBJS = dirlist.o cookie.o common.o genlistc.o sfv.o macro.o gllogs.o pwdfile.o stringtokenizer.o security.o sockop.o who.o xferlog.o mpegtool.o
 
-
-all:	$(OBJS)
+libhttpd:
+	@if [ ! -s libhttpd.a ]; then \
+	  sha512sum -c libhttpd-1.4.sha512sum && tar xvf libhttpd-1.4.tar.gz; \
+	  cd libhttpd-1.4 && echo n | ./configure && $(MAKE) all && \
+	    ranlib src/libhttpd.a && chmod 744 src/libhttpd.a && cp src/httpd.h src/libhttpd.a ..; \
+	else \
+	  echo "libhttpd already build"; \
+	fi
 
 clean:
 	rm -f *.o *~

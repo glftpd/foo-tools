@@ -19,9 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * Module that runs pzs-ng's audiosort on pre release
+ * Module that runs prebw script on pre release
  * Author, slv.
- * $Id: mod_audiosort.c,v 1.11 2020/01/25 21:00:00 slv Exp $
+ * $Id: mod_prebw.c,v 1.11 2022/03/12 18:15:00 slv Exp $
  */
 
 #include <string.h>
@@ -30,7 +30,7 @@
 #include <time.h>
 
 // project includes
-#include "mod_audiosort.h"
+#include "mod_prebw.h"
 #include "../foo-pre.h"
 
 // footools includes
@@ -39,21 +39,21 @@
 #include <collection/strlist.h>
 
 // in foo-pre
-hashtable_t *_mod_audiosort_cfg = 0;
-hashtable_t *_mod_audiosort_env = 0;
+hashtable_t *_mod_prebw_cfg = 0;
+hashtable_t *_mod_prebw_env = 0;
 
 void set_config(hashtable_t *cfg) {
-	_mod_audiosort_cfg = cfg;
+	_mod_prebw_cfg = cfg;
 }
 hashtable_t *get_config() {
-	return _mod_audiosort_cfg;
+	return _mod_prebw_cfg;
 }
 
 void set_env(hashtable_t *env) {
-	_mod_audiosort_env = env;
+	_mod_prebw_env = env;
 }
 hashtable_t *get_env() {
-	return _mod_audiosort_env;
+	return _mod_prebw_env;
 }
 
 /*
@@ -79,11 +79,11 @@ strlist_t * config_get_split_property(char *prop) {
 
 
 // prototype for rel handling function.
-int mod_audiosort_rel_func(char *dir, char *argv[]);
+int mod_prebw_rel_func(char *dir, char *argv[]);
 
-module_list_t mod_audiosort_info = {
+module_list_t mod_prebw_info = {
 	// module name
-	"audiosorter",
+	"prebw-script",
 
 	// module dir func
 	0,
@@ -92,7 +92,7 @@ module_list_t mod_audiosort_info = {
 	0,
 
 	// module rel func
-	mod_audiosort_rel_func,
+	mod_prebw_rel_func,
 
 	// struct module_list entry
 	0
@@ -103,7 +103,7 @@ module_list_t mod_audiosort_info = {
 
 // function to return module info of this module.
 module_list_t *module_loader() {
-	return &mod_audiosort_info;
+	return &mod_prebw_info;
 }
 
 int pre_replace(char *b, char *n, char *r) {
@@ -122,8 +122,8 @@ int pre_replace(char *b, char *n, char *r) {
 }
 
 
-int mod_audiosort_rel_func(char *dir, char *argv[]) {
-	char buf[1024], *tmp, *audiosort_bin, *section, *s_path;
+int mod_prebw_rel_func(char *dir, char *argv[]) {
+	char buf[1024], *tmp, *prebw_bin, *section, *s_path;
 	strlist_t *a_sections;
 	strlist_iterator_t *i;
 	FILE *f;
@@ -135,7 +135,7 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	if (!section)
 		return 1;
 
-	a_sections = config_get_split_property(PROPERTY_MOD_AUDIOSORT_SECTIONS);
+	a_sections = config_get_split_property(PROPERTY_MOD_PREBW_SECTIONS);
         for (i = str_iterator(a_sections); str_iterator_hasnext(i); ) {
                 tmp = str_iterator_next(i);
 		if (strcmp(tmp, section) == 0) {
@@ -150,7 +150,7 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	free(i);
 	if (!found) {
 #ifdef DEBUG
-		if (debug) printf("MODULE-DEBUG: no a_sections found=%i\n", found);
+		if (debug) printf("MODULE-DEBUG: no a_sections found: %i\n", found);
 #endif
 		return 1;
 	}
@@ -188,14 +188,14 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	if (debug) printf("MODULE-DEBUG: tmp=%s\n", tmp);
 #endif
 
-	audiosort_bin = ht_get(get_config(), PROPERTY_MOD_AUDIOSORT_BIN);
-	if (!audiosort_bin)
-		audiosort_bin = "/bin/audiosort";
+	prebw_bin = ht_get(get_config(), PROPERTY_MOD_PREBW_BIN);
+	if (!prebw_bin)
+		prebw_bin = "/bin/slv-prebw.sh";
 
 #ifdef DEBUG
-	if (debug) printf("MODULE-DEBUG: audiosort_bin=%s\n", audiosort_bin);
+	if (debug) printf("MODULE-DEBUG: prebw_bin=%s\n", prebw_bin);
 #endif
-	f = fopen(audiosort_bin, "r");
+	f = fopen(prebw_bin, "r");
 	if (!f)
 		return 1;
 
@@ -230,11 +230,11 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	strftime(buf, 1024, "%W", tm_now);
 	pre_replace(s_path, "WOY", buf);
 
-	sprintf(buf, "%s '%s/%s' >/dev/null 2>&1", audiosort_bin, s_path, tmp);
+	sprintf(buf, "%s '%s/%s' &", prebw_bin, s_path, tmp);
 #ifdef DEBUG
 	if (debug) { 
 		printf("MODULE-DEBUG: %s\n", buf);
-		f = fopen("mod_audiosort.log", "a");
+		f = fopen("mod_prebw.log", "a");
 		char fdate[12], ftime[10];
 		strftime(fdate, 1024, "%Y-%m-%d", tm_now);
 		strftime(ftime, 1024, "%H:%M:%S", tm_now);
@@ -243,7 +243,7 @@ int mod_audiosort_rel_func(char *dir, char *argv[]) {
 	}
 #endif
 	if (system(buf) == -1)
-		printf("audiosorting %s failed!\n", dir);
+		printf("prebw %s failed!\n", dir);
 
 	return 1;
 }

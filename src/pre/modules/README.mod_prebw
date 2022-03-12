@@ -1,0 +1,48 @@
+
+What is mod_prebw ?
+-------------------
+
+Runs prebw script on release dir after pre
+
+
+Building:
+---------
+
+Just build it with the make script ;)
+Or, to build this module only:
+make mod_prebw.so && cp mod_prebw.so /glftpd/bin/premodules
+
+Add it to the modules list in pre.cfg like this:
+modules=/bin/premodules/mod_prebw.so
+
+If you have more modules already loaded, then it will look like this
+modules=/bin/premodules/mod_other.so|/bin/premodules/mod_whatever.so|/bin/premodules/mod_prebw.so
+
+
+Configuring:
+------------
+
+Add the module to the modules list in pre.cfg and add property thats points to the prebw script
+and define section(s) where prebw should be run:
+
+#
+# properties for prebw module.
+#
+mod_prebw.bin=/bin/slv-prebw.sh
+mod_prebw.sections=apps|games
+
+
+PreBW Scripts:
+--------------
+
+While the default mod_prebw.bin setting is 'slv-prebw.sh', other prebw scripts should work too.
+Like 'glFTPd PreBW' by biohazard (untested).
+
+Since the prebw script now runs chrooted, make sure it can find glftpd's logs etc.
+
+For slv-prebw:
+  just set GLROOT="" and make sure any required binaries (sort, uniq, tac) are in gldir/bin
+For bio's prebw:
+  edit LOG paths in config.hpp (remove /glftpd) and recompile
+
+You might want to remove any TCL scripts from your bot that also call the prebw script.

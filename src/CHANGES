@@ -82,23 +82,28 @@ Nov  8 2014: * add calendar weeks for pre, fix typo, add CW/KW as macro for date
 Sep 15 2015: * fix compile warning
 
 //slv
-Aug 08 2012: * MP3 genre added to PRE output (instead of in mod_idmp3)
+Aug 08 2012: + added mp3 genre to PRE output (instead of in mod_idmp3)
+
 Apr 09 2017: * cleaned up files
 Apr 09 2017: * created makefile for mp3genre, fixed a few compiler warnings
-Apr 09 2017: * merged commits 2014/15 commits from glftpd/foo-tools.git
-Apr 09 2017: * updated mp3 genres from pzs-ng/zipscript/src/multimedia.c
+Apr 09 2017: * merged 2014/15 commits from glftpd/foo-tools.git
+Apr 09 2017: + updated mp3 genres from pzs-ng/zipscript/src/multimedia.c
 
 May 02 2018: * added libhttpd-1.4.tar.gz to src/lib (used by webspy)
 May 02 2018: * fixed foo-pre segfaults (glibc)
 May 02 2018: * fixed compiler warnings
-May 02 2018: * added date/time to foo-pre log entries
-May 02 2018: * "refactored" mp3genre and related code - again :)
-May 02 2018: * added debug and standalone options to mp3genre
-May 28 2018: * added option to pre.cfg always use external move program
+May 02 2018: + added date/time to foo-pre log entries
+May 02 2018: * mp3genre and related code "refactored" - again :)
+May 02 2018: + added debug and standalone options to mp3genre
+May 28 2018: + added option to pre.cfg always use external move program
 May 28 2018: * fixed force late pre msg
-Jun 04 2018: * added audiosort module
+Jun 04 2018: + added audiosort module
 Jan 25 2020: * fixed audiosort mod: pre dirs are enclosed in single quote now
+
 Apr 16 2021: * fixed overflow adding stats with multiple stat_section lines w/ seperate creds:
                  'malloc(): invalid (next) size (unsorted)' (or 'stack smashing detected')
-               (thanks MickMouse, SoniCFL, f*)
+    (thanks to MickMouse, SoniCFL and f* for pointing this out).
 
+Mar 03 2022: + added mod_prebw
+             + updated genres in mp3genre.h from pzs-ng's multimedia.c
+             * fixed makefiles/compiler warnings for foobnc and sfv
