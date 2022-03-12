@@ -14,6 +14,8 @@ SRCDIR = ..
 
 OBJS = dirlist.o cookie.o common.o genlistc.o sfv.o macro.o gllogs.o pwdfile.o stringtokenizer.o security.o sockop.o who.o xferlog.o mpegtool.o
 
+all:   $(OBJS)
+
 libhttpd:
 	@if [ ! -s libhttpd.a ]; then \
 	  sha512sum -c libhttpd-1.4.sha512sum && tar xvf libhttpd-1.4.tar.gz; \
@@ -24,7 +26,7 @@ libhttpd:
 	fi
 
 clean:
-	rm -f *.o *~
+	rm -f *.o *~ libhttpd.a httpd.h; rm -rf libhttpd-1.4
 
 release:
 	@mkdir $(RELEASEDIR)/lib

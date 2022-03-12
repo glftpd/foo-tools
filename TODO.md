@@ -1,6 +1,6 @@
 # TODO
 
-Things that ~~might eventually~~ get done.. or not :)
+Things that ~~might eventually~~ never get done.. or not :)
 
 ## foo-pre
 
