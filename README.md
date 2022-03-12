@@ -1,4 +1,5 @@
 # foo-tools
+[![build_footools](https://github.com/silv3rr/foo-tools/actions/workflows/build.yml/badge.svg)](https://github.com/silv3rr/foo-tools/actions/workflows/build.yml)
 
 Besides the more recent updates, the rest of the code base is preserved here mainly for historical reasons.
 
