@@ -34,7 +34,7 @@ libhttpd:
 
 show:
 	@echo These are the programs build ..
-	@size bouncer/simple_entry nfo/nfocleaner nukes/foo-nukes pre/foo-pre \
+	@size bouncer/foobnc nfo/nfocleaner nukes/foo-nukes pre/foo-pre \
 	  reset/foo-reset sfv/blehsfv sfv/createsfv who/spy who/webspy
 
 foobnc: foolibs libhttpd	
