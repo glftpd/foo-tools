@@ -1,4 +1,7 @@
-This a a quick HOWTO, for the things to NOT forget if you want footools works fine :
+
+This a a quick HOWTO,
+for the things to NOT forget if you want footools works fine :
+===============================================================================
 
 change your glftpd path (by default: /glftpd) here:
 
@@ -18,11 +21,19 @@ in config files:
 cd src
 ./configure
 make build
+( do "make distclean" first if compiled previously )
 
-------------------------------------------------------------------------------------
-Tips:
+-------------------------------------------------------------------------------
 
+last note;
+----------
+
+foo-tools:
+do not edit configure and Makefile, they will get overwritten (autotools)
+
+foo-pre:
 when you do 'site pre' and you have : "200 Command Successful."
 do : mknod /glftpd/dev/full c 1 7     
 
 //PCFiL
+

@@ -32,10 +32,29 @@ lfrtest
 spy
 webspy
 zipcheck
+tester
+mp3genre
 
 Makefile
 config.h
 config.status
 config.cache
 config.log
+autom4te.cache/
+*.swp
+
+*.bak
+*.log
+*.debug
+*_debug
+*.new
+*.old
+*_new
+*_old
+
+# Includes
+!testing/mover/Makefile
+!testing/new/Makefile
+!unsorted-older/kicker/Makefile
+!unsorted-older/lastraces/Makefile
 

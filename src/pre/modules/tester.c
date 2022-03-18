@@ -20,9 +20,13 @@
  */
 
 #include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../foo-pre.h"
 #include <collection/hashtable.h>
+#include <lib/gllogs.h>
 
 // test a module.
 int test_module(char *module, char *file, char *path) {
@@ -32,10 +36,10 @@ int test_module(char *module, char *file, char *path) {
 	module_list_t* (*module_loader)();
 	char *args[] = {"", "Whatever-REL", "mp3"};
 
-
 	handle = dlopen(module, RTLD_LAZY);
+
 	if (!handle) {
-		printf("Error loading module %s: %s\n", module, dlerror());
+		printf("Error loading module '%s':\n%s\n", module, dlerror());
 		return 0;
 	}
 
@@ -47,14 +51,24 @@ int test_module(char *module, char *file, char *path) {
 		return 0;
 	}
 
-	// show module name
-	printf("module name = %s\n", module_loader()->mod_name);
+	printf("DEBUG: file=%s path=%s\n", file, path);
 
+	// show module name
+	printf("module name = %s %s\n", module_loader()->mod_name, module);
+
+/* FIXME
 	// test module file func
-	module_loader()->mod_func_file(file, args);
+	if (module_func->mod_func_file != 0)
+		module_loader()->mod_func_file(file, args);
 
 	// test module dir func
-	module_loader()->mod_func_dir(path, args);
+	if (module_func->mod_func_dir != 0)
+		module_loader()->mod_func_dir(path, args);
+
+	// test module rel func
+	if (module_func->mod_func_rel != 0)
+		module_loader()->mod_func_rel(path, args);
+*/
 
 	dlclose(handle);
 
@@ -66,20 +80,35 @@ hashtable_t *get_config() {
 	return cfg;
 }
 
+/* FIXME
 int do_module(char *path, char *file) {
+
+	//void *handle;
 	module_list_t *module_func;
+	//module_list_t* (*module_loader)();
 	char *args[] = {"", "Whatever-REL", "mp3"};
 
 	module_func = module_loader();
 
-	if (module_func->mod_func_file)
+        //module_loader = dlsym(handle, MODULE_LOADER_FUNC);
+
+	if (module_func->mod_func_file != 0)
 		module_func->mod_func_file(file, args);
 
-	if (module_func->mod_func_dir)
+	if (module_func->mod_func_dir != 0)
 		module_func->mod_func_dir(path, args);
+
+	if (module_func->mod_func_rel != 0)
+		module_func->mod_func_rel(path, args);
 }
+*/
 
 int main(int argc, char *argv[]) {
+
+	if (!argv[2]) {
+		printf("Error no module specified\n");
+		exit(1);
+	}
 
 	cfg = malloc(sizeof(hashtable_t));
 	ht_init(cfg);
@@ -87,8 +116,11 @@ int main(int argc, char *argv[]) {
 
 	get_config();
 	//gl_gllog_add("");
-	//	test_module(argv[1], argv[2], argv[3]);
 
-	do_module(argv[2], argv[3]);
+	test_module(argv[2], argv[3], argv[4]);
+
+	//FIXME
+	//do_module(argv[2], argv[3]);
 
 }
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

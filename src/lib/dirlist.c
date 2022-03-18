@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
+#include <fnmatch.h>
 #include "dirlist.h"
 
 #define DIRLIST_VERSION 1

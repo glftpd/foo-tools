@@ -62,6 +62,7 @@ typedef unsigned short int ushort;
 #define PROPERTY_ADDSUB "addsubdirstodirlog"
 
 #define PROPERTY_MOVE_EXTERNAL "move.external"
+#define PROPERTY_MOVE_FORCE_EXT "move.force.ext"
 
 #define PROPERTY_ETCDIR "etcdir"
 
@@ -157,6 +158,9 @@ struct module_list {
 
 typedef struct module_list module_list_t;
 
-char *mp3_genre = "Unknown";
+int touch_dir(char *dir);
+int touch_file(char *fname);
+char *get_mp3_genre(const char* filename);
 
 #endif
+/* vim: set noai tabstop=8 shiftwidth=8 softtabstop=8 noexpandtab: */

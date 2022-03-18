@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <unistd.h>
 #include "threadpool.h"
 
 /*
@@ -103,7 +104,7 @@ void *_threadpool_wait_loop(void *args) {
 
 	pthread_cleanup_pop(0);
 
-	return;
+	return 0;
 }
 
 

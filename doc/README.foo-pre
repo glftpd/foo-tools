@@ -202,5 +202,8 @@ add the PRE: target.
 last note;
 ----------
 
+As mentioned by PCFiL in HOWTO :
 
+when you do 'site pre' and you have : "200 Command Successful."
+do : mknod /glftpd/dev/full c 1 7
 

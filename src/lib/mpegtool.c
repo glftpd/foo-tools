@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <ctype.h>
 #include "mpegtool.h"
 #include "mpegtoolconsts.h"
 

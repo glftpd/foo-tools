@@ -59,7 +59,7 @@ module_list_t mod_symlink_info = {
 	// module name
 	"symlinker",
 
-	// moduel dir func
+	// module dir func
 	0,
 
 	// module file func
@@ -84,7 +84,8 @@ module_list_t *module_loader() {
 int mod_symlink_rel_func(char *dir, char *argv[]) {
 
   int i;
-  char buflink[1024], buf[1024], bufto[1024], *tmp, *section, *s_linkpath, *s_path;
+  //char buflink[1024], buf[1024], bufto[1024], *tmp, *section, *s_linkpath, *s_path;
+  char buflink, buf[1024], bufto[1024], *tmp, *section, *s_linkpath, *s_path;
 
   // get section from context (undocumented feature :-).
   section = ht_get(get_env(), "section");

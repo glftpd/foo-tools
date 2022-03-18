@@ -16,11 +16,15 @@ WEBSPYLIBS = -lhttpd
 
 # for webspy
 #DEFS = -D__DEBUG__
+DEFS = -L../lib -I../lib
 
-all:	spy
+all: libhttpd spy
+
+libhttpd:
+	$(MAKE) -C ../lib libhttpd
 
 webspy: $(WEBSPYOBJS)
-	$(CC) -static -o $@ $(WEBSPYOBJS) $(WEBSPYLIBS) $(DEFS)
+	$(CC) -static -o webspy $(WEBSPYOBJS) $(WEBSPYLIBS) $(DEFS)
 
 spy: $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS) $(DEFS)

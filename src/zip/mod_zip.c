@@ -26,6 +26,8 @@
 
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
+#include <fnmatch.h>
 
 #include <checker/frame.h>
 #include "mod_zip.h"

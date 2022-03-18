@@ -29,6 +29,7 @@
 #include <lib/stringtokenizer.h>
 #include <util/strmatch.h>
 #include <string.h>
+#include <fnmatch.h>
 
 
 dirlist_t * util_get_dirlist(hashtable_t *conf, char *dir) {

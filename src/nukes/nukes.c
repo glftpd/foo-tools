@@ -22,6 +22,7 @@
  * Tanesha Team! $Id: nukes.c,v 1.4 2003/09/27 13:13:41 sorend Exp $
  */
 
+#include <ctype.h>
 #include "glnukelog.h"
 #include <collection/hashtable.h>
 #include "nukes.h"

@@ -66,6 +66,8 @@ AC_CONFIG_FILES([Makefile
                  nukes/Makefile
                  pre/Makefile
                  pre/modules/Makefile
+                 pre/modules/mp3info/Makefile
+                 pre/mp3genre/Makefile
                  reset/Makefile
                  sfv/Makefile
                  thread/Makefile

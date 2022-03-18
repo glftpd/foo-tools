@@ -4,10 +4,19 @@ include ../../Makefile.config
 mp3genre:
 	$(CC) -c $@.c -o $@.o
 
+debug:
+	$(CC) -DDEBUG -c $@.c -o $@.o
+
+standalone:
+	$(CC) -DSTANDALONE -o mp3genre mp3genre.c
+
+standalone.debug:
+	$(CC) -DDEBUG -DSTANDALONE -o mp3genre mp3genre.c
+
 all: mp3genre
 
 clean:
-	rm -f *.o *~
+	rm -f *.o *~ mp3genre
 
 release:
 	mkdir -p $(RELEASEDIR)/pre/mp3genre

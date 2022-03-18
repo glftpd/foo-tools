@@ -1,4 +1,4 @@
-mp3info(1)                                                          mp3info(1)
+mp3info(1)                  General Commands Manual                 mp3info(1)
 
 
 
@@ -19,8 +19,8 @@ SYNOPSIS
 
 DESCRIPTION
        mp3info is a utility used to read and modify the ID3 tags in MPEG layer
-       3  (MP3)  files.   It  can  also (optionally) display various technical
-       attributes of the MP3 file.
+       3  (MP3) files.  It can also (optionally) display various technical at-
+       tributes of the MP3 file.
 
 
 OPTIONS
@@ -55,15 +55,15 @@ OPTIONS
 
        -r a|m|v
               Report bit rate of Variable Bit Rate (VBR) files as one  of  the
-              following  (See  the  section  below entitled Bit Rates for more
-              information):
+              following (See the section below entitled Bit Rates for more in-
+              formation):
 
               a - Average bit rate [float](Note: this option also  causes  the
                      bit  rates  of  non-VBR files to be displayed as floating
                      point values).
               m - Median bit rate [integer]
-              v - Simply  use  the  word  'Variable'  [string]  (this  is  the
-                     default).
+              v - Simply use the word 'Variable' [string]  (this  is  the  de-
+                     fault).
 
        -i     Edit ID3 tag interactively (uses curses/ncurses functions)
 
@@ -79,12 +79,11 @@ OPTIONS
 
               Print  MP3 attributes according to FORMAT_STRING.  FORMAT_STRING
               is similar to a printf(3) format string in that  it  is  printed
-              verbatim   except  for  the  following  conversions  and  escape
-              sequences. Any conversion specifier may optionally  include  the
+              verbatim  except  for  the  following conversions and escape se-
+              quences. Any conversion specifier  may  optionally  include  the
               various alignment, precision, and field width modifiers accepted
               by printf(3).  See the EXAMPLES section below  for  examples  of
               how format strings are used in mp3info.
-
 
               Conversion Specifiers
 
@@ -111,8 +110,8 @@ OPTIONS
                  %b     Number of corrupt audio frames [integer]
                  %Q     Sampling frequency in Hz [integer]
                  %q     Sampling frequency in KHz [integer]
-                 %r     Bit  Rate  in  KB/s  (type  and meaning affected by -r
-                        option)
+                 %r     Bit  Rate in KB/s (type and meaning affected by -r op-
+                        tion)
                  %m     Playing time: minutes only [integer]
                  %s     Playing time: seconds only [integer] (usually used  in
                         conjunction with %m)
@@ -133,9 +132,6 @@ OPTIONS
                  \ooo   Any arbitrary character specified by the octal  number
                         ooo
                  \\     A single backslash character
-
-
-
 USAGE
        Specifying  MP3  files  without any other options displays the existing
        ID3 tag (if any).
@@ -170,12 +166,11 @@ NOTES
               switch is used or the -p switch is used with a  FORMAT_SPECIFIER
               containing  %m,  %s, %S, %u or (rarely) %r.  Using the -F switch
               under other conditions will only slow down mp3info.   Also  note
-              that  a  FORMAT_SPECIFIER  containing  %b or a VBR MP3 file will
-              automatically trigger a full scan even if the -F switch  is  not
+              that a FORMAT_SPECIFIER containing %b or a VBR MP3 file will au-
+              tomatically trigger a full scan even if the  -F  switch  is  not
               used.
 
               Several users have noted that the %u specifier used alone:
-
 
               mp3info -p "%u" song.mp3
 
@@ -219,12 +214,12 @@ NOTES
               rate would normally appear.  Another  option  is  to  print  the
               mathematical  average of all the frames.  This has the advantage
               of being completely accurate, but the  number  printed  may  not
-              correspond  to  one  of  the 14 discreet bit rates that would be
-              allowed for that file.  The third alternative solves that  prob-
-              lem  by  allowing  the bit rate to be reported as the median bit
-              rate which is what you would get if you lined up all the  frames
-              in  the  file  by bit rate from lowest to highest and picked the
-              frame closest to the middle of the line.
+              correspond to one of the 14 discreet bit rates that would be al-
+              lowed for that file.  The third alternative solves that  problem
+              by  allowing  the bit rate to be reported as the median bit rate
+              which is what you would get if you lined up all  the  frames  in
+              the file by bit rate from lowest to highest and picked the frame
+              closest to the middle of the line.
 
               For more specific usage information, see the -r switch  and  the
               %r  conversion  specifier  under  the  description  of -p's FOR-
@@ -235,17 +230,15 @@ NOTES
 EXAMPLES
        Display existing ID3 tag information (if any) in song.mp3
 
-
               mp3info song.mp3
 
-       Set the  title,  author  and  genre  of  song.mp3.  (All  other  fields
-       unchanged)
+       Set the title, author and genre of  song.mp3.  (All  other  fields  un-
+       changed)
 
               mp3info -t "Song Title" -a Author -g "Rock & Roll" song.mp3
 
        Set  the  album field of all MP3 files in the current directory to "The
        White Album"
-
 
               mp3info -l "The White Album" *.mp3
 
@@ -344,12 +337,12 @@ BUGS
 
        The title, author, album, and comment fields are limited to 30  charac-
        ters.  This is a limitation of the ID3 1.0 tag format, not MP3Info.  If
-       you specify the track number (with the -n  switch),  the  ID3  1.0  tag
-       becomes  a  1.1  tag and the comment field is limited to 28 characters.
+       you specify the track number (with the -n switch), the ID3 1.0 tag  be-
+       comes  a  1.1  tag  and  the comment field is limited to 28 characters.
        This is because the difference between ID3 1.0 and 1.1 is that the  tag
        number  is  stored  in  the last byte of the comment field.  This trick
-       "borrows" two bytes from the  fixed-length  comment  field  effectively
-       reducing the maximum comment by two characters.
+       "borrows" two bytes from the fixed-length comment field effectively re-
+       ducing the maximum comment by two characters.
 
        Genres  cannot be specified arbitrarily.  They must be specified from a
        pre-determined list (use mp3info -G to see that list).  Again, this  is

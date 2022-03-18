@@ -41,6 +41,8 @@ void zipcheck_init(hashtable_t *conf, char *file, char *dir) {
 
 	now = time(0);
 	tm = localtime(&now);
+
+	void util_replacer_set(hashtable_t *conf, char *key, char *val);
         
 	buf = (char*)malloc(strlen(file) + strlen(dir) + 2);
 	sprintf(buf, "%s/%s", dir, file);

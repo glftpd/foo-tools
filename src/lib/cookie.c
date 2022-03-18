@@ -25,6 +25,9 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <fnmatch.h>
 #include "cookie.h"
 
 void c_free(void **v)

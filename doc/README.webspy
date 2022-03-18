@@ -41,7 +41,13 @@ package.  This is because it has an external dependency on the
 libhttpd library. Before building webspy, you must download and
 install this library.  It can be found at the following URL:
 
-  http://www.hughes.com.au/products/libhttpd/
+  * http://www.hughes.com.au/products/libhttpd/
+
+  * or, use this direct link:
+  www.hughes.com.au/downloads/libhttpd/archive/libhttpd-1.4.tar.gz
+  (verified working May 2018)
+
+  * the tarball is now also included in foo-tools src/lib dir
 
 Please read its documentation on how to install it (and, don't
 forget to run 'ldconfig' when you are done).
@@ -61,4 +67,8 @@ After this has been done, you should be ready to run webspy:
 
 It should say a short notice about that it started up, and forked
 into background.
+
+Please note that libhttpd-1.4 is old and vulnerable to exploits,
+it's probably a good idea to rewrite webspy code to use libhttpd-2.0
+instead.
 

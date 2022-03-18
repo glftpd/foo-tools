@@ -69,6 +69,8 @@ hashtable_item_t *webspy_dirview_get_direntry(char *dir) {
 
 	dis = (hashtable_t*) ht_get(get_context(), DIRVIEW_DIRMAP_ATTR);
 
+        hashtable_item_t *_ht_find_item(hashtable_item_t *t, char *k);
+
 	// create if not existent.
 	if (!dis) {
 		dis = malloc(sizeof(hashtable_t));

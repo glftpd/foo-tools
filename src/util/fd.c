@@ -20,6 +20,7 @@
  */
 
 #include <fcntl.h>
+#include <unistd.h>
 #include "fd.h"
 
 int fd_copy(int to, int from) {

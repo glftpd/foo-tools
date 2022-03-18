@@ -1,0 +1,32 @@
+
+What is mod_audiosort ?
+-----------------------
+
+Runs pzs-ng's audiosort on release dir after pre
+
+
+Building:
+---------
+
+Just build it with the make script ;)
+Or, to build this module only:
+make mod_audiosort.so && cp mod_audiosort.so /glftpd/bin/premodules
+
+Add it to the modules list in pre.cfg like this:
+modules=/bin/premodules/mod_audiosort.so
+
+If you have more modules already loaded, then it will look like this
+modules=/bin/premodules/mod_other.so|/bin/premodules/mod_whatever.so|/bin/premodules/mod_audiosort.so
+
+
+Configuring:
+------------
+
+Add the module to the modules list in pre.cfg and add property thats points to the audiosort binary
+and define section(s) where audiosort should be run:
+
+#
+# properties for audiosort module.
+#
+mod_audiosort.bin=/bin/audiosort
+mod_audiosort.sections=flac|mp3
